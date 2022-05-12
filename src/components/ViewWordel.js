@@ -1,0 +1,111 @@
+import React from "react";
+import { View, Button, StyleSheet } from "react-native";
+import { useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import ModalAnimate from "./ModalAnimate";
+import CreateWordel from './CreateWordel';
+import CreateInputText from './CreateInputText';
+import TextTitle from "./TextTitle";
+import { setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFocus } from "../features/wordel/wordelSlice";
+
+export default function ViewWordel(){
+    const state = useSelector(state => state.wordel.attempts);
+    const finish = useSelector(state => state.wordel.finish);
+
+    const dispatch = useDispatch();
+    const inputRef = useRef(null);
+
+    if(!finish[0] && state[0]){
+        dispatch(createWordel('holacomo'.split('')));
+    }
+
+    function keyPress(key){
+        dispatch(setActualWorlde(key))
+    }
+
+    function setFocusInput(index){
+        inputRef.current.focus();
+        dispatch(selectWordel(index))
+    }
+
+    function getBlurFocus(){
+        dispatch(blurWordelFocus())
+    }
+
+    function Create(){
+        return state.map((value, i) => {
+            if(value){
+                return (
+                    <View style={ style.viewWordel } >
+                        <CreateWordel index={ i } setFocus={ setFocusInput } />
+                        <CreateInputText reference={ inputRef } blurFocus={ getBlurFocus } change={ keyPress } />
+                    </View>
+                )
+            }else{
+                return(
+                    <View style={ style.viewWordel } pointerEvents='none'>
+                        <CreateWordel index={ i } />
+                    </View>
+                )
+            }
+        })
+    }
+
+    function RenderModal(){
+        let error = finish[1] === 'Fallaste la traduccion correcta es' ? true : false;
+        return <ModalAnimate componentName={ 'wordel' } 
+            message={ finish[1] } 
+            typeError={ error }
+            visible={ finish[0] }
+            props={ { index: state.length - 1 } } />
+    }
+
+    return (
+        <View style={ style.contentAll } >
+            <RenderModal />
+            <View style={ style.contentWordel } >
+                <TextTitle text={ 'quiz' } typeStyle={ 'main' } />
+                <TextTitle text={ `Traduzca: Principal` } typeStyle={ 'secundary' } />
+                <Create />
+                <View style={ style.btn } >
+                    <Button onPress={ () => {
+                            dispatch(newAttempts('holacomo'.split('')))
+                            inputRef.current.focus();
+                        }}
+                        title="Next" />
+                </View>
+            </View>
+        </View>
+    )
+}
+
+const style = StyleSheet.create({
+    contentAll:{
+        height: '100%',
+    },
+    contentWordel: {
+        flex: 1,
+        position: 'relative',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    viewWordel: {
+        width: '100%',
+        paddingTop: 5,
+        paddingBottom: 5,
+        position: 'relative'
+    },
+    btn: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10
+    },
+    textTitle: {
+        color: 'white',
+        fontSize: 30
+    },
+    text: {
+        color: 'white'
+    }
+})
