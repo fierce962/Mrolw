@@ -3,19 +3,21 @@ import { TouchableHighlight, View, Text, StyleSheet, Animated } from 'react-nati
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Voice from '@react-native-voice/voice';
 import { useSelector, useDispatch } from "react-redux";
-import { changeStartRecord, textEnd } from "../features/pronunciation/pronunciationSlice";
+import { changeStartRecord, textEnd, ChangeNoSpeech } from "../features/pronunciation/pronunciationSlice";
+
+import FlotingMessage from "./FlotingMessage";
 
 export default function VoiceToText(){
     const dispatch = useDispatch();
     const record = useSelector(state => state.pronunciation.startRecord);
-
+    console.log('voice')
     Voice.onSpeechStart = onSpeechStartHandler;
     Voice.onSpeechResults = onSpeechResultsHandler;
     Voice.onSpeechEnd = onSpeechEndHandler;
     Voice.onSpeechError = onErrorHandler;
 
     function onSpeechStartHandler(e){
-        console.log(e);
+        //console.log(e);
     }
 
     function onSpeechResultsHandler(e){
@@ -29,6 +31,7 @@ export default function VoiceToText(){
 
     function onErrorHandler(e){
         dispatch(changeStartRecord());
+        dispatch(ChangeNoSpeech());
     }
 
     function onSpeechEndHandler(e){
@@ -67,6 +70,7 @@ export default function VoiceToText(){
                     </Text>
                 </TouchableHighlight>
             </Animated.View>
+            <FlotingMessage message={'No se detecto su voz'} topSpacing={ 90 }/>
         </View>
     )
 }
@@ -75,13 +79,14 @@ const style = StyleSheet.create({
     contentVoice: {
         height: 100,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'relative'
     },
     tolgleAnimate: {
         borderWidth: 1,
         borderColor: '#fff',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     buttonIcon: {
         width: 50,

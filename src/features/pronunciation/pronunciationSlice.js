@@ -11,6 +11,7 @@ const pronunciationSlice = createSlice({
         },
         testEnd: false,
         startRecord: false,
+        noSpeech: false
     },
     reducers: {
         changeStartRecord(state) {
@@ -18,9 +19,12 @@ const pronunciationSlice = createSlice({
         },
         textEnd(state) {
             state.testEnd = true;
+        },
+        ChangeNoSpeech(state){
+            state.noSpeech = !state.noSpeech;
         }
     }
 });
 
 export default pronunciationSlice.reducer;
-export const { changeStartRecord, textEnd } = pronunciationSlice.actions;
+export const { changeStartRecord, textEnd, ChangeNoSpeech } = pronunciationSlice.actions;
