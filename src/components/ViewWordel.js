@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Button, StyleSheet } from "react-native";
 import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,14 +8,22 @@ import CreateWordel from './CreateWordel';
 import CreateInputText from './CreateInputText';
 import TextTitle from "./TextTitle";
 import { setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFocus } from "../features/wordel/wordelSlice";
+import { assingModalParameters } from '../features/modal/modalSlice';
+
 
 export default function ViewWordel(){
     const state = useSelector(state => state.wordel.attempts);
     const finish = useSelector(state => state.wordel.finish);
-
     const dispatch = useDispatch();
     const inputRef = useRef(null);
 
+    useEffect(() => {
+        if(finish[0]){
+            const type = finish[1] === 'Fallaste la traduccion correcta es' ? 'close' : 'check'; 
+            dispatch(assingModalParameters({ type: type, message: finish[1] }));
+        }
+    });
+    
     if(!finish[0] && state[0]){
         dispatch(createWordel('holacomo'.split('')));
     }
@@ -37,14 +45,14 @@ export default function ViewWordel(){
         return state.map((value, i) => {
             if(value){
                 return (
-                    <View style={ style.viewWordel } >
+                    <View key={ `viewWorlde${i}` } style={ style.viewWordel } >
                         <CreateWordel index={ i } setFocus={ setFocusInput } />
                         <CreateInputText reference={ inputRef } blurFocus={ getBlurFocus } change={ keyPress } />
                     </View>
                 )
             }else{
                 return(
-                    <View style={ style.viewWordel } pointerEvents='none'>
+                    <View key={ `viewWorlde${i}` }  style={ style.viewWordel } pointerEvents='none'>
                         <CreateWordel index={ i } />
                     </View>
                 )
@@ -52,18 +60,9 @@ export default function ViewWordel(){
         })
     }
 
-    function RenderModal(){
-        let error = finish[1] === 'Fallaste la traduccion correcta es' ? true : false;
-        return <ModalAnimate componentName={ 'wordel' } 
-            message={ finish[1] } 
-            typeError={ error }
-            visible={ finish[0] }
-            props={ { index: state.length - 1 } } />
-    }
-
     return (
         <View style={ style.contentAll } >
-            <RenderModal />
+            <ModalAnimate />
             <View style={ style.contentWordel } >
                 <TextTitle text={ 'quiz' } typeStyle={ 'main' } />
                 <TextTitle text={ `Traduzca: Principal` } typeStyle={ 'secundary' } />

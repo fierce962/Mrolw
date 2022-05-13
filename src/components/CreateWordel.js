@@ -42,7 +42,7 @@ export default function CreateWordel({ index, setFocus, alternativeBackGraund })
 
     function LoadItems({ wordelLoad }){
         return wordel.map((item, index) => (
-            <Items item={ item } index={ index } setFocus={ setFocus }/>
+            <Items key={ `items${index}` } item={ item } index={ index } setFocus={ setFocus }/>
         ))
     }
 

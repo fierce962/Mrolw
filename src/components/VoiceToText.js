@@ -68,26 +68,31 @@ export default function VoiceToText(){
     ]
 
     return (
-        <View style={ style.contentVoice }>
-            <ModalAnimate />
-            <Animated.View style={ styleAnimate }>
-                <TouchableHighlight style={ style.buttonIcon } onPress={ startVoice }>
-                    <Text>
-                        <Icon name="microphone" size={ 30 } color="#000" />;
-                    </Text>
-                </TouchableHighlight>
-            </Animated.View>
-            <FlotingMessage message={'No se detecto su voz'} topSpacing={ 90 }/>
+        <View style={ style.voiceBody }>
+            <View style={ style.contentVoice }>
+                <ModalAnimate />
+                <Animated.View style={ styleAnimate }>
+                    <TouchableHighlight style={ style.buttonIcon } onPress={ startVoice }>
+                        <Text>
+                            <Icon name="microphone" size={ 30 } color="#000" />;
+                        </Text>
+                    </TouchableHighlight>
+                </Animated.View>
+                <FlotingMessage message={'No se detecto su voz'} topSpacing={ 90 }/>
+            </View>
         </View>
     )
 }
 
 const style = StyleSheet.create({
+    voiceBody: {
+        height: 140,
+    },
     contentVoice: {
         height: 100,
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'relative'
+        position: 'relative',
     },
     tolgleAnimate: {
         borderWidth: 1,

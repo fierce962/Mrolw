@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import ViewPronunciation from './components/ViewPronunciation';
+import ViewWordel from './components/ViewWordel';
 
 export default function Main() {
     return (
@@ -9,7 +10,8 @@ export default function Main() {
 
             </View>
             <View style={ style.content } >
-                <ViewPronunciation />
+                <ViewWordel />
+                {/* <ViewPronunciation /> */}
             </View>
         </View>
     );

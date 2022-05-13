@@ -1,9 +1,8 @@
 import React from "react";
-import { Modal, Text, View, StyleSheet, Animated } from "react-native";
+import { Modal, Text, View, StyleSheet, Animated, TouchableWithoutFeedback } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from "react-redux";
 import { setChangeVisible } from '../features/modal/modalSlice';
-import CreateWordel from "./CreateWordel";
 
 function CreateCurveAnimated({color}){
     let degEnd = 90;
@@ -39,28 +38,31 @@ function CreateCurveAnimated({color}){
 export default function ModalAnimate(){
     const modalValue = useSelector(state => state.modal.values);
     const dispatch = useDispatch();
+    
     const iconName = modalValue.type === 'close' ? 'close' : 'check';
     const color = modalValue.type === 'close' ? 'red' : 'green';
     const message = modalValue.message;
     const valueVisible = modalValue.visibleView;
 
     return (
-        <Modal transparent={true} animationType='fade' style={ {backgroundColor: color}}
-            visible={ valueVisible } onRequestClose={() => dispatch(setChangeVisible()) }>
-            <View style={ style.contentModal }>
-                <View style={ style.viewModal } >
-                    <View style={ style.contentAnimate }>
-                        <View style={[ style.borderCurve, { borderColor: `${color}` } ]}>
+        <Modal pointerEvents="none" transparent={ true } animationType='fade' style={ {backgroundColor: color}}
+                visible={ valueVisible }>
+                <TouchableWithoutFeedback onPress={() => dispatch(setChangeVisible()) }>
+                    <View style={ style.contentModal } >
+                        <View style={ style.viewModal } >
+                            <View style={ style.contentAnimate }>
+                                <View style={[ style.borderCurve, { borderColor: `${color}` } ]}>
 
+                                </View>
+                                <Text style={ style.iconAnimate }>
+                                    <Icon name={ iconName } size={ 30 } color={ color } />;
+                                </Text>
+                                <CreateCurveAnimated color={ color } />
+                            </View>
+                            <Text style={ style.message }>{ message }</Text>
                         </View>
-                        <Text style={ style.iconAnimate }>
-                            <Icon name={ iconName } size={ 30 } color={ color } />;
-                        </Text>
-                        <CreateCurveAnimated color={ color } />
                     </View>
-                    <Text style={ style.message }>{ message }</Text>
-                </View>
-            </View>
+                </TouchableWithoutFeedback>
         </Modal>
     );
 }
@@ -69,7 +71,7 @@ const style = StyleSheet.create({
     contentModal: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     viewModal: {
         width: '70%',
