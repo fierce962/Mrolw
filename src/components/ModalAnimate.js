@@ -1,6 +1,8 @@
 import React from "react";
-import { useState } from "react";
 import { Modal, Text, View, StyleSheet, Animated } from "react-native";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { useSelector, useDispatch } from "react-redux";
+import { setChangeVisible } from '../features/modal/modalSlice';
 import CreateWordel from "./CreateWordel";
 
 function CreateCurveAnimated({color}){
@@ -15,7 +17,7 @@ function CreateCurveAnimated({color}){
             useNativeDriver: false
         }).start();
         curve.push(
-            <Animated.View style={[ style.borderRotate, 
+            <Animated.View key={ `${curve}i` } style={[ style.borderRotate, 
                 { transform: [{ 
                     rotate: init.interpolate({
                         inputRange: [0, 1],
@@ -34,31 +36,33 @@ function CreateCurveAnimated({color}){
     return curve;
 }
 
-function LoadCompoents({ propieties }){
-    return <CreateWordel index={ propieties.index } alternativeBackGraund={ true } />
-}
+export default function ModalAnimate(){
+    const modalValue = useSelector(state => state.modal.values);
+    const dispatch = useDispatch();
+    const iconName = modalValue.type === 'close' ? 'close' : 'check';
+    const color = modalValue.type === 'close' ? 'red' : 'green';
+    const message = modalValue.message;
+    const valueVisible = modalValue.visibleView;
 
-export default function ModalAnimate({ componentName, message, props, typeError, visible }){
-    const [valueVisible, setVisible] = useState(visible)
-    const icon = typeError === true ? 'close' : 'check';
-    const color = typeError === true ? 'red' : 'green';
     return (
         <Modal transparent={true} animationType='fade' style={ {backgroundColor: color}}
-            visible={ valueVisible } onRequestClose={() => setVisible(!valueVisible) }>
+            visible={ valueVisible } onRequestClose={() => dispatch(setChangeVisible()) }>
             <View style={ style.contentModal }>
                 <View style={ style.viewModal } >
                     <View style={ style.contentAnimate }>
                         <View style={[ style.borderCurve, { borderColor: `${color}` } ]}>
 
                         </View>
+                        <Text style={ style.iconAnimate }>
+                            <Icon name={ iconName } size={ 30 } color={ color } />;
+                        </Text>
                         <CreateCurveAnimated color={ color } />
                     </View>
                     <Text style={ style.message }>{ message }</Text>
-                    <LoadCompoents  propieties={ props } />
                 </View>
             </View>
         </Modal>
-    )
+    );
 }
 
 const style = StyleSheet.create({

@@ -9,22 +9,18 @@ const pronunciationSlice = createSlice({
             "pronunciation": "māks",
             "pronunciationSpanish": "meiks"
         },
-        testEnd: false,
         startRecord: false,
         noSpeech: false
     },
     reducers: {
         changeStartRecord(state) {
-            state.startRecord = ! state.startRecord;
+            state.startRecord = !state.startRecord;
         },
-        textEnd(state) {
-            state.testEnd = true;
-        },
-        ChangeNoSpeech(state){
-            state.noSpeech = !state.noSpeech;
+        ChangeNoSpeech(state, actions) {
+            state.noSpeech = actions.payload;
         }
     }
 });
 
 export default pronunciationSlice.reducer;
-export const { changeStartRecord, textEnd, ChangeNoSpeech } = pronunciationSlice.actions;
+export const { changeStartRecord, ChangeNoSpeech } = pronunciationSlice.actions;

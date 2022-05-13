@@ -3,14 +3,17 @@ import { TouchableHighlight, View, Text, StyleSheet, Animated } from 'react-nati
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Voice from '@react-native-voice/voice';
 import { useSelector, useDispatch } from "react-redux";
-import { changeStartRecord, textEnd, ChangeNoSpeech } from "../features/pronunciation/pronunciationSlice";
 
+import { changeStartRecord, ChangeNoSpeech } from "../features/pronunciation/pronunciationSlice";
+import { assingModalParameters } from '../features/modal/modalSlice';
+
+import ModalAnimate from "./ModalAnimate";
 import FlotingMessage from "./FlotingMessage";
 
 export default function VoiceToText(){
     const dispatch = useDispatch();
     const record = useSelector(state => state.pronunciation.startRecord);
-    console.log('voice')
+
     Voice.onSpeechStart = onSpeechStartHandler;
     Voice.onSpeechResults = onSpeechResultsHandler;
     Voice.onSpeechEnd = onSpeechEndHandler;
@@ -25,13 +28,15 @@ export default function VoiceToText(){
             if(voiceResults.includes('makes')) return true;
         });
         if(correct){
-            dispatch(textEnd());
+            dispatch(assingModalParameters({ type: 'check', message: 'La Pronunciacion fue correcta'}));
+        }else{
+            dispatch(assingModalParameters({ type: 'close', message: 'La Pronunciacion fue incorrecta'}));
         }
     }
 
     function onErrorHandler(e){
         dispatch(changeStartRecord());
-        dispatch(ChangeNoSpeech());
+        dispatch(ChangeNoSpeech(true));
     }
 
     function onSpeechEndHandler(e){
@@ -41,6 +46,7 @@ export default function VoiceToText(){
     function startVoice(){
         Voice.start('en-US');
         dispatch(changeStartRecord());
+        dispatch(ChangeNoSpeech(false));
     }
 
     let animateInit = record ? new Animated.Value(50) : 50;
@@ -63,6 +69,7 @@ export default function VoiceToText(){
 
     return (
         <View style={ style.contentVoice }>
+            <ModalAnimate />
             <Animated.View style={ styleAnimate }>
                 <TouchableHighlight style={ style.buttonIcon } onPress={ startVoice }>
                     <Text>
