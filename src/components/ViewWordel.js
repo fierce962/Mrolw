@@ -11,7 +11,7 @@ import { setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFoc
 import { assingModalParameters } from '../features/modal/modalSlice';
 
 
-export default function ViewWordel(){
+export default function ViewWordel({ navigation }){
     const state = useSelector(state => state.wordel.attempts);
     const finish = useSelector(state => state.wordel.finish);
     const dispatch = useDispatch();
@@ -62,7 +62,7 @@ export default function ViewWordel(){
 
     return (
         <View style={ style.contentAll } >
-            <ModalAnimate />
+            <ModalAnimate navigation={ navigation } route={ 'voice' } />
             <View style={ style.contentWordel } >
                 <TextTitle text={ 'quiz' } typeStyle={ 'main' } />
                 <TextTitle text={ `Traduzca: Principal` } typeStyle={ 'secundary' } />

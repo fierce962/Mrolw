@@ -35,7 +35,7 @@ function CreateCurveAnimated({color}){
     return curve;
 }
 
-export default function ModalAnimate(){
+export default function ModalAnimate({ navigation, route }){
     const modalValue = useSelector(state => state.modal.values);
     const dispatch = useDispatch();
     
@@ -45,9 +45,12 @@ export default function ModalAnimate(){
     const valueVisible = modalValue.visibleView;
 
     return (
-        <Modal pointerEvents="none" transparent={ true } animationType='fade' style={ {backgroundColor: color}}
+        <Modal pointerEvents="none" transparent={ true } animationType='fade' style={ { backgroundColor: color }}
                 visible={ valueVisible }>
-                <TouchableWithoutFeedback onPress={() => dispatch(setChangeVisible()) }>
+                <TouchableWithoutFeedback onPress={() => {
+                        dispatch(setChangeVisible());
+                        navigation.navigate(route); 
+                    }} >
                     <View style={ style.contentModal } >
                         <View style={ style.viewModal } >
                             <View style={ style.contentAnimate }>
