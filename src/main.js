@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import ViewPronunciation from './components/ViewPronunciation';
 import ViewWordel from './components/ViewWordel';
@@ -11,15 +10,6 @@ import IconTouchable from './components/IconTouchable';
 
 export default function Main() {
     const Stack = createNativeStackNavigator();
-    const Drawer = createDrawerNavigator();
-    // return (
-    //     <NavigationContainer>
-    //         <Drawer.Navigator initialRouteName="Home">
-    //             <Drawer.Screen name="Home" component={ Home } />
-    //             <Drawer.Screen name="Notifications" component={ ViewWordel } />
-    //         </Drawer.Navigator>
-    //     </NavigationContainer>
-    // );
     return (
         <NavigationContainer>
             <Stack.Navigator>
