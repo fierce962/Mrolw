@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Image } from 'react-native';
+import { SvgUri } from 'react-native-svg';
+import Logo from '../img/logo.svg';
 
 export default function Home({ navigation }) {
     return (
         <View>
-            <Text style={ { color: '#fff' } } >home</Text>
-            <Button title="test" onPress={() => navigation.navigate('wordel') }/>
+            <Logo width={120} height={40} />
         </View>
     )
 }

@@ -3,7 +3,7 @@ import { DrawerLayoutAndroid } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
 import Navigation from './Views/Navigation';
-import DrawerButton from './Views/DrawerButton';
+import DrawerButton from './components/DrawerButton';
 
 export default function Main() {
     const drawerRef = useRef(null)
