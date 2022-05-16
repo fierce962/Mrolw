@@ -3,16 +3,20 @@ import { TouchableHighlight, View, Text, StyleSheet, Animated } from 'react-nati
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Voice from '@react-native-voice/voice';
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 import { changeStartRecord, ChangeNoSpeech } from "../features/pronunciation/pronunciationSlice";
 import { assingModalParameters } from '../features/modal/modalSlice';
+import { setParameters } from "../features/FloatingButton/floatingButtonSlice";
 
 import ModalAnimate from "./ModalAnimate";
 import FlotingMessage from "./FlotingMessage";
+import FloatingButton from "./FloatingButton";
 
 export default function VoiceToText(){
     const dispatch = useDispatch();
     const record = useSelector(state => state.pronunciation.startRecord);
+    const navigation = useNavigation();
 
     Voice.onSpeechStart = onSpeechStartHandler;
     Voice.onSpeechResults = onSpeechResultsHandler;
@@ -28,9 +32,10 @@ export default function VoiceToText(){
             if(voiceResults.includes('makes')) return true;
         });
         if(correct){
-            dispatch(assingModalParameters({ type: 'check', message: 'La Pronunciacion fue correcta'}));
+            dispatch(assingModalParameters({ type: 'check', message: 'La Pronunciacion fue correcta', route: 'home' }));
         }else{
-            dispatch(assingModalParameters({ type: 'close', message: 'La Pronunciacion fue incorrecta'}));
+            dispatch(assingModalParameters({ type: 'close', message: 'La Pronunciacion fue incorrecta puedes intentarlo cuantas veces quieras' }));
+            dispatch(setParameters({ title: 'salir', view: true }))
         }
     }
 
@@ -80,6 +85,7 @@ export default function VoiceToText(){
                 </Animated.View>
                 <FlotingMessage message={'No se detecto su voz'} topSpacing={ 90 }/>
             </View>
+            <FloatingButton fnPress={ () => navigation.navigate('home') }/>
         </View>
     )
 }
@@ -87,6 +93,7 @@ export default function VoiceToText(){
 const style = StyleSheet.create({
     voiceBody: {
         height: 140,
+        position: 'relative'
     },
     contentVoice: {
         height: 100,

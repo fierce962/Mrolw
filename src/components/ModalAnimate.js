@@ -1,5 +1,7 @@
 import React from "react";
 import { Modal, Text, View, StyleSheet, Animated, TouchableWithoutFeedback } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from "react-redux";
 import { setChangeVisible } from '../features/modal/modalSlice';
@@ -35,21 +37,25 @@ function CreateCurveAnimated({color}){
     return curve;
 }
 
-export default function ModalAnimate({ navigation, route }){
+export default function ModalAnimate(){
     const modalValue = useSelector(state => state.modal.values);
     const dispatch = useDispatch();
-    
+    const navigation = useNavigation();
+
     const iconName = modalValue.type === 'close' ? 'close' : 'check';
     const color = modalValue.type === 'close' ? 'red' : 'green';
     const message = modalValue.message;
     const valueVisible = modalValue.visibleView;
+    const route = modalValue.route;
 
     return (
         <Modal pointerEvents="none" transparent={ true } animationType='fade' style={ { backgroundColor: color }}
                 visible={ valueVisible }>
                 <TouchableWithoutFeedback onPress={() => {
                         dispatch(setChangeVisible());
-                        navigation.navigate(route); 
+                        if(route !== undefined){
+                            navigation.navigate(route); 
+                        }
                     }} >
                     <View style={ style.contentModal } >
                         <View style={ style.viewModal } >

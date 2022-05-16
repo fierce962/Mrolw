@@ -15,10 +15,10 @@ const wordelSlice = createSlice({
             if(finish || state.wordel.length + 1 === 4){
                 let message;
                 if(finish){
-                    message = 'Correcto la traduccion es'
+                    message = 'Correcta';
                 }else{
                     resIncorrect(state.wordel[state.wordel.length - 1], action.payload);
-                    message = 'Fallaste la traduccion correcta es'
+                    message = 'Fallaste';
                 }
                 state.finish = [true, message];
             }else{

@@ -6,7 +6,8 @@ const modalslice = createSlice({
         values: {
             visibleView: false,
             type: 'close' | 'check',
-            message: ''
+            message: '',
+            route: ''
         }
     },
     reducers: {
@@ -17,6 +18,7 @@ const modalslice = createSlice({
             state.values.visibleView = true;
             state.values.type = action.payload.type;
             state.values.message = action.payload.message;
+            state.values.route = action.payload.route;
         }
     }
 });

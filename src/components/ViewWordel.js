@@ -11,7 +11,7 @@ import { setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFoc
 import { assingModalParameters } from '../features/modal/modalSlice';
 
 
-export default function ViewWordel({ navigation }){
+export default function ViewWordel(){
     const state = useSelector(state => state.wordel.attempts);
     const finish = useSelector(state => state.wordel.finish);
     const dispatch = useDispatch();
@@ -19,8 +19,10 @@ export default function ViewWordel({ navigation }){
 
     useEffect(() => {
         if(finish[0]){
-            const type = finish[1] === 'Fallaste la traduccion correcta es' ? 'close' : 'check'; 
-            dispatch(assingModalParameters({ type: type, message: finish[1] }));
+            const message = finish[1] === 'Fallaste' ? `Fallaste la respuesta correcta era: no te preocupes puedes intentarlo pronto` : 'La traduccion fue correcta';
+            const type = finish[1] === 'Fallaste' ? 'close' : 'check'; 
+            const route = finish[1] === 'Fallaste' ? 'home' : 'voice';
+            dispatch(assingModalParameters({ type: type, message: message, route: route }));
         }
     });
     
@@ -62,7 +64,7 @@ export default function ViewWordel({ navigation }){
 
     return (
         <View style={ style.contentAll } >
-            <ModalAnimate navigation={ navigation } route={ 'voice' } />
+            <ModalAnimate />
             <View style={ style.contentWordel } >
                 <TextTitle text={ 'quiz' } typeStyle={ 'main' } />
                 <TextTitle text={ `Traduzca: Principal` } typeStyle={ 'secundary' } />
