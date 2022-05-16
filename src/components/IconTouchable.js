@@ -8,12 +8,12 @@ function createIconParameters(props){
     if(props.navigation !== undefined && props.route.name === 'home'){
         return {
             iconName: 'align-justify',
-            fnPress: undefined
+            fnPress: () => props.drawer.current.openDrawer()
         }
     }else{
         return {
             iconName: 'home',
-            fnPress: undefined
+            fnPress: () => props.navigation.navigate('home')
         }
     };
 }
@@ -21,9 +21,9 @@ function createIconParameters(props){
 export default function IconTouchable({ props }) {
     const toucheProps = createIconParameters(props);
     controllerNavigation.set(props.navigation);
-    
+
     return (
-        <TouchableHighlight>
+        <TouchableHighlight onPress={ () => toucheProps.fnPress()  }>
             <Text>
                 <Icon name={ toucheProps.iconName } size={ 30 } color={ '#fff' } />;
             </Text>

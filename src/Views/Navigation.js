@@ -6,7 +6,7 @@ import ViewWordel from '../components/ViewWordel';
 import ViewPronunciation from '../components/ViewPronunciation';
 import IconTouchable from '../components/IconTouchable';
 
-export default function Navigation(){
+export default function Navigation({ drawer }){
     const Stack = createNativeStackNavigator();
 
     return(
@@ -26,7 +26,7 @@ export default function Navigation(){
                         borderTopColor: '#fff'
                     },
                     headerLeft: () => (
-                        <IconTouchable props={ { navigation, route } } />
+                        <IconTouchable props={ { navigation, route, drawer } } />
                     )
                 })}>
                 <Stack.Screen name='home' component={ Home } />

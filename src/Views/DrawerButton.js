@@ -3,11 +3,14 @@ import { Button } from 'react-native';
 
 import { controllerNavigation } from "../models/ControllerNavigation";
 
-export default function GoToButton() {
+export default function DrawerButton({ drawer }) {
     return (
         <Button
             title='wordel'
-            onPress={() => controllerNavigation.get().navigate('wordel') }
+            onPress={() => {
+                drawer.current.closeDrawer();
+                controllerNavigation.get().navigate('wordel')
+            }}
         />
     )
 }
