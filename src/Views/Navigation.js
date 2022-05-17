@@ -9,30 +9,31 @@ import { CreateLogo } from '../components/CreateSvg';
 
 export default function Navigation({ drawer }){
     const Stack = createNativeStackNavigator();
-
     return(
         <Stack.Navigator>
-            <Stack.Group screenOptions={({ navigation, route }) => ({
+            <Stack.Group screenOptions={({ route, navigation }) => ({
                     headerTitle: () => <CreateLogo width={50} height={ 50 } color={ 'red' } />,
                     headerTitleAlign: 'center',
                     headerStyle: {
                         backgroundColor: '#181818'
-                    },
-                    headerTitleStyle: {
-                        color: '#fff'
                     },
                     contentStyle: {
                         backgroundColor: '#181818',
                         borderTopWidth: 0.6,
                         borderTopColor: '#fff'
                     },
-                    headerLeft: () => (
-                        <IconTouchable props={ { navigation, route, drawer } } />
-                    )
+                    headerLeft: () => {
+                        const name = route.name === 'home' ? 'align-justify' : 'home';
+                        const fnPress = () => route.name === 'home' ? drawer.current.openDrawer() : navigation.navigate('home')
+                        return (
+                            <IconTouchable iconName={ name }
+                                fnPress={ fnPress } /> 
+                        )
+                    }
                 })}>
                 <Stack.Screen name='home' component={ Home } />
-                <Stack.Screen name='wordel' component={ ViewWordel } />
-                <Stack.Screen name='voice' component={ ViewPronunciation } />
+                <Stack.Screen options={ { headerBackVisible: false } } name='wordel' component={ ViewWordel } />
+                <Stack.Screen options={ { headerBackVisible: false } } name='voice' component={ ViewPronunciation } />
             </Stack.Group>
         </Stack.Navigator>
     );
