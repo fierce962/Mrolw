@@ -5,6 +5,7 @@ import Home from './home';
 import ViewWordel from '../components/ViewWordel';
 import ViewPronunciation from '../components/ViewPronunciation';
 import IconTouchable from '../components/IconTouchable';
+import { CreateLogo } from '../components/CreateSvg';
 
 export default function Navigation({ drawer }){
     const Stack = createNativeStackNavigator();
@@ -12,7 +13,7 @@ export default function Navigation({ drawer }){
     return(
         <Stack.Navigator>
             <Stack.Group screenOptions={({ navigation, route }) => ({
-                    headerTitle: 'MrOwl',
+                    headerTitle: () => <CreateLogo width={50} height={ 50 } color={ 'red' } />,
                     headerTitleAlign: 'center',
                     headerStyle: {
                         backgroundColor: '#181818'
