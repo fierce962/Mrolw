@@ -1,7 +1,6 @@
 
 class ControllerNavigation {
     navigation;
-    
     set(navigation){
         this.navigation = navigation;
     }

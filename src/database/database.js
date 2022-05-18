@@ -1,7 +1,6 @@
 import { db } from './firebaseConfig';
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, limit } from "firebase/firestore";
+
+const pronunciation = require('../../pronunciation.json')
 
 
-export async function addWords(){
-
-}
