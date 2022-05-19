@@ -22,7 +22,7 @@ export default function CreateBoxLearnWord(){
     if(words === undefined){
         dispatch(getWords());
     }
-    if(words !== undefined){
+    if(words !== undefined && words !== null){
         return (
             <FlatList data={ words.list }
                 renderItem={ ({ item }) => (
