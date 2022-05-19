@@ -17,6 +17,7 @@ const style = StyleSheet.create({
     secundary: {
         marginTop: 5,
         marginBottom: 10,
+        fontSize: 19
     },
     color: {
         color: 'white'

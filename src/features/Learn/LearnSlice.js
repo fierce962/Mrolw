@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getStorage, setStorage } from "../../models/Storage";
-import { getWordsDb } from "../../database/database";
+import { getWordsRangeDb } from "../../database/database";
 
 export const getWords = createAsyncThunk(
     'learn/getWords',
@@ -8,12 +8,12 @@ export const getWords = createAsyncThunk(
         const words = await getStorage('words');
         let parseWords = JSON.parse(words);
         if(parseWords === null){
-            parseWords = createWordsObject(await getWordsDb(4));
+            parseWords = createWordsObject(await getWordsRangeDb(4));
         }else if(parseWords.day !== new Date().getDate()){
             if(parseWords.list.length === 0){
                 const maxid = getMaxId(parseWords.learn) + 5;
-                parseWords = createWordsObject(await getWordsDb(maxid));
-            }else {
+                parseWords = createWordsObject(await getWordsRangeDb(maxid));
+            }else{
                 parseWords.learn.forEach(learnWords => {
                     parseWords.list.push(learnWords);
                 });
@@ -56,11 +56,18 @@ function createWordsObject(addList, addLearn = []){
     }
 }
 
+function getMode(state){
+    if(state.words.list.length === 0 && state.words.learn.length !== 0){
+        return 'testMode';
+    }
+    return undefined;
+}
+
 const learnSlice = createSlice({
     name: 'learn',
     initialState: {
         words: undefined,
-        learnFishin: 'learnMode' | 'textMode',
+        mode: 'learnMode',
     },
     reducers: {
 
@@ -68,10 +75,13 @@ const learnSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getWords.fulfilled, (state, action) => {
             state.words = action.payload;
+            state.mode = getMode(state);
         }),
         builder.addCase(setLearnWord.fulfilled, (state, action) => {
             state.words.list = action.payload.newList;
             state.words.learn = action.payload.newLearn;
+            const mode = getMode(state)
+            if(mode !== undefined) state.mode = mode;
         })
     }
 })

@@ -16,28 +16,30 @@ function LearnText({ textTitle, text }){
     )
 }
 
-export default function CreateBoxLearnWord(){
-    const words = useSelector(state => state.learn.words);
-    const dispatch = useDispatch();
-    if(words === undefined){
-        dispatch(getWords());
-    }
-    if(words !== undefined && words !== null){
-        return (
-            <FlatList data={ words.list }
-                renderItem={ ({ item }) => (
-                    <View style={ style.contentBox }>
-                        <LearnText textTitle={ 'english' } text={ item.english } />
-                        <LearnText textTitle={ 'español' } text={ item.espanish } />
-                        <View style={ style.contentButton }>
-                            <CreateButton title={ 'Aprendido' } 
-                                fnPress={ () => dispatch(setLearnWord(0)) }
-                                size={ 18 } iconName={ 'thumbs-o-up' } 
-                                />
+export default function CreateBoxLearnWord({ viewRender }){
+    if(viewRender){
+        const words = useSelector(state => state.learn.words);
+        const dispatch = useDispatch();
+        if(words === undefined){
+            dispatch(getWords());
+        }
+        if(words !== undefined && words !== null){
+            return (
+                <FlatList data={ words.list }
+                    renderItem={ ({ item }) => (
+                        <View style={ style.contentBox }>
+                            <LearnText textTitle={ 'english' } text={ item.english } />
+                            <LearnText textTitle={ 'español' } text={ item.espanish } />
+                            <View style={ style.contentButton }>
+                                <CreateButton title={ 'Aprendido' } 
+                                    fnPress={ () => dispatch(setLearnWord(0)) }
+                                    size={ 18 } iconName={ 'thumbs-o-up' } 
+                                    />
+                            </View>
                         </View>
-                    </View>
-                ) }/>
-        );
+                    ) }/>
+            );
+        }
     }
     return null
 }

@@ -2,11 +2,11 @@ import { db } from './firebaseConfig';
 import { addDoc, getDocs, collection, limit, orderBy, query, where } from "firebase/firestore";
 
 
-export async function getWordsDb(rangeNumber){
+export async function getWordsRangeDb(rangeMax){
     try {
         const wordsList = [];
         const querySnapshot = await getDocs(query(collection(db, 'words'), 
-                where("id", ">=", rangeNumber - 4), where("id", "<=", rangeNumber),
+                where("id", ">=", rangeMax - 4), where("id", "<=", rangeMax),
                 orderBy('id', 'asc'), limit(5)));
         querySnapshot.forEach((doc) => {
             wordsList.push(doc.data());
