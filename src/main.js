@@ -6,7 +6,7 @@ import Navigation from './Views/Navigation';
 import DrawerButton from './components/DrawerButton';
 
 export default function Main() {
-    const drawerRef = useRef(null)
+    const drawerRef = useRef(null);
     return (
         <NavigationContainer >
             <DrawerLayoutAndroid

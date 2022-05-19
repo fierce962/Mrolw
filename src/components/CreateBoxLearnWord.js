@@ -1,12 +1,20 @@
 import React from "react";
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useSelector, useDispatch } from "react-redux";
 
-import { getWords } from '../features/Learn/LearnSlice';
+import { getWords, setLearnWord } from '../features/Learn/LearnSlice';
 
 import TextTitle from "./TextTitle";
 import CreateButton from "./CreateButton";
 
+function LearnText({ textTitle, text }){
+    return (
+        <View style={ style.contentText } >
+            <TextTitle text={ textTitle } typeStyle={ 'main' }/>
+            <Text style={ style.colorText } > { text } </Text>
+        </View>
+    )
+}
 
 export default function CreateBoxLearnWord(){
     const words = useSelector(state => state.learn.words);
@@ -14,22 +22,24 @@ export default function CreateBoxLearnWord(){
     if(words === undefined){
         dispatch(getWords());
     }
-    console.log(words)
-    return (
-        <View style={ style.contentBox }>
-            <View style={ style.contentText } >
-                <TextTitle text={ 'ingles' } typeStyle={ 'main' }/>
-                <Text style={ style.colorText } > experimentalist </Text>
-            </View>
-            <View style={ style.contentText } >
-                <TextTitle text={ 'español' } typeStyle={ 'main' }/>
-                <Text style={ style.colorText } > experimentador </Text>
-            </View>
-            <View style={ style.contentButton }>
-                <CreateButton title={ 'Aprendido' } size={ 18 } iconName={ 'thumbs-o-up' } />
-            </View>
-        </View>
-    );
+    if(words !== undefined){
+        return (
+            <FlatList data={ words.list }
+                renderItem={ ({ item }) => (
+                    <View style={ style.contentBox }>
+                        <LearnText textTitle={ 'english' } text={ item.english } />
+                        <LearnText textTitle={ 'español' } text={ item.espanish } />
+                        <View style={ style.contentButton }>
+                            <CreateButton title={ 'Aprendido' } 
+                                fnPress={ () => dispatch(setLearnWord(0)) }
+                                size={ 18 } iconName={ 'thumbs-o-up' } 
+                                />
+                        </View>
+                    </View>
+                ) }/>
+        );
+    }
+    return null
 }
 
 const style = StyleSheet.create({
