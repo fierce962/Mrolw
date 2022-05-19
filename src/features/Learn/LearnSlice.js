@@ -75,7 +75,8 @@ const learnSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getWords.fulfilled, (state, action) => {
             state.words = action.payload;
-            state.mode = getMode(state);
+            const mode = getMode(state)
+            if(mode !== undefined) state.mode = mode;
         }),
         builder.addCase(setLearnWord.fulfilled, (state, action) => {
             state.words.list = action.payload.newList;

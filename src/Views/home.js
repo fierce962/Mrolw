@@ -14,7 +14,7 @@ export default function Home() {
     return (
         <View style={ [{ padding: 10  }, { flex: 1 } ] }>
             <CreateBoxLearnWord viewRender={ mode === 'learnMode' ? true : false } />
-            <CreateBoxInformative />
+            {/* <CreateBoxInformative /> */}
         </View>
     )
 }
