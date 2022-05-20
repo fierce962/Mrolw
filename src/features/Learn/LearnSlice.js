@@ -2,6 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getStorage, setStorage } from "../../models/Storage";
 import { getWordsRangeDb } from "../../database/database";
 
+import { controllerNotifications } from "../../models/ControllerNotifications";
+
+
 export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
@@ -40,7 +43,8 @@ export const setLearnWord = createAsyncThunk(
         const list = words.list.filter((value, i) => i !== index);
         const learn = [... words.learn];
         learn.push(words.list[index]);
-        await setStorage('words', createWordsObject(list, learn))
+        await setStorage('words', createWordsObject(list, learn));
+        if(list.length === 0) await controllerNotifications.createNotification();
         return {
             newList: list,
             newLearn: learn 
