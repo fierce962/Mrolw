@@ -18,7 +18,7 @@ class ControllerNotifications{
         notifee.onBackgroundEvent(async ({ type, detail }) => {
             const { notification, pressAction } = detail;
             if(pressAction.id === 'open-wordel'){
-                controllerNavigation.get().navigate('wordel');
+                controllerNavigation.get().navigate('wordel', notification.data);
             }
         });
     }
@@ -41,6 +41,12 @@ class ControllerNotifications{
             {
                 title: 'Meeting with Jane',
                 body: 'Today at 11:20am',
+                data: {
+                    english: "makes",
+                    espanish: "hace",
+                    pronunciation: "māks",
+                    pronunciationSpanish: "meiks"
+                },
                 android: {
                     channelId: channelId,
                     sound: 'doorbell',

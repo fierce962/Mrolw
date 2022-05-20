@@ -18,6 +18,14 @@ class Storage{
             console.log('ha sucedido un error')
         }
     }
+
+    async removeStorage(){
+        try {
+            await AsyncStorage.removeItem('words');
+        } catch (error) {
+            console.log('error');
+        }
+    }
 }
 
-export const { getStorage, setStorage } = new Storage();
+export const { getStorage, setStorage, removeStorage } = new Storage();

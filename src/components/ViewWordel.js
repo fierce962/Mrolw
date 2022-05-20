@@ -7,27 +7,30 @@ import ModalAnimate from "./ModalAnimate";
 import CreateWordel from './CreateWordel';
 import CreateInputText from './CreateInputText';
 import TextTitle from "./TextTitle";
+
 import { setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFocus } from "../features/wordel/wordelSlice";
 import { assingModalParameters } from '../features/modal/modalSlice';
+import { loadWord } from "../features/pronunciation/pronunciationSlice";
 
-
-export default function ViewWordel(){
+export default function ViewWordel({ route }){
     const state = useSelector(state => state.wordel.attempts);
     const finish = useSelector(state => state.wordel.finish);
     const dispatch = useDispatch();
     const inputRef = useRef(null);
 
+
     useEffect(() => {
         if(finish[0]){
             const message = finish[1] === 'Fallaste' ? `Fallaste la respuesta correcta era: no te preocupes puedes intentarlo pronto` : 'La traduccion fue correcta';
             const type = finish[1] === 'Fallaste' ? 'close' : 'check'; 
-            const route = finish[1] === 'Fallaste' ? 'home' : 'voice';
-            dispatch(assingModalParameters({ type: type, message: message, route: route }));
+            const redirect = finish[1] === 'Fallaste' ? 'home' : 'voice';
+            if(type === 'check') dispatch(loadWord(route.params))
+            dispatch(assingModalParameters({ type: type, message: message, route: redirect }));
         }
     });
     
     if(!finish[0] && state[0]){
-        dispatch(createWordel('holacomo'.split('')));
+        dispatch(createWordel(route.params.english.split('')));
     }
 
     function keyPress(key){
@@ -67,11 +70,11 @@ export default function ViewWordel(){
             <ModalAnimate />
             <View style={ style.contentWordel } >
                 <TextTitle text={ 'quiz' } typeStyle={ 'main' } />
-                <TextTitle text={ `Traduzca: Principal` } typeStyle={ 'secundary' } />
+                <TextTitle text={ `Traduzca: ${ route.params.espanish }` } typeStyle={ 'secundary' } />
                 <Create />
                 <View style={ style.btn } >
                     <Button onPress={ () => {
-                            dispatch(newAttempts('holacomo'.split('')))
+                            dispatch(newAttempts(route.params.english.split('')))
                             inputRef.current.focus();
                         }}
                         title="Next" />

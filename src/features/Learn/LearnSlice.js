@@ -43,14 +43,28 @@ export const setLearnWord = createAsyncThunk(
         const list = words.list.filter((value, i) => i !== index);
         const learn = [... words.learn];
         learn.push(words.list[index]);
+        if(list.length === 0){
+            learn = CreateRamdonLearn(learn);
+            console.log('random learn', learn)
+            await controllerNotifications.createNotification();
+        } 
         await setStorage('words', createWordsObject(list, learn));
-        if(list.length === 0) await controllerNotifications.createNotification();
         return {
             newList: list,
             newLearn: learn 
         }
     }
 )
+
+function CreateRamdonLearn(learn){
+    const newLearn = [];
+    while(learn.length !== 0){
+        position = parseInt(Math.random() * learn.length);
+        let word = learn.splice(position, 1)
+        newLearn.push(word[0])
+    }
+    return newLearn;
+}
 
 function createWordsObject(addList, addLearn = []){
     return {
