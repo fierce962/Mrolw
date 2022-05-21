@@ -11,6 +11,7 @@ import TextTitle from "./TextTitle";
 import { setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFocus } from "../features/wordel/wordelSlice";
 import { assingModalParameters } from '../features/modal/modalSlice';
 import { loadWord } from "../features/pronunciation/pronunciationSlice";
+import { removeLearn } from '../features/Learn/LearnSlice';
 
 export default function ViewWordel({ route }){
     const state = useSelector(state => state.wordel.attempts);
@@ -24,7 +25,11 @@ export default function ViewWordel({ route }){
             const message = finish[1] === 'Fallaste' ? `Fallaste la respuesta correcta era: no te preocupes puedes intentarlo pronto` : 'La traduccion fue correcta';
             const type = finish[1] === 'Fallaste' ? 'close' : 'check'; 
             const redirect = finish[1] === 'Fallaste' ? 'home' : 'voice';
-            if(type === 'check') dispatch(loadWord(route.params))
+            if(type === 'check'){
+                console.log('finish')
+                dispatch(loadWord(route.params));
+                dispatch(removeLearn());
+            } 
             dispatch(assingModalParameters({ type: type, message: message, route: redirect }));
         }
     });

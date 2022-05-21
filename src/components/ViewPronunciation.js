@@ -13,7 +13,7 @@ export default function ViewPronunciation(){
         <View style={ style.contentPronunciation }>
             <View>
                 <View style={ style.viewTitle }>
-                    <TextTitle typeStyle={ 'main' }  text={ `Pronunacion de ${pronunciation.english}` } />
+                    <TextTitle typeStyle={ 'main' }  text={ `Pronunacion de ${ pronunciation.english }` } />
                 </View>
                 <TextTitle typeStyle={ 'secundary' }  
                     text={ 'Transformando de la pronunciacion en ingles utilizando el alfabeto fonetico en español seria' }/>

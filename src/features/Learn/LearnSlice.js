@@ -47,9 +47,8 @@ export const setLearnWord = createAsyncThunk(
             learn = CreateRamdonLearn(learn);
             try {
                 const notificationData =  {... learn[0]}
-                delete notificationData.id
-                await controllerNotifications.createNotification('Comienza la prueba', 
-                'Ya puedes practicar lo que aprendiste', notificationData, 300000);
+                delete notificationData.id;
+                await addNotification(notificationData);
             } catch (error) {
                 console.log(error)
             }
@@ -61,6 +60,23 @@ export const setLearnWord = createAsyncThunk(
         }
     }
 )
+
+export const removeLearn = createAsyncThunk(
+    'learn/remove',
+    async () => {
+        const words = JSON.parse(await getStorage('words'));
+        words.learn.shift();
+        await setStorage('words', words);
+        console.log(words.learn.length)
+        delete words.learn[0].id
+        await addNotification(words.learn[0]);
+    }
+)
+
+async function addNotification(data){
+    await controllerNotifications.createNotification('Comienza la prueba', 
+    'Ya puedes practicar lo que aprendiste', data, 60000);
+}
 
 function CreateRamdonLearn(learn){
     const newLearn = [];
@@ -107,6 +123,9 @@ const learnSlice = createSlice({
             state.words.learn = action.payload.newLearn;
             const mode = getMode(state)
             if(mode !== undefined) state.mode = mode;
+        }),
+        builder.addCase(removeLearn.fulfilled, () => {
+            console.log('resolve')
         })
     }
 })
