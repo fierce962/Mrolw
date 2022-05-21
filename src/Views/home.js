@@ -22,10 +22,10 @@ export default function Home() {
 
     return (
         <View style={ [{ padding: 10  }, { flex: 1 } ] }>
-            <Button title="create notification" onPress={() => controllerNotifications.createNotification() }/>
+            <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 60000) }/>
             <Button title="remove" onPress={() => removeStorage() }/>
-            {/* <CreateBoxLearnWord viewRender={ mode === 'learnMode' ? true : false } />
-            <CreateBoxInformative viewRender={ mode === 'testMode' ? true : false }/> */}
+            <CreateBoxLearnWord viewRender={ mode === 'learnMode' ? true : false } />
+            <CreateBoxInformative viewRender={ mode === 'testMode' ? true : false }/>
         </View>
     )
 }

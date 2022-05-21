@@ -13,7 +13,7 @@ import ModalAnimate from "./ModalAnimate";
 import FlotingMessage from "./FlotingMessage";
 import FloatingButton from "./FloatingButton";
 
-export default function VoiceToText(){
+export default function VoiceToText({ evaluatedText }){
     const dispatch = useDispatch();
     const record = useSelector(state => state.pronunciation.startRecord);
     const navigation = useNavigation();
@@ -29,7 +29,7 @@ export default function VoiceToText(){
 
     function onSpeechResultsHandler(e){
         let correct = e.value.some(voiceResults => {
-            if(voiceResults.includes('makes')) return true;
+            if(voiceResults.includes(evaluatedText)) return true;
         });
         if(correct){
             dispatch(assingModalParameters({ type: 'check', message: 'La Pronunciacion fue correcta', route: 'home' }));

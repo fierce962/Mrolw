@@ -27,7 +27,7 @@ export default function ViewPronunciation(){
                 </View>
             </View>
             <View>
-                <VoiceToText />
+                <VoiceToText evaluatedText={ pronunciation.english }/>
             </View>
         </View>
     );

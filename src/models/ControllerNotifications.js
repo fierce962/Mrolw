@@ -5,7 +5,7 @@ class ControllerNotifications{
 
     createListener(){
         this.createListenerFirstplane();
-        this.createListenerbackGround();
+        this.createListenerOpenNotification();
     }
 
     createListenerFirstplane(){
@@ -14,18 +14,19 @@ class ControllerNotifications{
         })
     }
 
-    createListenerbackGround(){
-        notifee.onBackgroundEvent(async ({ type, detail }) => {
-            const { notification, pressAction } = detail;
-            if(pressAction.id === 'open-wordel'){
-                controllerNavigation.get().navigate('wordel', notification.data);
+    createListenerOpenNotification(){
+        notifee.getInitialNotification().then(openNotification => {
+            if(openNotification !== null){
+                const { notification: { data }, pressAction } = openNotification;
+                if(pressAction.id === 'open-wordel'){
+                    controllerNavigation.get().navigate('wordel', data);
+                };
             }
         });
     }
 
-    async createNotification(){
-        const date = new Date(new Date().getTime() + 300);
-
+    async createNotification(title, body, dataInput = {}, time = 300){
+        const date = new Date(new Date().getTime() + time);
         const channelId = await notifee.createChannel({
             id: 'default',
             name: 'Default Channel',
@@ -39,14 +40,9 @@ class ControllerNotifications{
         
         await notifee.createTriggerNotification(
             {
-                title: 'Meeting with Jane',
-                body: 'Today at 11:20am',
-                data: {
-                    english: "makes",
-                    espanish: "hace",
-                    pronunciation: "māks",
-                    pronunciationSpanish: "meiks"
-                },
+                title: title,
+                body: body,
+                data: dataInput,
                 android: {
                     channelId: channelId,
                     sound: 'doorbell',

@@ -41,12 +41,18 @@ export const setLearnWord = createAsyncThunk(
     async (index, thunkApi) => {
         let words = thunkApi.getState().learn.words;
         const list = words.list.filter((value, i) => i !== index);
-        const learn = [... words.learn];
+        let learn = [... words.learn];
         learn.push(words.list[index]);
         if(list.length === 0){
             learn = CreateRamdonLearn(learn);
-            console.log('random learn', learn)
-            await controllerNotifications.createNotification();
+            try {
+                const notificationData =  {... learn[0]}
+                delete notificationData.id
+                await controllerNotifications.createNotification('Comienza la prueba', 
+                'Ya puedes practicar lo que aprendiste', notificationData, 300000);
+            } catch (error) {
+                console.log(error)
+            }
         } 
         await setStorage('words', createWordsObject(list, learn));
         return {
