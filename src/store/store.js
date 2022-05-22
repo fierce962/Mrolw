@@ -4,6 +4,7 @@ import pronunciationSlice from '../features/pronunciation/pronunciationSlice';
 import modalSlice from '../features/modal/modalSlice';
 import floatingButtonSlice from '../features/FloatingButton/floatingButtonSlice';
 import learnSlice from '../features/Learn/LearnSlice';
+import timerCountSlice from '../features/timerCount/timerCountSlice';
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         pronunciation: pronunciationSlice,
         modal: modalSlice,
         floatingBtn: floatingButtonSlice,
-        learn: learnSlice
+        learn: learnSlice,
+        timer: timerCountSlice
     },
 })

@@ -2,10 +2,10 @@ import React from "react";
 import { View, Text } from 'react-native';
 
 import TextTitle from "./TextTitle";
-import CreateButton from './CreateButton';
 
 
-export default function CreateBoxInformative({ viewRender, title, subtitle, message }){
+
+export default function CreateBoxInformative({ viewRender, title, subtitle, message, SubElement }){
     if(viewRender){
         return (
             <View>
@@ -14,6 +14,7 @@ export default function CreateBoxInformative({ viewRender, title, subtitle, mess
                 <Text style={{ color: '#fff' }}>
                     { message }
                 </Text>
+                <SubElement />
             </View>
         );
     }
