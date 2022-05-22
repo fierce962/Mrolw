@@ -5,15 +5,14 @@ import TextTitle from "./TextTitle";
 import CreateButton from './CreateButton';
 
 
-export default function CreateBoxInformative({ viewRender }){
+export default function CreateBoxInformative({ viewRender, title, subtitle, message }){
     if(viewRender){
         return (
             <View>
-                <TextTitle text={ 'Termino el modo estudio' } typeStyle={ 'main' } />
-                <TextTitle text={ 'Modo de pruebas' } typeStyle={ 'secundary' }/>
-                <Text style={{ color: '#fff' }}>llegara una notificacion informando cuando puedas 
-                    entrar al modo pruebas, en el cual tendras que traducir de 
-                    español a ingles una de las palabras aprendiste hoy.
+                <TextTitle text={ title } typeStyle={ 'main' } />
+                <TextTitle text={ subtitle } typeStyle={ 'secundary' }/>
+                <Text style={{ color: '#fff' }}>
+                    { message }
                 </Text>
             </View>
         );

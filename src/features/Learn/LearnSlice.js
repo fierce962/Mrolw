@@ -67,15 +67,18 @@ export const removeLearn = createAsyncThunk(
         const words = JSON.parse(await getStorage('words'));
         words.learn.shift();
         await setStorage('words', words);
-        console.log(words.learn.length)
-        delete words.learn[0].id
-        await addNotification(words.learn[0]);
+        console.log('logitud learns', words.learn.length)
+        if(words.learn.length !== 0){
+            delete words.learn[0].id
+            await addNotification(words.learn[0]);
+        }
+        return words;
     }
 )
 
 async function addNotification(data){
     await controllerNotifications.createNotification('Comienza la prueba', 
-    'Ya puedes practicar lo que aprendiste', data, 60000);
+    'Ya puedes practicar lo que aprendiste', data, 20000);
 }
 
 function CreateRamdonLearn(learn){
@@ -99,6 +102,8 @@ function createWordsObject(addList, addLearn = []){
 function getMode(state){
     if(state.words.list.length === 0 && state.words.learn.length !== 0){
         return 'testMode';
+    }else if(state.words.list.length === 0 && state.words.learn.length === 0){
+        return 'finishMode';
     }
     return undefined;
 }
@@ -124,8 +129,11 @@ const learnSlice = createSlice({
             const mode = getMode(state)
             if(mode !== undefined) state.mode = mode;
         }),
-        builder.addCase(removeLearn.fulfilled, () => {
-            console.log('resolve')
+        builder.addCase(removeLearn.fulfilled, (state, action) => {
+            state.words = action.payload;
+            const mode = getMode(state);
+            if(mode !== undefined) state.mode = mode;
+            console.log('remove learn', mode, state.words);
         })
     }
 })

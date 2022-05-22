@@ -16,16 +16,29 @@ export default function Home() {
     const navigation = useNavigation();
     controllerNavigation.set(navigation);
 
+    const information = {
+        title: 'Termino el modo estudio',
+        subtitle: 'Modo de pruebas',
+        message: 'llegara una notificacion informando cuando puedas entrar al modo pruebas, en el cual tendras que traducir de español a ingles una de las palabras aprendiste hoy.'
+    }
+    console.log(mode)
     useEffect(() => {
         controllerNotifications.createListener();
     })
+    if(mode === 'finishMode'){
+        information.title = 'termino';
+        information.subtitle = 'termino';
+        information.message = 'termino';
+    }
 
     return (
         <View style={ [{ padding: 10  }, { flex: 1 } ] }>
             <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 60000) }/>
             <Button title="remove" onPress={() => removeStorage() }/>
             <CreateBoxLearnWord viewRender={ mode === 'learnMode' ? true : false } />
-            <CreateBoxInformative viewRender={ mode === 'testMode' ? true : false }/>
+            <CreateBoxInformative viewRender={ mode === 'testMode' || 'finishMode' ? true : false }
+                title={ information.title } subtitle={ information.subtitle } 
+                message={ information.message } />
         </View>
     )
 }

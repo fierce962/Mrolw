@@ -26,7 +26,6 @@ export default function ViewWordel({ route }){
             const type = finish[1] === 'Fallaste' ? 'close' : 'check'; 
             const redirect = finish[1] === 'Fallaste' ? 'home' : 'voice';
             if(type === 'check'){
-                console.log('finish')
                 dispatch(loadWord(route.params));
                 dispatch(removeLearn());
             } 
