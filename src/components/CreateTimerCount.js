@@ -8,7 +8,6 @@ import { restTime } from '../features/timerCount/timerCountSlice';
 export default function CreateTimerCount({ fnPress }){
     const dispatch = useDispatch();
     const time = useSelector(state => state.timer.timeRemaining);
-    console.log('calc time', time)
     if(time === undefined){
         return null
     }

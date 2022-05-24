@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableHighlight, View, Text, StyleSheet, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Voice from '@react-native-voice/voice';
@@ -17,11 +17,13 @@ export default function VoiceToText({ evaluatedText }){
     const dispatch = useDispatch();
     const record = useSelector(state => state.pronunciation.startRecord);
     const navigation = useNavigation();
-
-    Voice.onSpeechStart = onSpeechStartHandler;
-    Voice.onSpeechResults = onSpeechResultsHandler;
-    Voice.onSpeechEnd = onSpeechEndHandler;
-    Voice.onSpeechError = onErrorHandler;
+    console.log('evalate text1', evaluatedText)
+    useEffect(() => {
+        Voice.onSpeechStart = onSpeechStartHandler;
+        Voice.onSpeechResults = onSpeechResultsHandler;
+        Voice.onSpeechEnd = onSpeechEndHandler;
+        Voice.onSpeechError = onErrorHandler;
+    });
 
     function onSpeechStartHandler(e){
         //console.log(e);
@@ -29,6 +31,7 @@ export default function VoiceToText({ evaluatedText }){
 
     function onSpeechResultsHandler(e){
         let correct = e.value.some(voiceResults => {
+            console.log('evalate text2', evaluatedText)
             if(voiceResults.includes(evaluatedText)) return true;
         });
         if(correct){
@@ -37,6 +40,7 @@ export default function VoiceToText({ evaluatedText }){
             dispatch(assingModalParameters({ type: 'close', message: 'La Pronunciacion fue incorrecta puedes intentarlo cuantas veces quieras' }));
             dispatch(setParameters({ title: 'salir', view: true }))
         }
+        Voice.destroy();
     }
 
     function onErrorHandler(e){

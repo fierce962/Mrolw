@@ -30,7 +30,7 @@ class ControllerNotifications{
         const channelId = await notifee.createChannel({
             id: 'default',
             name: 'Default Channel',
-            sound: 'doorbell'
+            sound:"doorbell"
         });
 
         const trigger = {
@@ -45,7 +45,7 @@ class ControllerNotifications{
                 data: dataInput,
                 android: {
                     channelId: channelId,
-                    sound: 'doorbell',
+                    sound: "doorbell",
                     pressAction: {
                         id: 'open-wordel',
                         launchActivity: 'default',

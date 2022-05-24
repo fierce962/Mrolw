@@ -8,11 +8,10 @@ import CreateWordel from './CreateWordel';
 import CreateInputText from './CreateInputText';
 import TextTitle from "./TextTitle";
 
-import { clearWordel, setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFocus } from "../features/wordel/wordelSlice";
+import { setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFocus } from "../features/wordel/wordelSlice";
 import { assingModalParameters } from '../features/modal/modalSlice';
 import { loadWord } from "../features/pronunciation/pronunciationSlice";
 import { removeLearn } from '../features/Learn/LearnSlice';
-import { calcTime } from "../features/timerCount/timerCountSlice";
 
 export default function ViewWordel({ route }){
     const state = useSelector(state => state.wordel.attempts);

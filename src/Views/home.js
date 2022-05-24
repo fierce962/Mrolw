@@ -10,6 +10,7 @@ import CreateTimerCount from "../components/CreateTimerCount";
 
 import { controllerNotifications } from "../models/ControllerNotifications";
 import { removeStorage, getStorage } from '../models/Storage';
+import { clearWordel } from "../features/wordel/wordelSlice";
 
 import { calcTime } from "../features/timerCount/timerCountSlice";
 
@@ -18,8 +19,6 @@ export default function Home() {
     const mode = useSelector(state => state.learn.mode);
     const navigation = useNavigation();
     controllerNavigation.set(navigation);
-
-    console.log('home', mode)
 
     const information = {
         title: 'Termino el modo estudio',
@@ -42,9 +41,10 @@ export default function Home() {
 
     function timer(){
         if(mode[0] === 'testMode'){
+            return null
             return <CreateTimerCount fnPress={ async () => {
                 const words = JSON.parse(await getStorage('words'));
-                console.log(words.learn.length)
+                dispatch(clearWordel())
                 navigation.navigate('wordel', words.learn[0])
             } }/>
         }
@@ -53,7 +53,7 @@ export default function Home() {
 
     return (
         <View style={ [{ padding: 10  }, { flex: 1 } ] }>
-            <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 60000) }/>
+            <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) }/>
             <Button title="remove" onPress={() => removeStorage() }/>
             <CreateBoxLearnWord viewRender={ mode[0] === 'learnMode' ? true : false } />
             <CreateBoxInformative viewRender={
@@ -62,11 +62,11 @@ export default function Home() {
                 }
                 title={ information.title } subtitle={ information.subtitle } 
                 message={ information.message } SubElement={ timer } />
-            {/* <Button title="test" onPress={ async () => {
+            <Button title="test" onPress={ async () => {
                 const words = JSON.parse(await getStorage('words'));
-                console.log(words.learn.length)
+                dispatch(clearWordel())
                 navigation.navigate('wordel', words.learn[0])
-            }} /> */}
+            }} />
         </View>
     )
 }

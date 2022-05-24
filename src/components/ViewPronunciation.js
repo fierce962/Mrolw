@@ -7,7 +7,6 @@ import TextTitle from "./TextTitle";
 
 export default function ViewPronunciation(){
     const pronunciation = useSelector(state => state.pronunciation.words);
-    const testEnd = useSelector(state => state.pronunciation.testEnd);
 
     return (
         <View style={ style.contentPronunciation }>
