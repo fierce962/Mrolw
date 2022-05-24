@@ -1,17 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getStorage } from "../../models/Storage";
+
+export const calcTime = createAsyncThunk(
+    'timet/calctime',
+    async () => {
+        const storageDate = new Date(JSON.parse(await getStorage('proxTestMode')));
+        let calc = (storageDate.getTime() - new Date().getTime()) / 60000;
+        calc = parseInt(calc);
+        if(calc >= 10){
+            calc = calc.toString();
+        }else if(calc > 0){
+            calc = `0${ calc }`;
+        }
+        if(calc <= 0) calc = '00';
+        return [storageDate.toString(), calc]
+    }
+)
+
 
 const timerCounter = createSlice({
     name: 'timer',
     initialState: {
-        goalDate: '2022-05-24T11:56:28.312Z',
+        goalDate: undefined,
         timeRemaining: undefined
     },
     reducers: {
-        calcTime(state){
-            console.log('calctime')
-            let actualDate = new Date();
-            state.timeRemaining = parseInt((new Date(state.goalDate).getTime() - actualDate.getTime()) / 60000).toString();
-        },
         restTime(state){
             if(parseInt(state.timeRemaining) - 1 >= 10){
                 state.timeRemaining = (parseInt(state.timeRemaining) - 1).toString();
@@ -19,8 +32,14 @@ const timerCounter = createSlice({
                 state.timeRemaining = `0${ parseInt(state.timeRemaining) - 1 }`;
             }
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(calcTime.fulfilled, (state, action) => {
+            state.goalDate = action.payload[0];
+            state.timeRemaining = action.payload[1];
+        });
     }
 });
 
 export default timerCounter.reducer;
-export const { calcTime, restTime } = timerCounter.actions;
+export const { restTime } = timerCounter.actions;

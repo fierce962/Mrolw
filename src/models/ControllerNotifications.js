@@ -27,7 +27,6 @@ class ControllerNotifications{
 
     async createNotification(title, body, dataInput = {}, time = 300){
         const date = new Date(new Date().getTime() + time);
-        console.log(date);
         const channelId = await notifee.createChannel({
             id: 'default',
             name: 'Default Channel',

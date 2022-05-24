@@ -10,6 +10,14 @@ const wordelSlice = createSlice({
         finish: [false]
     },
     reducers: {
+        clearWordel: (state) => {
+            console.log('clear wordel')
+            state.wordel = [],
+            state.actualIndex = 0,
+            state.seletIndex = undefined,
+            state.attempts = [true],
+            state.finish = [false]
+        },
         newAttempts: (state, action) => {
             let [valid, finish] = validNew(state.wordel[state.wordel.length - 1], action.payload);
             if(finish || state.wordel.length + 1 === 4){
@@ -129,5 +137,5 @@ function resIncorrect(wordel, word){
     });
 }
 
-export const { createWordel, setActualWorlde, selectWordel, newAttempts, blurWordelFocus } = wordelSlice.actions;
+export const { clearWordel, createWordel, setActualWorlde, selectWordel, newAttempts, blurWordelFocus } = wordelSlice.actions;
 export default wordelSlice.reducer;

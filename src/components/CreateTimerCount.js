@@ -1,61 +1,70 @@
 import React from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+
+import CreateButton from './CreateButton';
 import { restTime } from '../features/timerCount/timerCountSlice';
 
-export default function CreateTimerCount(){
+export default function CreateTimerCount({ fnPress }){
     const dispatch = useDispatch();
-    const goalDate = useSelector(state => state.timer.goalDate);
     const time = useSelector(state => state.timer.timeRemaining);
+    console.log('calc time', time)
+    if(time === undefined){
+        return null
+    }
 
-    let animate = new Animated.Value(0);
-    Animated.timing(animate, {
-        toValue: -40,
-        duration: 1000,
-        useNativeDriver: false,
-        delay: 3000
-    }).start();
+    if(time !== '00'){
+        let animate = new Animated.Value(0);
+        Animated.timing(animate, {
+            toValue: -40,
+            duration: 1000,
+            useNativeDriver: false,
+            delay: 59000
+        }).start();
 
-    if(time >= 0){
         setTimeout(() => {
-            console.log('time out');
             Animated.timing(animate, {
                 toValue: 0,
                 duration: 0,
                 useNativeDriver: false,
             }).start();
             dispatch(restTime());
-        }, 4000);
+        }, 60000);
+
+        const fisrtNumber = [
+            style.viewAnimation,
+            time[1] - 1 < 0 && time[0] !== '0' && { bottom: animate },
+            time[1] - 1 >= 0 && { bottom: 0 },
+        ]
+        
+        return (
+            <View style={ style.contentTimer }>
+                <View style={ style.contentText }>
+                    <Animated.View style={ fisrtNumber }>
+                        <Text style={ style.textTimer }>{ time[0] - 1 }</Text>
+                        <Text style={ style.textTimer }>{ time[0] }</Text>
+                    </Animated.View>
+                </View>
+                <View style={ style.contentText }>
+                    <Animated.View style={[ style.viewAnimation, { bottom: animate } ]}>
+                        <Text style={ style.textTimer }>{ time[1] === '0' ? 9 : time[1] - 1 }</Text>
+                        <Text style={ style.textTimer }>{ time[1] }</Text>
+                    </Animated.View>
+                </View>
+            </View>
+        )
     }else{
-        console.log('ya no mas')
+        return <CreateButton title={ 'Practica' } size={ 22 } 
+                    iconName={ 'angle-double-right' } 
+                    fnPress={ fnPress } />
     }
 
-    const fisrtNumber = [
-        style.viewAnimation,
-        time[1] - 1 < 0 && { bottom: animate },
-        time[1] - 1 >= 0 && { bottom: 0 }
-    ]
-    
-    return (
-        <View style={ style.contentTimer }>
-            <View style={ style.contentText }>
-                <Animated.View style={ fisrtNumber }>
-                    <Text style={ style.textTimer }>{ time[0] - 1 }</Text>
-                    <Text style={ style.textTimer }>{ time[0] }</Text>
-                </Animated.View>
-            </View>
-            <View style={ style.contentText }>
-                <Animated.View style={[ style.viewAnimation, { bottom: animate } ]}>
-                    <Text style={ style.textTimer }>{ time[1] === '0' ? 9 : time[1] - 1 }</Text>
-                    <Text style={ style.textTimer }>{ time[1] }</Text>
-                </Animated.View>
-            </View>
-        </View>
-    )
+
 }
 
 const style = StyleSheet.create({
     contentTimer: {
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
@@ -64,7 +73,6 @@ const style = StyleSheet.create({
         width: 25,
         height: 40,
         alignItems: 'center',
-        backgroundColor: 'red',
         position: 'relative',
         overflow: 'hidden'
     },

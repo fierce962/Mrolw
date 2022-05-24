@@ -9,19 +9,17 @@ import CreateBoxInformative from "../components/CreateBoxInformative";
 import CreateTimerCount from "../components/CreateTimerCount";
 
 import { controllerNotifications } from "../models/ControllerNotifications";
+import { removeStorage, getStorage } from '../models/Storage';
 
-import { removeStorage } from '../models/Storage';
-
-//por ahora
 import { calcTime } from "../features/timerCount/timerCountSlice";
 
 export default function Home() {
+    const dispatch = useDispatch();
     const mode = useSelector(state => state.learn.mode);
     const navigation = useNavigation();
     controllerNavigation.set(navigation);
 
-    const dispatch = useDispatch();
-    dispatch(calcTime())
+    console.log('home', mode)
 
     const information = {
         title: 'Termino el modo estudio',
@@ -31,31 +29,44 @@ export default function Home() {
     
     useEffect(() => {
         controllerNotifications.createListener();
+        if(mode[0] === 'testMode'){
+            dispatch(calcTime());
+        }
     })
-    if(mode === 'finishMode'){
+
+    if(mode[0] === 'finishMode'){
         information.title = 'termino';
         information.subtitle = 'termino';
         information.message = 'termino';
     }
 
-    function CreateButton(){
-        return (
-            <Button title="test" onPress={ () => console.log('hola') }/>
-        )
+    function timer(){
+        if(mode[0] === 'testMode'){
+            return <CreateTimerCount fnPress={ async () => {
+                const words = JSON.parse(await getStorage('words'));
+                console.log(words.learn.length)
+                navigation.navigate('wordel', words.learn[0])
+            } }/>
+        }
+        return null
     }
 
     return (
         <View style={ [{ padding: 10  }, { flex: 1 } ] }>
-            {/* <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 60000) }/>
+            <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 60000) }/>
             <Button title="remove" onPress={() => removeStorage() }/>
-            <CreateBoxLearnWord viewRender={ mode === 'learnMode' ? true : false } />
+            <CreateBoxLearnWord viewRender={ mode[0] === 'learnMode' ? true : false } />
             <CreateBoxInformative viewRender={
-                    mode === 'testMode' ? true : 
-                    mode === 'finishMode' ? true : false
+                    mode[0] === 'testMode' ? true : 
+                    mode[0] === 'finishMode' ? true : false
                 }
                 title={ information.title } subtitle={ information.subtitle } 
-                message={ information.message } SubElement={ CreateButton }/> */}
-            <CreateTimerCount />
+                message={ information.message } SubElement={ timer } />
+            {/* <Button title="test" onPress={ async () => {
+                const words = JSON.parse(await getStorage('words'));
+                console.log(words.learn.length)
+                navigation.navigate('wordel', words.learn[0])
+            }} /> */}
         </View>
     )
 }

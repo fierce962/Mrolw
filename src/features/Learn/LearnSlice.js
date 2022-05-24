@@ -67,7 +67,6 @@ export const removeLearn = createAsyncThunk(
         const words = JSON.parse(await getStorage('words'));
         words.learn.shift();
         await setStorage('words', words);
-        console.log('logitud learns', words.learn.length)
         if(words.learn.length !== 0){
             delete words.learn[0].id
             await addNotification(words.learn[0]);
@@ -78,7 +77,8 @@ export const removeLearn = createAsyncThunk(
 
 async function addNotification(data){
     await controllerNotifications.createNotification('Comienza la prueba', 
-    'Ya puedes practicar lo que aprendiste', data, 20000);
+    'Ya puedes practicar lo que aprendiste', data, 180000);
+    await setStorage('proxTestMode', new Date( new Date().getTime() + 180000 ));
 }
 
 function CreateRamdonLearn(learn){
@@ -112,7 +112,7 @@ const learnSlice = createSlice({
     name: 'learn',
     initialState: {
         words: undefined,
-        mode: 'learnMode',
+        mode: ['learnMode'],
     },
     reducers: {
 
@@ -120,20 +120,19 @@ const learnSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getWords.fulfilled, (state, action) => {
             state.words = action.payload;
-            const mode = getMode(state)
-            if(mode !== undefined) state.mode = mode;
+            const mode = [getMode(state)];
+            if(mode[0] !== undefined) state.mode = mode;
         }),
         builder.addCase(setLearnWord.fulfilled, (state, action) => {
             state.words.list = action.payload.newList;
             state.words.learn = action.payload.newLearn;
-            const mode = getMode(state)
-            if(mode !== undefined) state.mode = mode;
+            const mode = [getMode(state)];
+            if(mode[0] !== undefined) state.mode = mode;
         }),
         builder.addCase(removeLearn.fulfilled, (state, action) => {
             state.words = action.payload;
-            const mode = getMode(state);
-            if(mode !== undefined) state.mode = mode;
-            console.log('remove learn', mode, state.words);
+            const mode = [getMode(state)];
+            if(mode[0] !== undefined) state.mode = mode;
         })
     }
 })
