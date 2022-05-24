@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 class Storage{
     async getStorage(nameItem){
         try {
-            return await AsyncStorage.getItem(nameItem);
+            return JSON.parse(await AsyncStorage.getItem(nameItem));
         } catch (error) {
             console.log('ha sucedido un error');
         }

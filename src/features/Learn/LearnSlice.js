@@ -8,19 +8,28 @@ import { controllerNotifications } from "../../models/ControllerNotifications";
 export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
-        const words = await getStorage('words');
-        let parseWords = JSON.parse(words);
-        if(parseWords === null){
-            parseWords = createWordsObject(await getWordsRangeDb(4));
-        }else if(parseWords.day !== new Date().getDate()){
-            if(parseWords.list.length === 0){
-                const maxid = getMaxId(parseWords.learn) + 5;
-                parseWords = createWordsObject(await getWordsRangeDb(maxid));
-            }else{
+        let parseWords = await getStorage('words');
+        if(parseWords === null || parseWords.day !== new Date().getDate()){
+            if(parseWords === null) parseWords = {};
+            const maxId = parseWords.maxId === undefined ? 4 : parseWords.maxId; 
+            let limit = 5;
+            if(parseWords.learn !== undefined && parseWords.learn.length !== 0){
                 parseWords.learn.forEach(learnWords => {
                     parseWords.list.push(learnWords);
                 });
-                parseWords = createWordsObject(parseWords.list);
+                limit += -parseWords.list.length;
+            };
+            if(limit !== 0){
+                const newList = await getWordsRangeDb(maxId, limit);
+                const olwList = parseWords.list === undefined ? [] : parseWords.list;
+                parseWords = createWordsObject(olwList);
+                newList.forEach(wordList =>{
+                    parseWords.list.push(wordList);
+                });
+                parseWords.maxId = getMaxId(parseWords.list);
+            }else{
+                parseWords.day = new Date().getDate();
+                parseWords.learn = [];
             }
         }
         await setStorage('words', parseWords);
@@ -33,7 +42,7 @@ function getMaxId(learnList){
     learnList.forEach(learnWord => {
         ids.push(learnWord.id);
     })
-    return Math.max(... ids)
+    return Math.max(... ids) + 5;
 }
 
 export const setLearnWord = createAsyncThunk(
@@ -53,7 +62,7 @@ export const setLearnWord = createAsyncThunk(
                 console.log(error)
             }
         } 
-        await setStorage('words', createWordsObject(list, learn));
+        await setStorage('words', createWordsObject(list, learn, words.maxId));
         return {
             newList: list,
             newLearn: learn 
@@ -64,7 +73,7 @@ export const setLearnWord = createAsyncThunk(
 export const removeLearn = createAsyncThunk(
     'learn/remove',
     async () => {
-        const words = JSON.parse(await getStorage('words'));
+        const words = await getStorage('words')
         words.learn.shift();
         await setStorage('words', words);
         if(words.learn.length !== 0){
@@ -91,11 +100,12 @@ function CreateRamdonLearn(learn){
     return newLearn;
 }
 
-function createWordsObject(addList, addLearn = []){
+function createWordsObject(addList = [], addLearn = [], maxId = 0){
     return {
         day: new Date().getDate(),
         list: addList,
-        learn: addLearn
+        learn: addLearn,
+        maxId: maxId
     }
 }
 

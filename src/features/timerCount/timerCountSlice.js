@@ -4,7 +4,7 @@ import { getStorage } from "../../models/Storage";
 export const calcTime = createAsyncThunk(
     'timet/calctime',
     async () => {
-        const storageDate = new Date(JSON.parse(await getStorage('proxTestMode')));
+        const storageDate = new Date(await getStorage('proxTestMode'));
         let calc = (storageDate.getTime() - new Date().getTime()) / 60000;
         calc = parseInt(calc);
         if(calc >= 10){

@@ -41,10 +41,10 @@ export default function Home() {
 
     function timer(){
         if(mode[0] === 'testMode'){
-            return null
             return <CreateTimerCount fnPress={ async () => {
-                const words = JSON.parse(await getStorage('words'));
+                const words = await getStorage('words');
                 dispatch(clearWordel())
+                controllerNotifications.removeNotification('notificationId')
                 navigation.navigate('wordel', words.learn[0])
             } }/>
         }
@@ -63,8 +63,9 @@ export default function Home() {
                 title={ information.title } subtitle={ information.subtitle } 
                 message={ information.message } SubElement={ timer } />
             <Button title="test" onPress={ async () => {
-                const words = JSON.parse(await getStorage('words'));
+                const words = await getStorage('words');
                 dispatch(clearWordel())
+                controllerNotifications.removeNotification('notificationId')
                 navigation.navigate('wordel', words.learn[0])
             }} />
         </View>

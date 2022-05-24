@@ -1,6 +1,7 @@
 import React from 'react';
 import notifee, { TriggerType, EventType } from '@notifee/react-native';
 import { controllerNavigation } from './ControllerNavigation'
+import { setStorage, getStorage } from '../models/Storage'
 class ControllerNotifications{
 
     createListener(){
@@ -10,7 +11,10 @@ class ControllerNotifications{
 
     createListenerFirstplane(){
         notifee.onForegroundEvent(({ type, detail }) => {
-            console.log('action')
+            if(type === EventType.DELIVERED){
+                notifee.cancelNotification(detail.notification.id)
+                console.log('se cancelo')
+            }
         })
     }
 
@@ -25,12 +29,18 @@ class ControllerNotifications{
         });
     }
 
+    async removeNotification(nameStore){
+        console.log('fn remove remove notification')
+        let id = await getStorage(nameStore);
+        await notifee.cancelNotification(id);
+    }
+
     async createNotification(title, body, dataInput = {}, time = 300){
         const date = new Date(new Date().getTime() + time);
         const channelId = await notifee.createChannel({
             id: 'default',
             name: 'Default Channel',
-            sound:"doorbell"
+            sound: 'default'
         });
 
         const trigger = {
@@ -38,14 +48,14 @@ class ControllerNotifications{
             timestamp: date.getTime(), 
         }
         
-        await notifee.createTriggerNotification(
+        const notificationId = await notifee.createTriggerNotification(
             {
                 title: title,
                 body: body,
                 data: dataInput,
                 android: {
                     channelId: channelId,
-                    sound: "doorbell",
+                    sound: "default",
                     pressAction: {
                         id: 'open-wordel',
                         launchActivity: 'default',
@@ -54,6 +64,8 @@ class ControllerNotifications{
             },
             trigger,
         );
+
+        await setStorage('notificationId', notificationId)
     }
 }
 
