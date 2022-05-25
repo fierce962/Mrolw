@@ -1,9 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { useSelector } from "react-redux";
-
+import Tts from 'react-native-tts';
 import VoiceToText from "./VoiceToText";
 import TextTitle from "./TextTitle";
+import IconTouchable from './IconTouchable';
+
 
 export default function ViewPronunciation(){
     const pronunciation = useSelector(state => state.pronunciation.words);
@@ -20,6 +22,7 @@ export default function ViewPronunciation(){
             <View style={ style.contenCentral }>
                 <View style={ style.pronunciationView }>
                     <Text style={ style.textPronunciation }>{ pronunciation.pronunciationSpanish }</Text>
+                    <IconTouchable iconName={ 'volume-up' } sizeIcon={ 40 } fnPress={ () => Tts.speak(pronunciation.english) }/>
                 </View>
                 <View style={ { alignItems: 'center' } }>
                     <Text style={ style.text }>Ponte a prueba intentalo</Text>
@@ -49,7 +52,8 @@ const style = StyleSheet.create({
     pronunciationView: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        flexDirection: 'row'
     },
     textPronunciation: {
         color: 'white',

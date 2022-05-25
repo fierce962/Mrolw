@@ -22,6 +22,7 @@ export default function CreateTimerCount({ fnPress }){
         }).start();
 
         setTimeout(() => {
+            console.log('set time aout')
             Animated.timing(animate, {
                 toValue: 0,
                 duration: 0,
@@ -57,8 +58,6 @@ export default function CreateTimerCount({ fnPress }){
                     iconName={ 'angle-double-right' } 
                     fnPress={ fnPress } />
     }
-
-
 }
 
 const style = StyleSheet.create({

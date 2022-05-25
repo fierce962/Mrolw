@@ -23,6 +23,8 @@ target 'Mrowl' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'TextToSpeech', :path => '../node_modules/react-native-tts'
+
   target 'MrowlTests' do
     inherit! :complete
     # Pods for testing

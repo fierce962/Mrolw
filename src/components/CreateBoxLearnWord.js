@@ -26,13 +26,13 @@ export default function CreateBoxLearnWord({ viewRender }){
         if(words !== undefined && words !== null){
             return (
                 <FlatList data={ words.list }
-                    renderItem={ ({ item }) => (
+                    renderItem={ ({ item, index }) => (
                         <View style={ style.contentBox }>
                             <LearnText textTitle={ 'english' } text={ item.english } />
                             <LearnText textTitle={ 'español' } text={ item.espanish } />
                             <View style={ style.contentButton }>
                                 <CreateButton title={ 'Aprendido' } 
-                                    fnPress={ () => dispatch(setLearnWord(0)) }
+                                    fnPress={ () => dispatch(setLearnWord(index)) }
                                     size={ 18 } iconName={ 'thumbs-o-up' } 
                                     />
                             </View>
@@ -41,6 +41,7 @@ export default function CreateBoxLearnWord({ viewRender }){
             );
         }
     }
+    console.log('return null')
     return null
 }
 

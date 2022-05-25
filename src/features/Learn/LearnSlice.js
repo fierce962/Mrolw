@@ -9,6 +9,7 @@ export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
         let parseWords = await getStorage('words');
+        console.log(parseWords)
         if(parseWords === null || parseWords.day !== new Date().getDate()){
             if(parseWords === null) parseWords = {};
             const maxId = parseWords.maxId === undefined ? 4 : parseWords.maxId; 
@@ -17,8 +18,8 @@ export const getWords = createAsyncThunk(
                 parseWords.learn.forEach(learnWords => {
                     parseWords.list.push(learnWords);
                 });
-                limit += -parseWords.list.length;
             };
+            limit += -parseWords.list.length;
             if(limit !== 0){
                 const newList = await getWordsRangeDb(maxId, limit);
                 const olwList = parseWords.list === undefined ? [] : parseWords.list;
@@ -37,6 +38,21 @@ export const getWords = createAsyncThunk(
     }
 )
 
+export const searchWords = createAsyncThunk(
+    'learn/searchNewWords',
+    async () => {
+        try {
+            let words = await getStorage('words');
+            words.list = await getWordsRangeDb(words.maxId, 5);
+            words.maxId = getMaxId(words.list);
+            await setStorage('words', words);
+            return words;
+        } catch (error) {
+            console.log('seachWords', error)
+        }
+    }
+);
+
 function getMaxId(learnList){
     const ids = [];
     learnList.forEach(learnWord => {
@@ -49,6 +65,7 @@ export const setLearnWord = createAsyncThunk(
     'learn/setWord',
     async (index, thunkApi) => {
         let words = thunkApi.getState().learn.words;
+        console.log('index', index)
         const list = words.list.filter((value, i) => i !== index);
         let learn = [... words.learn];
         learn.push(words.list[index]);
@@ -81,6 +98,25 @@ export const removeLearn = createAsyncThunk(
             await addNotification(words.learn[0]);
         }
         return words;
+    }
+)
+
+export const errorLearn = createAsyncThunk(
+    'learn/ErrorResults',
+    async () => {
+        try {
+            const words = await getStorage('words')
+            const remove = words.learn.shift();
+            words.learn.push(remove);
+            if(words.learn.length !== 0){
+                delete words.learn[0].id
+                await addNotification(words.learn[0]);
+            }
+            await setStorage('words', words);
+            return words;
+        } catch (error) {
+            console.log('learn/errorResults', error)
+        }
     }
 )
 
@@ -143,6 +179,15 @@ const learnSlice = createSlice({
             state.words = action.payload;
             const mode = [getMode(state)];
             if(mode[0] !== undefined) state.mode = mode;
+        }),
+        builder.addCase(searchWords.fulfilled, (state, action) => {
+            state.words = action.payload;
+            state.mode = ['learnMode'];
+        }),
+        builder.addCase(errorLearn.fulfilled, (state, action) => {
+            console.log(action.payload);
+            state.words = action.payload;
+            state.mode = ['testMode'];
         })
     }
 })

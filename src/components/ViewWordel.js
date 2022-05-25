@@ -11,7 +11,7 @@ import TextTitle from "./TextTitle";
 import { setActualWorlde, createWordel, selectWordel, newAttempts, blurWordelFocus } from "../features/wordel/wordelSlice";
 import { assingModalParameters } from '../features/modal/modalSlice';
 import { loadWord } from "../features/pronunciation/pronunciationSlice";
-import { removeLearn } from '../features/Learn/LearnSlice';
+import { removeLearn, errorLearn } from '../features/Learn/LearnSlice';
 
 export default function ViewWordel({ route }){
     const state = useSelector(state => state.wordel.attempts);
@@ -27,7 +27,9 @@ export default function ViewWordel({ route }){
             if(type === 'check'){
                 dispatch(loadWord(route.params));
                 dispatch(removeLearn());
-            } 
+            }else{
+                dispatch(errorLearn());
+            }
             dispatch(assingModalParameters({ type: type, message: message, route: redirect }));
         }
     });
