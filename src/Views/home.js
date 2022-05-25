@@ -22,7 +22,7 @@ export default function Home() {
     controllerNavigation.set(navigation);
 
     const information = {
-        title: 'Termino el modo estudio',
+        title: 'se acabo el estudio',
         subtitle: 'Modo de pruebas',
         message: 'llegara una notificacion informando cuando puedas entrar al modo pruebas, en el cual tendras que traducir de español a ingles una de las palabras aprendiste hoy.'
     }
@@ -35,9 +35,9 @@ export default function Home() {
     })
 
     if(mode[0] === 'finishMode'){
-        information.title = 'termino';
-        information.subtitle = 'termino';
-        information.message = 'termino';
+        information.title = 'terminaste por hoy';
+        information.subtitle = '¿Fue muy facil quieres seguir?';
+        information.message = 'Puedes solicitar mas palabras por el dia de hoy si lo deseas';
     }
 
     function timer(){
@@ -49,7 +49,7 @@ export default function Home() {
                 navigation.navigate('wordel', words.learn[0])
             } }/>
         }
-        return <CreateButton title={ 'Buscar Mas palabras' } size={ 20 } fnPress={ () => dispatch(searchWords()) } />
+        return <CreateButton title={ 'Solicitar mas palabras' } size={ 20 } fnPress={ () => dispatch(searchWords()) } />
     }
 
     function HasLearnMode(){
@@ -64,8 +64,8 @@ export default function Home() {
 
     return (
         <View style={ [{ padding: 10  }, { flex: 1 } ] }>
-            <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) }/>
-            <Button title="remove" onPress={() => removeStorage() }/>
+            {/* <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) }/>
+            <Button title="remove" onPress={() => removeStorage() }/> */}
             <HasLearnMode />
             {/* <Button title="test" onPress={ async () => {
                 const words = await getStorage('words');
