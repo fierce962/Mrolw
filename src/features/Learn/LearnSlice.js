@@ -9,30 +9,37 @@ export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
         let parseWords = await getStorage('words');
-        console.log(parseWords)
-        if(parseWords === null || parseWords.day !== new Date().getDate()){
-            if(parseWords === null) parseWords = {};
-            const maxId = parseWords.maxId === undefined ? 4 : parseWords.maxId; 
-            let limit = 5;
-            if(parseWords.learn !== undefined && parseWords.learn.length !== 0){
-                parseWords.learn.forEach(learnWords => {
-                    parseWords.list.push(learnWords);
-                });
-            };
-            limit += -parseWords.list.length;
-            if(limit !== 0){
-                const newList = await getWordsRangeDb(maxId, limit);
-                const olwList = parseWords.list === undefined ? [] : parseWords.list;
-                parseWords = createWordsObject(olwList);
-                newList.forEach(wordList =>{
-                    parseWords.list.push(wordList);
-                });
-                parseWords.maxId = getMaxId(parseWords.list);
-            }else{
-                parseWords.day = new Date().getDate();
-                parseWords.learn = [];
+        console.log('parse words', parseWords)
+        try {
+            if(parseWords === null || parseWords.day !== new Date().getDate()){
+                if(parseWords === null) parseWords = {};
+                const maxId = parseWords.maxId === undefined ? 4 : parseWords.maxId; 
+                let limit = 5;
+                if(parseWords.learn !== undefined && parseWords.learn.length !== 0){
+                    parseWords.learn.forEach(learnWords => {
+                        parseWords.list.push(learnWords);
+                    });
+                };
+                if(parseWords.learn !== undefined){
+                    limit += -parseWords.list.length;
+                }
+                if(limit !== 0){
+                    const newList = await getWordsRangeDb(maxId, limit);
+                    const olwList = parseWords.list === undefined ? [] : parseWords.list;
+                    parseWords = createWordsObject(olwList);
+                    newList.forEach(wordList =>{
+                        parseWords.list.push(wordList);
+                    });
+                    parseWords.maxId = getMaxId(parseWords.list);
+                }else{
+                    parseWords.day = new Date().getDate();
+                    parseWords.learn = [];
+                }
             }
+        } catch (error) {
+            console.log('error getwords', error)
         }
+        console.log('words', parseWords)
         await setStorage('words', parseWords);
         return parseWords;
     }

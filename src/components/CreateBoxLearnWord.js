@@ -18,6 +18,7 @@ function LearnText({ textTitle, text }){
 
 export default function CreateBoxLearnWord({ viewRender }){
     if(viewRender){
+        console.log('entro en renderbox')
         const words = useSelector(state => state.learn.words);
         const dispatch = useDispatch();
         if(words === undefined){

@@ -54,6 +54,7 @@ export default function Home() {
 
     function HasLearnMode(){
         if(mode[0] === 'learnMode'){
+            console.log('learn')
             return <CreateBoxLearnWord viewRender={ true } />
         }else{
             return <CreateBoxInformative viewRender={ true }
