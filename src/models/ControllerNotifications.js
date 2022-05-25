@@ -20,6 +20,7 @@ class ControllerNotifications{
 
     createListenerOpenNotification(){
         notifee.getInitialNotification().then(openNotification => {
+            console.log('open notification')
             if(openNotification !== null){
                 const { notification: { data }, pressAction } = openNotification;
                 if(pressAction.id === 'open-wordel'){

@@ -64,7 +64,7 @@ export default function ModalAnimate(){
 
                                 </View>
                                 <Text style={ style.iconAnimate }>
-                                    <Icon name={ iconName } size={ 30 } color={ color } />;
+                                    <Icon name={ iconName } size={ 30 } color={ color } />
                                 </Text>
                                 <CreateCurveAnimated color={ color } />
                             </View>
