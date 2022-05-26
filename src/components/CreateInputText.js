@@ -1,23 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { TextInput, StyleSheet } from "react-native";
 
 export default function CreateInputText({ change, reference, blurFocus }){
-    const [keyPress, setKeyPress] = useState([]);
-    console.log('change input', keyPress)
+    let actualText = '';
     return (
         <TextInput ref={ reference } 
             style={[ style.text, style.textDisplay ]} 
-            onKeyPress={ ({ nativeEvent: { key: keyValue } })  => {
-                change(keyValue);
-                let intent = [... keyPress]
-                intent.push(1)
-                setKeyPress(intent);
+            onChange={({ nativeEvent: { eventCount, target, text} }) => {
+                actualText = text
+            }}
+            onKeyPress={ ({ nativeEvent: { key: keyValue } }) => {
+                change({ key: keyValue, text: actualText });
             }}
             onBlur={ () => blurFocus() }
             autoFocus={ true } />
     )
 }
-
 
 const style = StyleSheet.create({
     text: {
