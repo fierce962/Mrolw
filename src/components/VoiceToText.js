@@ -17,7 +17,6 @@ export default function VoiceToText({ evaluatedText }){
     const dispatch = useDispatch();
     const record = useSelector(state => state.pronunciation.startRecord);
     const navigation = useNavigation();
-    console.log('evalate text1', evaluatedText)
     useEffect(() => {
         Voice.onSpeechStart = onSpeechStartHandler;
         Voice.onSpeechResults = onSpeechResultsHandler;
@@ -31,7 +30,6 @@ export default function VoiceToText({ evaluatedText }){
 
     function onSpeechResultsHandler(e){
         let correct = e.value.some(voiceResults => {
-            console.log('evalate text2', evaluatedText)
             if(voiceResults.includes(evaluatedText)) return true;
         });
         if(correct){

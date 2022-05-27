@@ -22,7 +22,11 @@ export default function ViewPronunciation(){
             <View style={ style.contenCentral }>
                 <View style={ style.pronunciationView }>
                     <Text style={ style.textPronunciation }>{ pronunciation.pronunciationSpanish }</Text>
-                    <IconTouchable iconName={ 'volume-up' } sizeIcon={ 40 } fnPress={ () => Tts.speak(pronunciation.english) }/>
+                    <IconTouchable iconName={ 'volume-up' } sizeIcon={ 40 } 
+                        fnPress={ async () => {
+                            await Tts.setDefaultLanguage('en-US');
+                            Tts.speak(pronunciation.english);
+                        }}/>
                 </View>
                 <View style={ { alignItems: 'center' } }>
                     <Text style={ style.text }>Ponte a prueba intentalo</Text>

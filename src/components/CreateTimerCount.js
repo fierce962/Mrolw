@@ -22,7 +22,6 @@ export default function CreateTimerCount({ fnPress }){
         }).start();
 
         setTimeout(() => {
-            console.log('set time aout')
             Animated.timing(animate, {
                 toValue: 0,
                 duration: 0,

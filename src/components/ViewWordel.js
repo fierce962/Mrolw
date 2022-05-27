@@ -58,7 +58,7 @@ export default function ViewWordel({ route }){
                 return (
                     <View key={ `viewWorlde${i}` } style={ style.viewWordel } >
                         <CreateWordel index={ i } setFocus={ setFocusInput } />
-                        <CreateInputText reference={ inputRef } blurFocus={ getBlurFocus } change={ keyPress } />
+                        <CreateInputText pointerEvents={ 'none' } reference={ inputRef } blurFocus={ getBlurFocus } change={ keyPress } />
                     </View>
                 )
             }else{

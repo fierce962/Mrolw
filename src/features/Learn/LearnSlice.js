@@ -9,7 +9,6 @@ export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
         let parseWords = await getStorage('words');
-        console.log('parse words', parseWords)
         try {
             if(parseWords === null || parseWords.day !== new Date().getDate()){
                 if(parseWords === null) parseWords = {};
@@ -39,7 +38,6 @@ export const getWords = createAsyncThunk(
         } catch (error) {
             console.log('error getwords', error)
         }
-        console.log('words', parseWords)
         await setStorage('words', parseWords);
         return parseWords;
     }
@@ -72,7 +70,6 @@ export const setLearnWord = createAsyncThunk(
     'learn/setWord',
     async (index, thunkApi) => {
         let words = thunkApi.getState().learn.words;
-        console.log('index', index)
         const list = words.list.filter((value, i) => i !== index);
         let learn = [... words.learn];
         learn.push(words.list[index]);
@@ -192,7 +189,6 @@ const learnSlice = createSlice({
             state.mode = ['learnMode'];
         }),
         builder.addCase(errorLearn.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.words = action.payload;
             state.mode = ['testMode'];
         })

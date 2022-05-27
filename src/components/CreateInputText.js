@@ -15,10 +15,7 @@ export default function CreateInputText({ change, reference, blurFocus }){
                 actualText = text
             }}
             onKeyPress={ ({ nativeEvent: { key: keyValue } }) => {
-                console.log('se disparo el keypress')
-                console.log('key', keyValue, actualText);
                 if(actualText !== '' || keyValue === 'Backspace'){
-                    console.log('se disparo change')
                     change({ key: keyValue, text: actualText });
                 }
             }}

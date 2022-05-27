@@ -3,7 +3,6 @@ import { addDoc, getDocs, collection, limit, orderBy, query, where } from "fireb
 
 
 export async function getWordsRangeDb(rangeMax, limitNumb = 5){
-    console.log('rango', rangeMax, limitNumb)
     try {
         const wordsList = [];
         const querySnapshot = await getDocs(query(collection(db, 'words'), 
