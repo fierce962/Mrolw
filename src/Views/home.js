@@ -28,7 +28,6 @@ export default function Home() {
     }
     
     useEffect(() => {
-        controllerNotifications.createListener();
         if(mode[0] === 'testMode'){
             dispatch(calcTime());
         }
@@ -65,8 +64,11 @@ export default function Home() {
 
     return (
         <View style={ [{ padding: 10  }, { flex: 1 } ] }>
-            {/* <Button title="create notification" onPress={() => controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) }/>
-            <Button title="remove" onPress={() => removeStorage() }/> */}
+            <Button title="create notification" onPress={() => {
+                console.log('create anotification')
+                controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) 
+                }}/>
+            <Button title="remove" onPress={() => removeStorage() }/>
             <HasLearnMode />
             {/* <Button title="test" onPress={ async () => {
                 const words = await getStorage('words');

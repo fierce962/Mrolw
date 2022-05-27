@@ -101,6 +101,7 @@ export const removeLearn = createAsyncThunk(
             delete words.learn[0].id
             await addNotification(words.learn[0]);
         }
+        console.log('quedan restando', words.learn.length);
         return words;
     }
 )

@@ -19,9 +19,9 @@ class Storage{
         }
     }
 
-    async removeStorage(){
+    async removeStorage(itemName){
         try {
-            await AsyncStorage.removeItem('words');
+            await AsyncStorage.removeItem(itemName);
         } catch (error) {
             console.log('error');
         }

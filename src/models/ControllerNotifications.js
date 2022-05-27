@@ -1,33 +1,41 @@
 import React from 'react';
 import notifee, { TriggerType, EventType } from '@notifee/react-native';
+
 import { controllerNavigation } from './ControllerNavigation'
 import { setStorage, getStorage } from '../models/Storage'
 class ControllerNotifications{
 
     createListener(){
         this.createListenerFirstplane();
-        this.createListenerOpenNotification();
+        console.log('create no tification')
     }
 
     createListenerFirstplane(){
         notifee.onForegroundEvent(({ type, detail }) => {
             if(type === EventType.DELIVERED){
-                notifee.cancelNotification(detail.notification.id)
+                //.cancelNotification(detail.notification.id)
                 console.log('se cancelo')
             }
         })
     }
 
-    createListenerOpenNotification(){
-        notifee.getInitialNotification().then(openNotification => {
-            console.log('open notification')
-            if(openNotification !== null){
-                const { notification: { data }, pressAction } = openNotification;
-                if(pressAction.id === 'open-wordel'){
-                    controllerNavigation.get().navigate('wordel', data);
-                };
+    createListenerBackgraound(){
+        notifee.onBackgroundEvent(async ({ type, detail }) => {
+            const { notification } = detail;
+            if (type === EventType.PRESS) {
+                await setStorage('notificationBack', {
+                    pressAction: notification.android.pressAction,
+                    data:  notification.data
+                });
             }
         });
+    }
+
+    actionsPress(data, pressActionId){
+        const action = pressActionId.split('-');
+        if(action[0] === 'open'){
+            controllerNavigation.get().navigate(action[1], data);
+        };
     }
 
     async removeNotification(nameStore){
@@ -37,6 +45,7 @@ class ControllerNotifications{
     }
 
     async createNotification(title, body, dataInput = {}, time = 300){
+        console.log('create notification');
         const date = new Date(new Date().getTime() + time);
         const channelId = await notifee.createChannel({
             id: 'default',
