@@ -67,7 +67,7 @@ const style = StyleSheet.create({
         backgroundColor: 'white'
     },
     viewAbsolute: {
-        position: 'absolute'
+        //position: 'absolute'
     },
     item: {
         width: 30,

@@ -7,7 +7,8 @@ const wordelSlice = createSlice({
         actualIndex: 0,
         seletIndex: undefined,
         attempts: [true],
-        finish: [false]
+        finish: [false],
+        actualWord: ['']
     },
     reducers: {
         clearWordel: (state) => {
@@ -15,7 +16,8 @@ const wordelSlice = createSlice({
             state.actualIndex = 0,
             state.seletIndex = undefined,
             state.attempts = [true],
-            state.finish = [false]
+            state.finish = [false],
+            state.actualWord = ['']
         },
         newAttempts: (state, action) => {
             let [valid, finish] = validNew(state.wordel[state.wordel.length - 1], action.payload);
@@ -33,8 +35,9 @@ const wordelSlice = createSlice({
                     create(state, action)
                     state.attempts[state.attempts.length - 1] = false;
                     state.attempts.push(true);
+                    state.actualWord = ['']
                 }else{
-                    state.wordel[state.wordel.length - 1][state.actualIndex].active = true;
+                    state.wordel[state.wordel.length - 1][state.actualIndex + 1].active = true;
                 }
             }
         },
@@ -42,44 +45,54 @@ const wordelSlice = createSlice({
             create(state, action)
         },
         setActualWorlde: (state, action) => {
-            if(action.payload === 'Backspace' || 
-            (action.payload.toLowerCase().charCodeAt(0) >= 97 
-            && action.payload.toLowerCase().charCodeAt(0) <= 122) ){
-                const sum = action.payload === 'Backspace' ? -1 : 1;
-                const index = state.seletIndex === undefined ? state.actualIndex : state.seletIndex;
-                const actualValue = state.wordel[state.wordel.length - 1][index].letters;
-                const setValue = getWordelValue(action.payload, actualValue, state.actualIndex, state.seletIndex);
-    
-                setWordel(state.wordel[state.wordel.length - 1][index], setValue);
-    
-                if((state.actualIndex + sum) > -1 && 
-                (state.actualIndex + sum) < state.wordel[state.wordel.length - 1].length
-                && actualValue === ' ' && state.seletIndex === undefined){
-                    state.actualIndex += sum;
-                    setWordel(state.wordel[state.wordel.length - 1][state.actualIndex], ' ');
-                }
-    
-                if(state.seletIndex !== undefined && state.wordel[state.wordel.length - 1][index].letters !== ' '){
+            const text = action.payload.text;
+            const key = action.payload.key;
+            if(state.seletIndex === undefined){
+                const newWordel = text.split('');
+                let newWord = '';
+                state.wordel[state.wordel.length - 1].forEach((position, i) => {
+                    if(newWordel[i] !== undefined){
+                        position.letters = newWordel[i];
+                        newWord += newWordel[i];
+                        state.actualIndex = i;
+                    }else{
+                        position.letters = '';
+                    }
+                    position.active = false;
+                })
+                state.actualWord = [newWord];
+                if(state.wordel[state.wordel.length - 1][newWordel.length] !== undefined &&
+                    state.wordel[state.wordel.length - 1][newWordel.length].letters === ''){
+                    state.wordel[state.wordel.length - 1][newWordel.length].letters = ' ';
+                    state.wordel[state.wordel.length - 1][newWordel.length].active = true;
+                };
+            } else {
+                if(key !== 'Backspace'){
+                    const changeWord = state.actualWord[0].split('');
+                    changeWord[state.seletIndex] = text[text.length - 1];
+                    state.actualWord = [changeWord.join('')];
+                    state.wordel[state.wordel.length - 1][state.seletIndex].letters = text[text.length - 1];
+                    state.wordel[state.wordel.length - 1][state.seletIndex].active = false;
+                    if(state.wordel[state.wordel.length - 1][state.actualIndex + 1] !== undefined){
+                        state.wordel[state.wordel.length - 1][state.actualIndex + 1].active = true;
+                    }
                     state.seletIndex = undefined;
-                    state.wordel[state.wordel.length - 1][state.actualIndex].active = true;
+                }else{
+                    state.wordel[state.wordel.length - 1][state.seletIndex].letters = ' ';
                 }
             }
         },
         selectWordel(state, action){
-            if(state.actualIndex === action.payload){
-                state.wordel[state.wordel.length - 1][state.actualIndex].active = true;
-                if(state.seletIndex !== undefined){
-                    state.wordel[state.wordel.length - 1][state.seletIndex].active = false;
-                    state.seletIndex = undefined
-                }
-            }else if(state.actualIndex !== action.payload){
-                state.wordel[state.wordel.length - 1][state.actualIndex].active = false;
-                state.wordel[state.wordel.length - 1][action.payload].active = true;
-                state.seletIndex = action.payload;
+            if(state.wordel[state.wordel.length - 1][state.actualIndex + 1] !== undefined){
+                state.wordel[state.wordel.length - 1][state.actualIndex + 1].active = false;
             }
+            state.wordel[state.wordel.length - 1][action.payload].active = true;
+            state.seletIndex = action.payload;
         },
         blurWordelFocus(state){
-            state.wordel[state.wordel.length - 1][state.actualIndex].active = false;
+            if(state.wordel[state.wordel.length - 1][state.actualIndex + 1] !== undefined){
+                state.wordel[state.wordel.length - 1][state.actualIndex + 1].active = false;
+            }
         }
     }
 });
@@ -119,7 +132,7 @@ function validNew(wordel, word){
         element.active = false;
         if(element.letters === '' || element.letters === ' '){
             return true
-        }else if(element.letters === word[i]){
+        }else if(element.letters.toLocaleLowerCase() === word[i].toLocaleLowerCase()){
             element.correct = 'green';
             countCorret += 1
         }else{

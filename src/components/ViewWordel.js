@@ -40,13 +40,7 @@ export default function ViewWordel({ route }){
     }
 
     function keyPress({ key, text }){
-        if(actualText === '' || actualText !== text){
-            actualText = text;
-            dispatch(setActualWorlde(key))
-            console.log('actual text', actualText)
-        }else{
-            console.log('keypress no se ejecuto porque era igual')
-        }
+        dispatch(setActualWorlde({ key, text }))
     }
 
     function setFocusInput(index){
