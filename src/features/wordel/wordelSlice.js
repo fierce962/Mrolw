@@ -43,7 +43,7 @@ const wordelSlice = createSlice({
             }
         },
         createWordel: (state, action) => {
-            create(state, action)
+            create(state, action);
         },
         setActualWorlde: (state, action) => {
             const text = action.payload.text;

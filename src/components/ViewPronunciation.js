@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import Tts from 'react-native-tts';
 import VoiceToText from "./VoiceToText";
@@ -9,7 +9,6 @@ import IconTouchable from './IconTouchable';
 
 export default function ViewPronunciation(){
     const pronunciation = useSelector(state => state.pronunciation.words);
-
     return (
         <View style={ style.contentPronunciation }>
             <View>

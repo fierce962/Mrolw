@@ -14,9 +14,11 @@ import FlotingMessage from "./FlotingMessage";
 import FloatingButton from "./FloatingButton";
 
 export default function VoiceToText({ evaluatedText }){
+    console.log('render voice to text')
     const dispatch = useDispatch();
     const record = useSelector(state => state.pronunciation.startRecord);
     const navigation = useNavigation();
+
     useEffect(() => {
         Voice.onSpeechStart = onSpeechStartHandler;
         Voice.onSpeechResults = onSpeechResultsHandler;

@@ -12,7 +12,7 @@ export default function Navigation({ drawer }){
     return(
         <Stack.Navigator>
             <Stack.Group screenOptions={({ route, navigation }) => ({
-                    headerTitle: () => <CreateLogo width={50} height={ 50 } color={ '#cc0000' } />,
+                    headerTitle: () => <CreateLogo width={ 50 } height={ 50 } color={ '#cc0000' } />,
                     headerTitleAlign: 'center',
                     headerStyle: {
                         backgroundColor: '#202020'

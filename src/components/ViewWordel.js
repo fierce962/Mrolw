@@ -18,7 +18,6 @@ export default function ViewWordel({ route }){
     const finish = useSelector(state => state.wordel.finish);
     const dispatch = useDispatch();
     const inputRef = useRef(null);
-    console.log('view Wordel finish', finish);
 
     useEffect(() => {
         if(finish[0]){

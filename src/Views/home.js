@@ -43,9 +43,10 @@ export default function Home() {
         if(mode[0] === 'testMode'){
             return <CreateTimerCount fnPress={ async () => {
                 const words = await getStorage('words');
-                dispatch(clearWordel())
-                controllerNotifications.removeNotification('notificationId')
-                navigation.navigate('wordel', words.learn[0])
+                dispatch(clearWordel());
+                controllerNotifications.removeNotification('notificationId');
+                console.log('timer', words)
+                navigation.navigate('wordel', words.learn[0]);
             } }/>
         }
         return <CreateButton title={ 'Solicitar mas palabras' } size={ 20 } fnPress={ () => dispatch(searchWords()) } />
@@ -68,7 +69,7 @@ export default function Home() {
                 console.log('create anotification')
                 controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) 
                 }}/>
-            <Button title="remove" onPress={() => removeStorage() }/>
+            <Button title="remove" onPress={() => removeStorage('words') }/>
             <HasLearnMode />
             {/* <Button title="test" onPress={ async () => {
                 const words = await getStorage('words');

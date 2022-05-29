@@ -34,6 +34,8 @@ function Items({item, setFocus, index}){
 
 export default function CreateWordel({ index, setFocus, alternativeBackGraund }){
     const wordel = useSelector(state => state.wordel.wordel[index])
+    if(wordel === undefined) return null
+    
     const setStyle = [
         style.viewWordel,
         setFocus !== undefined && style.viewAbsolute,

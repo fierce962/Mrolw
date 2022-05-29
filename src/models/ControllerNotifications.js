@@ -1,13 +1,24 @@
 import React from 'react';
 import notifee, { TriggerType, EventType } from '@notifee/react-native';
 
-import { controllerNavigation } from './ControllerNavigation'
-import { setStorage, getStorage } from '../models/Storage'
+import { controllerNavigation } from './ControllerNavigation';
+import { setStorage, getStorage, removeStorage } from '../models/Storage';
 class ControllerNotifications{
-
+    initialNotification = true;
     createListener(){
         this.createListenerFirstplane();
-        console.log('create no tification')
+        this.getInitialNotification();
+    }
+
+    async getInitialNotification(){
+        const initialNotification = await notifee.getInitialNotification();
+
+        if(initialNotification !== null && this.initialNotification){
+            this.actionsPress(initialNotification.notification.data, initialNotification.pressAction.id);
+        }else{
+            this.initialNotification = false;
+            console.log('no se disparo el initial', this.initialNotification);
+        }
     }
 
     createListenerFirstplane(){
@@ -31,7 +42,7 @@ class ControllerNotifications{
         });
     }
 
-    actionsPress(data, pressActionId){
+    async actionsPress(data, pressActionId){
         const action = pressActionId.split('-');
         if(action[0] === 'open'){
             controllerNavigation.get().navigate(action[1], data);
