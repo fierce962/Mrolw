@@ -5,8 +5,10 @@ export const calcTime = createAsyncThunk(
     'timet/calctime',
     async () => {
         const storageDate = new Date(await getStorage('proxTestMode'));
+        console.log('storage date', storageDate)
         let calc = (storageDate.getTime() - new Date().getTime()) / 60000;
         calc = parseInt(calc);
+        console.log('log calctim', calc > 0)
         if(calc >= 10){
             calc = calc.toString();
         }else if(calc > 0){

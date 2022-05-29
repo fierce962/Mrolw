@@ -108,7 +108,8 @@ const style = StyleSheet.create({
     btn: {
         position: 'absolute',
         bottom: 10,
-        right: 10
+        right: 10,
+        zIndex: 50
     },
     textTitle: {
         color: 'white',

@@ -5,6 +5,7 @@ import { controllerNavigation } from './ControllerNavigation';
 import { setStorage, getStorage, removeStorage } from '../models/Storage';
 class ControllerNotifications{
     initialNotification = true;
+    
     createListener(){
         this.createListenerFirstplane();
         this.getInitialNotification();

@@ -32,7 +32,9 @@ export default function VoiceToText({ evaluatedText }){
 
     function onSpeechResultsHandler(e){
         let correct = e.value.some(voiceResults => {
-            if(voiceResults.includes(evaluatedText)) return true;
+            console.log(voiceResults, evaluatedText)
+            if(voiceResults.toLocaleLowerCase()
+                .includes(evaluatedText.toLocaleLowerCase())) return true;
         });
         if(correct){
             dispatch(assingModalParameters({ type: 'check', message: 'La Pronunciacion fue correcta', route: 'home' }));

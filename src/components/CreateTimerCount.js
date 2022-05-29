@@ -8,11 +8,12 @@ import { restTime } from '../features/timerCount/timerCountSlice';
 export default function CreateTimerCount({ fnPress }){
     const dispatch = useDispatch();
     const time = useSelector(state => state.timer.timeRemaining);
+    console.log('time', time)
     if(time === undefined){
         return null
     }
 
-    if(time !== '00'){
+    if(parseInt(time) > 0){
         let animate = new Animated.Value(0);
         Animated.timing(animate, {
             toValue: -40,

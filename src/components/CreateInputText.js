@@ -29,6 +29,6 @@ const style = StyleSheet.create({
         backgroundColor: 'white'
     },
     textDisplay: {
-        opacity: 1
+        opacity: 0
     }
 });

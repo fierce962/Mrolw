@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import Tts from 'react-native-tts';
@@ -9,6 +10,18 @@ import IconTouchable from './IconTouchable';
 
 export default function ViewPronunciation(){
     const pronunciation = useSelector(state => state.pronunciation.words);
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        navigation.addListener('beforeRemove', (e) => {
+            console.log(e.data.action.type, e.data.action.type === 'GO_BACK')
+            if(e.data.action.type === 'GO_BACK'){
+                e.preventDefault();
+                navigation.navigate('home');
+            }
+        });
+    })
+
     return (
         <View style={ style.contentPronunciation }>
             <View>

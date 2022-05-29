@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 
 import { clearWordel } from './features/wordel/wordelSlice';
+import { clearModal } from './features/modal/modalSlice';
 import { getStorage, removeStorage } from './models/Storage';
 import { controllerNotifications } from './models/ControllerNotifications';
 import { controllerNavigation } from './models/ControllerNavigation';
@@ -29,6 +30,7 @@ export default function Main() {
                 });
                 if(notification.pressAction.id === 'open-wordel'){
                     dispatch(clearWordel());
+                    dispatch(clearModal());
                 };
                 controllerNotifications.actionsPress(notification.data, 
                     notification.pressAction.id);
