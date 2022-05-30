@@ -56,14 +56,14 @@ export default function ViewWordel({ route }){
             if(value){
                 return (
                     <View key={ `viewWorlde${i}` } style={ style.viewWordel } >
-                        <CreateWordel index={ i } setFocus={ setFocusInput } />
+                        <CreateWordel index={ i } setFocus={ setFocusInput } wordelText={ route.params.english } />
                         <CreateInputText pointerEvents={ 'none' } reference={ inputRef } blurFocus={ getBlurFocus } change={ keyPress } />
                     </View>
                 )
             }else{
                 return(
                     <View key={ `viewWorlde${i}` }  style={ style.viewWordel } pointerEvents='none'>
-                        <CreateWordel index={ i } />
+                        <CreateWordel index={ i } wordelText={ route.params.english } />
                     </View>
                 )
             }

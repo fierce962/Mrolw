@@ -1,56 +1,25 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import { View, StyleSheet } from "react-native";
+import CreateWordelItems from "./CreateWordelItems";
 
-function Items({item, setFocus, index}){
-    let animate = 1;
-    const selectStyle = [
-        style.itemText,
-        item.active && style.textActive,
-    ]
-    const selectViewStyle = [
-        style.item,
-        setFocus === undefined && item.correct === 'green' && style.itemCorrect
-    ]
-    if(item.active){
-        animate = new Animated.Value(0.1);
-        Animated.loop(
-            Animated.timing(animate, {
-                toValue: 1,
-                duration: 1000,
-                useNativeDriver: false
-            })
-        ).start()
-    }
-
-    return (
-        <TouchableOpacity onPress={ () => setFocus(index) }>
-            <View style={ selectViewStyle }>
-                <Animated.Text style={[ selectStyle, { opacity: animate } ]} >{ item.letters }</Animated.Text>
-            </View>
-        </TouchableOpacity>
-    )
-}
-
-export default function CreateWordel({ index, setFocus, alternativeBackGraund }){
-    const wordel = useSelector(state => state.wordel.wordel[index])
-    if(wordel === undefined) return null
-    
+export default function CreateWordel({ index, setFocus, alternativeBackGraund, wordelText }){
     const setStyle = [
         style.viewWordel,
         setFocus !== undefined && style.viewAbsolute,
         alternativeBackGraund && style.viewAlternative
     ]
 
-    function LoadItems({ wordelLoad }){
-        return wordel.map((item, index) => (
-            <Items key={ `items${index}` } item={ item } index={ index } setFocus={ setFocus }/>
+    function LoadItems(){
+        console.log(wordelText)
+        return wordelText.split('').map((value, i) => (
+            <CreateWordelItems key={ `items${index}-${i}` } indexItem={ i } indexWordel={ index } setFocus={ setFocus } />
         ))
     }
 
     return (
         <View style={ setStyle }>
-            <LoadItems wordelLoad={ wordel }/>
+            <LoadItems />
         </View>
     )
 }
@@ -70,26 +39,5 @@ const style = StyleSheet.create({
     },
     viewAbsolute: {
         position: 'absolute'
-    },
-    item: {
-        width: 30,
-        height: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 3,
-        borderWidth: 1,
-        backgroundColor: 'rgba(84, 89, 95, 0.7)',
-        borderColor: 'rgb(109, 115, 122)'
-    },
-    itemCorrect: {
-        backgroundColor: 'green',
-    },
-    itemText: {
-        color: '#fff',
-        textTransform: 'uppercase'
-    },
-    textActive: {
-        borderRightWidth: 1,
-        borderColor: 'white'
     }
 });
