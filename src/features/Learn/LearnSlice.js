@@ -11,6 +11,7 @@ export const getWords = createAsyncThunk(
         let parseWords = await getStorage('words');
         try {
             if(parseWords === null || parseWords.day !== new Date().getDate()){
+                await controllerNotifications.removeNotification('notificationId');
                 if(parseWords === null) parseWords = {};
                 const maxId = parseWords.maxId === undefined ? 4 : parseWords.maxId; 
                 let limit = 5;
@@ -166,7 +167,9 @@ const learnSlice = createSlice({
         mode: ['learnMode'],
     },
     reducers: {
-
+        refreshHome(state){
+            state.mode = ['learnMode'];
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(getWords.fulfilled, (state, action) => {
@@ -197,6 +200,6 @@ const learnSlice = createSlice({
 })
 
 export default learnSlice.reducer;
-
+export const { refreshHome } = learnSlice.actions;
 
 

@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function CreateButton({ title, fnPress, iconName, size }){
+    if(size === undefined) size = 20;
     function CreateIcon(){
         if(iconName !== undefined){
             return (

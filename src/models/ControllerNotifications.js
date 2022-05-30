@@ -13,8 +13,8 @@ class ControllerNotifications{
 
     async getInitialNotification(){
         const initialNotification = await notifee.getInitialNotification();
-
         if(initialNotification !== null && this.initialNotification){
+            console.log('nitial notification', initialNotification.data)
             this.actionsPress(initialNotification.notification.data, initialNotification.pressAction.id);
         }else{
             this.initialNotification = false;
@@ -43,22 +43,52 @@ class ControllerNotifications{
         });
     }
 
+    hasEqualDay(data, action){
+        const day = `${ new Date().getDate() }`;
+        if(data.day !== undefined && data.day !== day && action[1] === 'wordel'){
+            const errorObject = this.createMessageError(action[1]);
+            return [false, errorObject];
+        }
+        return [true];
+    }
+
+    createMessageError(nameRoute){
+        const errorObject = {
+            title: 'Ha ocurrido un error', 
+            subTitle: 'Lo semtimos', 
+            nameIcon: 'home', 
+            textBtn: 'ir al inicio', 
+            routeName: 'home'
+        }
+        if(nameRoute === 'wordel'){
+            errorObject.subTitle += ' su prueba caduco, no se preocupe podra volve hacerla'; 
+        }
+        return errorObject;
+    }
+
     async actionsPress(data, pressActionId){
         const action = pressActionId.split('-');
-        if(action[0] === 'open'){
+        const EqualDay = this.hasEqualDay(data, action);
+        if(action[0] === 'open' && EqualDay[0]){
             controllerNavigation.get().navigate(action[1], data);
+        }else{
+            controllerNavigation.get().navigate('error', EqualDay[1]);
         };
     }
 
     async removeNotification(nameStore){
         console.log('fn remove remove notification')
         let id = await getStorage(nameStore);
-        await notifee.cancelNotification(id);
+        if(id !== null){
+            await notifee.cancelNotification(id);
+        };
     }
 
     async createNotification(title, body, dataInput = {}, time = 300){
         console.log('create notification');
         const date = new Date(new Date().getTime() + time);
+        dataInput.day = `${ date.getDate() }`;
+        console.log('create notification', dataInput)
         const channelId = await notifee.createChannel({
             id: 'default',
             name: 'Default Channel',

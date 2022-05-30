@@ -15,12 +15,14 @@ import { clearWordel } from "../features/wordel/wordelSlice";
 import { searchWords } from "../features/Learn/LearnSlice";
 import { calcTime } from "../features/timerCount/timerCountSlice";
 
+import CreateError from "../components/CreateError";
+
 export default function Home() {
     const dispatch = useDispatch();
     const mode = useSelector(state => state.learn.mode);
     const navigation = useNavigation();
     controllerNavigation.set(navigation);
-
+    console.log('reaload home', mode)
     const information = {
         title: 'se acabo el estudio',
         subtitle: 'Modo de pruebas',
@@ -71,12 +73,6 @@ export default function Home() {
                 }}/>
             <Button title="remove" onPress={() => removeStorage('words') }/>
             <HasLearnMode />
-            {/* <Button title="test" onPress={ async () => {
-                const words = await getStorage('words');
-                dispatch(clearWordel())
-                controllerNotifications.removeNotification('notificationId')
-                navigation.navigate('wordel', words.learn[0])
-            }} /> */}
         </View>
     )
 }

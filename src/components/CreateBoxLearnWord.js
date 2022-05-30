@@ -20,7 +20,7 @@ export default function CreateBoxLearnWord({ viewRender }){
     if(viewRender){
         const words = useSelector(state => state.learn.words);
         const dispatch = useDispatch();
-        if(words === undefined){
+        if(words === undefined || words.day !== new Date().getDate()){
             dispatch(getWords());
         }
         if(words !== undefined && words !== null){
