@@ -2,9 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-
-import { refreshHome } from "../features/Learn/LearnSlice";
 
 import TextTitle from "./TextTitle";
 import CreateButton from "./CreateButton";
@@ -12,7 +9,6 @@ import CreateButton from "./CreateButton";
 export default function CreateError({ route }){
     const { title, subTitle, nameIcon, textBtn, routeName } = route.params;
     const navigation = useNavigation();
-    const dispatch = useDispatch();
 
     return (
         <View style={ style.contentError }>
@@ -25,7 +21,6 @@ export default function CreateError({ route }){
             </View>
             <View style={ style.contentbtn }>
                 <CreateButton title={ textBtn } fnPress={ () => {
-                        if(routeName === 'home') dispatch(refreshHome());
                         navigation.navigate(routeName); 
                     } } 
                     iconName={ nameIcon }/>
