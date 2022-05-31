@@ -16,3 +16,11 @@ export async function getWordsRangeDb(rangeMax, limitNumb = 5){
         console.log('error', error)
     }
 }
+
+export async function createUser(userName){
+    const user = {
+        userName: userName
+    }
+    const querySnapshot = await addDoc(collection(db, 'users'), user);
+    console.log('respuesta del crear usuario', querySnapshot);
+}

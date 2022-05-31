@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { store } from "../store/store";
 import { createInput } from '../features/MaterialInput/materialInputSlice';
+import { loginUser } from "../database/AuthDataBase";
 
 
 import TextTitle from "../components/TextTitle";
@@ -22,8 +23,9 @@ export default function Login(){
                 <CreateMaterialInput />
             </View>
             <View style={ style.contentBtn } >
-                <CreateButton sytle={ style.btn } title={ 'Iniciar' } fnPress={() => {
-                    console.log(store.getState().materialInput.inputs)
+                <CreateButton sytle={ style.btn } title={ 'Iniciar' } fnPress={async () => {
+                    const inputsValue = store.getState().materialInput.inputs
+                    await loginUser(inputsValue[0].text, inputsValue[1].text);
                 }} />
                 <CreateButton sytle={ style.btn } title={ 'Registrarse' } secudary={ 'true' } />
             </View>

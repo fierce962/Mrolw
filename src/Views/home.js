@@ -15,7 +15,7 @@ import { clearWordel } from "../features/wordel/wordelSlice";
 import { searchWords } from "../features/Learn/LearnSlice";
 import { calcTime } from "../features/timerCount/timerCountSlice";
 
-import Login from "./Login";
+import Register from "./Register";
 
 export default function Home() {
     const dispatch = useDispatch();
@@ -74,7 +74,7 @@ export default function Home() {
         //     <Button title="remove" onPress={() => removeStorage('words') }/>
         //     <HasLearnMode />
         // </View>
-        <Login />
+        <Register />
     )
 }
 
