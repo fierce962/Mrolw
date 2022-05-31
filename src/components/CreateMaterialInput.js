@@ -1,24 +1,38 @@
-import React, { useState } from "react";
-import { TextInput, StyleSheet } from "react-native";
+import React from "react";
+import { TextInput, StyleSheet, FlatList } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setFocus, setValueInputs } from "../features/MaterialInput/materialInputSlice";
 
 
-export default function CreateMaterialInput({ textPlaceHolder, colorPlaceHolder }){
-    const [inputFocus, setFocus] = useState(false);
-    const styleInput = [
-        style.input,
-        inputFocus && style.inputFocus
-    ];
+export default function CreateMaterialInput(){
+    const dispatch = useDispatch();
+    const inputs = useSelector(state => state.materialInput.inputs);
 
     return (
-        <TextInput style={ styleInput } 
-            onFocus={ () => setFocus(true) } 
-            onBlur={ () => setFocus(false) }
-            placeholder={ textPlaceHolder }
-            placeholderTextColor={ colorPlaceHolder } />
+        <FlatList data={ inputs }
+            renderItem={({ item, index }) => {
+                const styleInput = [
+                    style.input,
+                    inputs[index].focus && style.inputFocus
+                ];
+
+                return <TextInput style={ styleInput } 
+                    onFocus={ () => dispatch(setFocus(index)) } 
+                    onBlur={ () => dispatch(setFocus(index)) }
+                    onChange={ ({ nativeEvent: { text } }) => {
+                        dispatch(setValueInputs({
+                            index: index,
+                            inputValue: text
+                        }));
+                    } }
+                    placeholder={ item.text }
+                    placeholderTextColor={ '#aaa' } />
+            }}/>
     )
 }
 
-const style = {
+const style = StyleSheet.create({
     input: {
         borderBottomWidth: 2,
         borderBottomColor: '#aaa',
@@ -28,4 +42,4 @@ const style = {
     inputFocus: {
         borderBottomColor: '#cc0000'
     },
-}
+});

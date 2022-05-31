@@ -5,6 +5,7 @@ import modalSlice from '../features/modal/modalSlice';
 import floatingButtonSlice from '../features/FloatingButton/floatingButtonSlice';
 import learnSlice from '../features/Learn/LearnSlice';
 import timerCountSlice from '../features/timerCount/timerCountSlice';
+import materialInputSlice from '../features/MaterialInput/materialInputSlice';
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
         modal: modalSlice,
         floatingBtn: floatingButtonSlice,
         learn: learnSlice,
-        timer: timerCountSlice
+        timer: timerCountSlice,
+        materialInput: materialInputSlice
     },
 })
