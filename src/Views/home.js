@@ -15,7 +15,7 @@ import { clearWordel } from "../features/wordel/wordelSlice";
 import { searchWords } from "../features/Learn/LearnSlice";
 import { calcTime } from "../features/timerCount/timerCountSlice";
 
-import CreateError from "../components/CreateError";
+import Login from "./Login";
 
 export default function Home() {
     const dispatch = useDispatch();
@@ -66,14 +66,15 @@ export default function Home() {
     }
 
     return (
-        <View style={ [{ padding: 10  }, { flex: 1 } ] }>
-            <Button title="create notification" onPress={() => {
-                console.log('create anotification')
-                controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) 
-                }}/>
-            <Button title="remove" onPress={() => removeStorage('words') }/>
-            <HasLearnMode />
-        </View>
+        // <View style={ [{ padding: 10  }, { flex: 1 } ] }>
+        //     <Button title="create notification" onPress={() => {
+        //         console.log('create anotification')
+        //         controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) 
+        //         }}/>
+        //     <Button title="remove" onPress={() => removeStorage('words') }/>
+        //     <HasLearnMode />
+        // </View>
+        <Login />
     )
 }
 
