@@ -10,7 +10,7 @@ import { loginUser } from "../database/AuthDataBase";
 import TextTitle from "../components/TextTitle";
 import CreateButton from "../components/CreateButton";
 import CreateMaterialInput from "../components/CreateMaterialInput";
-
+import { afAuth } from "../database/firebaseConfig";
 
 export default function Login(){
     const dispatch = useDispatch();
@@ -26,6 +26,7 @@ export default function Login(){
                 <CreateButton sytle={ style.btn } title={ 'Iniciar' } fnPress={async () => {
                     const inputsValue = store.getState().materialInput.inputs
                     await loginUser(inputsValue[0].value, inputsValue[1].value);
+                    console.log('value afauth', afAuth)
                 }} />
                 <CreateButton sytle={ style.btn } title={ 'Registrarse' } secudary={ 'true' } />
             </View>

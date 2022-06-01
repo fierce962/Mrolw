@@ -9,9 +9,15 @@ class AuthDataBase{
         try {            
             const login = await signInWithEmailAndPassword(afAuth, email, password);
             console.log(login)
+            return 'login'
         } catch (error) {
             // auth/invalid-email
-            console.log('error in login', error.code)
+            console.log('error in login', error.code);
+            if(error.code === 'auth/invalid-email'){
+                return 'invalid-email';
+            }else if(error.code === 'auth/wrong-password'){
+                return 'invalid-password';
+            }
         }
     }
 

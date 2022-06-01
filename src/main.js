@@ -21,7 +21,6 @@ export default function Main() {
     let date = new Date().getDate();
     controllerNotifications.createListener();
 
-
     async function hasNotificationBackGraund(){
         try {
             let notification = await getStorage('notificationBack');

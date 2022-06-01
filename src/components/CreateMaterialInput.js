@@ -43,7 +43,8 @@ export default function CreateMaterialInput({ renderIcons, fnValidate, contentRe
                 return (
                     <View style={ style.contentInput } >
                         <TextInput ref={(ref) => {
-                                if(contentReference[index] === undefined){
+                                if(contentReference !== undefined && 
+                                    contentReference[index] === undefined){
                                     contentReference.push(ref);
                                 }
                             }}
