@@ -20,7 +20,9 @@ const materialSlice = createSlice({
             state.inputs[action.payload].focus = !state.inputs[action.payload].focus
         },
         setValueInputs(state, action){
-            state.inputs[action.payload.index].value = action.payload.inputValue; 
+            if(action.payload.inputValue !== undefined){
+                state.inputs[action.payload.index].value = action.payload.inputValue; 
+            }
             if(action.payload.valid !== undefined){
                 state.inputs[action.payload.index].valid = action.payload.valid;
             } 

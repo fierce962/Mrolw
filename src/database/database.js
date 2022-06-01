@@ -17,8 +17,9 @@ export async function getWordsRangeDb(rangeMax, limitNumb = 5){
     }
 }
 
-export async function createUsers(userName){
+export async function createUsers(userName, id){
     const user = {
+        idUser: id,
         userName: userName
     }
     const querySnapshot = await addDoc(collection(db, 'users'), user);

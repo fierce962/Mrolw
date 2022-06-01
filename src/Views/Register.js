@@ -2,11 +2,14 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
 
-import { createInput } from "../features/MaterialInput/materialInputSlice";
+import { store } from '../store/store';
+import { createInput, setValueInputs } from "../features/MaterialInput/materialInputSlice";
+import { createUser } from "../database/AuthDataBase";
 
 import TextTitle from "../components/TextTitle";
 import CreateMaterialInput from "../components/CreateMaterialInput";
 import CreateButton from "../components/CreateButton";
+
 
 function validate(textInput, Allinputs, index){
     const validateResult = {
@@ -15,7 +18,9 @@ function validate(textInput, Allinputs, index){
     }
     if('Correo Electronico' === Allinputs[index].textHolder){
         const evaluateRegex = new RegExp(/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/);
-        if(evaluateRegex.test(textInput)){
+        if(textInput === ''){
+            validateResult.message = 'El no puede estar vacio';
+        }else if(evaluateRegex.test(textInput)){
             validateResult.result = true;
         }else{
             validateResult.message = 'El correo no es valido';
@@ -54,15 +59,37 @@ function validate(textInput, Allinputs, index){
 export default function Register(){
     const dispatch = useDispatch();
     dispatch(createInput(['Nombre de Usuario', 'Correo Electronico', 'Clave', 'Confirme la clave']));
+    const contentReference = [];
     return (
         <View style={ style.contentRegister }>
             <View></View>
             <View>
                 <TextTitle text={'Registarse'} typeStyle={ 'main' } />
-                <CreateMaterialInput renderIcons={ true } fnValidate={ validate }/>
+                <CreateMaterialInput renderIcons={ true } fnValidate={ validate } 
+                    contentReference={ contentReference }  />
             </View>
             <View style={ style.contentBtn } >
-                <CreateButton title={ 'registrarse' } />
+                <CreateButton title={ 'registrarse' } fnPress={async () => {
+                    const inputsValues = store.getState().materialInput.inputs;
+                    let inputError;
+                    const send = inputsValues.every((value, index) => {
+                        if(value.valid !== undefined && value.valid.result){
+                            return true;
+                        }
+                        if(inputError === undefined) inputError = [value.value, index];
+                        return false;
+                    });
+                    if(send){
+                        await createUser(inputsValues[0].value, inputsValues[1].value, inputsValues[2].value);
+                    }else{
+                        console.log('input error',inputError[0], inputError[1])
+                        dispatch(setValueInputs({
+                            index: inputError[1],
+                            valid: validate(inputError[0], inputsValues, inputError[1])
+                        }));
+                        contentReference[inputError[1]].focus();
+                    }
+                }} />
                 <CreateButton title={ 'cancelar' } secudary={ true } />
             </View>
         </View>

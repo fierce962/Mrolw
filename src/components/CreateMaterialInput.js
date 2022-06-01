@@ -28,7 +28,7 @@ function CreateBoxError({ input }){
     )
 }
 
-export default function CreateMaterialInput({ renderIcons, fnValidate }){
+export default function CreateMaterialInput({ renderIcons, fnValidate, contentReference }){
     const dispatch = useDispatch();
     const inputs = useSelector(state => state.materialInput.inputs);
 
@@ -42,7 +42,16 @@ export default function CreateMaterialInput({ renderIcons, fnValidate }){
 
                 return (
                     <View style={ style.contentInput } >
-                        <TextInput style={ styleInput } 
+                        <TextInput ref={(ref) => {
+                                if(contentReference[index] === undefined){
+                                    contentReference.push(ref);
+                                }
+                                // else{
+                                //     console.log('se cambio la referencia')
+                                //     contentReference[index] = ref;
+                                // }
+                            }}
+                            style={ styleInput }
                             onFocus={ () => dispatch(setFocus(index)) } 
                             onBlur={ () => dispatch(setFocus(index)) }
                             onChange={ ({ nativeEvent: { text } }) => {

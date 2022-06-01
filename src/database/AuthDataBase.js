@@ -15,15 +15,13 @@ class AuthDataBase{
         }
     }
 
-    async createUser(email, password, repeatPassword, userName){
+    async createUser(userName, email, password){
+        console.log(email, password)
         try {
-            if(password === repeatPassword){
-                await signInWithEmailAndPassword(afAuth, email, password);
-                await createUsers(userName);
-            }else{
-                console.log('la clave no coinciden')
-            }
+            const user = await createUserWithEmailAndPassword(afAuth, email, password);
+            await createUsers(userName, user.user.uid);
         } catch (error) {
+            // (auth/email-already-in-use)
             console.log('error in create user', error)
         }
     }
