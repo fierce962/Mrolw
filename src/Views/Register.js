@@ -8,40 +8,41 @@ import TextTitle from "../components/TextTitle";
 import CreateMaterialInput from "../components/CreateMaterialInput";
 import CreateButton from "../components/CreateButton";
 
-function validate(inputs, index){
+function validate(textInput, Allinputs, index){
     const validateResult = {
         message: '',
         result: false,
     }
-    if('Correo Electronico' === inputs[index].textHolder){
+    if('Correo Electronico' === Allinputs[index].textHolder){
         const evaluateRegex = new RegExp(/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/);
-        if(evaluateRegex.test(inputs[index].value)){
+        if(evaluateRegex.test(textInput)){
             validateResult.result = true;
         }else{
             validateResult.message = 'El correo no es valido';
         }
-    }else if('Nombre de Usuario' === inputs[index].textHolder){
-        if(inputs[index].value === ''){
+    }else if('Nombre de Usuario' === Allinputs[index].textHolder){
+        if(textInput === ''){
             validateResult.message = 'El nombre de usuario no puede estar vacio';
-        }else if(inputs[index].value.length < 5){
+        }else if(textInput.length < 6){
             validateResult.message = 'El nombre de usuario debe ser de minimo 6 caracteres';
         }else{
             validateResult.result = true;
         }
-    }else if('Clave' === inputs[index].textHolder){
-        if(inputs[index].value === ''){
+    }else if('Clave' === Allinputs[index].textHolder){
+        if(textInput === ''){
             validateResult.message = 'La clave no puede estar vacia';
-        }else if(inputs[index].value.length < 5){
+        }else if(textInput.length < 6){
             validateResult.message = 'La clave debe ser de minimo 6 caracteres';
         }else{
             validateResult.result = true;
         }
-    }else if('Confirme la clave' === inputs[index].textHolder){
-        if(inputs[index].value === ''){
+    }else if('Confirme la clave' === Allinputs[index].textHolder){
+        console.log('clave 1', Allinputs[index - 1].value, 'clave 2', Allinputs[index].value)
+        if(textInput === ''){
             validateResult.message = 'La clave no puede estar vacia';
-        }else if(inputs[index].value.length < 5){
+        }else if(textInput.length < 6){
             validateResult.message = 'La clave debe ser de minimo 6 caracteres';
-        }else if(inputs[index - 1].value !== inputs[index].value){
+        }else if(Allinputs[index - 1].value !== textInput){
             validateResult.message = 'Las claves no coinciden';
         }else{
             validateResult.result = true;

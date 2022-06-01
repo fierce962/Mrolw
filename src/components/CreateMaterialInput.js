@@ -19,6 +19,15 @@ function CreateIcons({ icon, stateIcon }){
     return null
 }
 
+function CreateBoxError({ input }){
+    if(!input.focus || input.valid === undefined) return null
+    return (
+        <View style={ { paddingLeft: 10 } }>
+            <Text style={ { color: '#fff' } }>{ input.valid.message }</Text>
+        </View>
+    )
+}
+
 export default function CreateMaterialInput({ renderIcons, fnValidate }){
     const dispatch = useDispatch();
     const inputs = useSelector(state => state.materialInput.inputs);
@@ -39,7 +48,7 @@ export default function CreateMaterialInput({ renderIcons, fnValidate }){
                             onChange={ ({ nativeEvent: { text } }) => {
                                 let validate = undefined;
                                 if(fnValidate !== undefined){
-                                    validate = fnValidate(inputs, index);
+                                    validate = fnValidate(text, inputs, index);
                                 }
                                 dispatch(setValueInputs({
                                     index: index,
@@ -50,6 +59,7 @@ export default function CreateMaterialInput({ renderIcons, fnValidate }){
                             placeholder={ item.textHolder }
                             placeholderTextColor={ '#aaa' } />
                         <CreateIcons icon={ renderIcons } stateIcon={ item } />
+                        <CreateBoxError input={ item } />
                     </View>
                 )
             }}/>
