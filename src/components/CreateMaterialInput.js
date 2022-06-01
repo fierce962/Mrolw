@@ -46,10 +46,6 @@ export default function CreateMaterialInput({ renderIcons, fnValidate, contentRe
                                 if(contentReference[index] === undefined){
                                     contentReference.push(ref);
                                 }
-                                // else{
-                                //     console.log('se cambio la referencia')
-                                //     contentReference[index] = ref;
-                                // }
                             }}
                             style={ styleInput }
                             onFocus={ () => dispatch(setFocus(index)) } 

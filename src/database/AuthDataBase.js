@@ -20,9 +20,12 @@ class AuthDataBase{
         try {
             const user = await createUserWithEmailAndPassword(afAuth, email, password);
             await createUsers(userName, user.user.uid);
+            return 'create';
         } catch (error) {
-            // (auth/email-already-in-use)
-            console.log('error in create user', error)
+            console.log('error', error.code)
+            if(error.code === 'auth/email-already-in-use'){
+                return 'email-duplicate';
+            }
         }
     }
 }

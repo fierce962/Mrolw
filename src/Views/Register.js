@@ -80,7 +80,17 @@ export default function Register(){
                         return false;
                     });
                     if(send){
-                        await createUser(inputsValues[0].value, inputsValues[1].value, inputsValues[2].value);
+                        const resultCreate = await createUser(inputsValues[0].value, inputsValues[1].value, inputsValues[2].value);
+                        if(resultCreate === 'email-duplicate'){
+                            dispatch(setValueInputs({
+                                index: 1,
+                                valid: {
+                                    message: 'Este correo se encuentra esta registrado',
+                                    result: true,
+                                }
+                            }));
+                            contentReference[1].focus();
+                        }
                     }else{
                         console.log('input error',inputError[0], inputError[1])
                         dispatch(setValueInputs({
