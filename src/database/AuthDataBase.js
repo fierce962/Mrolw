@@ -1,6 +1,7 @@
 import { afAuth } from "./firebaseConfig";
 import { createUserWithEmailAndPassword, 
     signInWithEmailAndPassword } from "firebase/auth";
+import { createUsers } from './database';
 
 class AuthDataBase{
 
@@ -17,7 +18,8 @@ class AuthDataBase{
     async createUser(email, password, repeatPassword, userName){
         try {
             if(password === repeatPassword){
-                await signInWithEmailAndPassword(email, password);
+                await signInWithEmailAndPassword(afAuth, email, password);
+                await createUsers(userName);
             }else{
                 console.log('la clave no coinciden')
             }

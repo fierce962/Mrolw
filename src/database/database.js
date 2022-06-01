@@ -17,7 +17,7 @@ export async function getWordsRangeDb(rangeMax, limitNumb = 5){
     }
 }
 
-export async function createUser(userName){
+export async function createUsers(userName){
     const user = {
         userName: userName
     }

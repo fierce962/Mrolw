@@ -25,7 +25,7 @@ export default function Login(){
             <View style={ style.contentBtn } >
                 <CreateButton sytle={ style.btn } title={ 'Iniciar' } fnPress={async () => {
                     const inputsValue = store.getState().materialInput.inputs
-                    await loginUser(inputsValue[0].text, inputsValue[1].text);
+                    await loginUser(inputsValue[0].value, inputsValue[1].value);
                 }} />
                 <CreateButton sytle={ style.btn } title={ 'Registrarse' } secudary={ 'true' } />
             </View>

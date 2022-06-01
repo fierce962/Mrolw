@@ -1,11 +1,25 @@
 import React from "react";
-import { TextInput, StyleSheet, FlatList } from "react-native";
+import { TextInput, StyleSheet, FlatList, View, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { setFocus, setValueInputs } from "../features/MaterialInput/materialInputSlice";
 
+function CreateIcons({ icon, stateIcon }){
+    console.log(stateIcon)
+    if(icon !== undefined && icon){
+        let nameIcon = 'times-circle';
+        let color = 'red'
+        if(stateIcon.valid !== undefined && stateIcon.valid.result){
+            nameIcon = 'check-circle';
+            color = 'green'
+        }
+        return <Icon style={ style.icon } name={ nameIcon } size={ 20 } color={ color } />
+    }
+    return null
+}
 
-export default function CreateMaterialInput(){
+export default function CreateMaterialInput({ renderIcons, fnValidate }){
     const dispatch = useDispatch();
     const inputs = useSelector(state => state.materialInput.inputs);
 
@@ -17,22 +31,36 @@ export default function CreateMaterialInput(){
                     inputs[index].focus && style.inputFocus
                 ];
 
-                return <TextInput style={ styleInput } 
-                    onFocus={ () => dispatch(setFocus(index)) } 
-                    onBlur={ () => dispatch(setFocus(index)) }
-                    onChange={ ({ nativeEvent: { text } }) => {
-                        dispatch(setValueInputs({
-                            index: index,
-                            inputValue: text
-                        }));
-                    } }
-                    placeholder={ item.text }
-                    placeholderTextColor={ '#aaa' } />
+                return (
+                    <View style={ style.contentInput } >
+                        <TextInput style={ styleInput } 
+                            onFocus={ () => dispatch(setFocus(index)) } 
+                            onBlur={ () => dispatch(setFocus(index)) }
+                            onChange={ ({ nativeEvent: { text } }) => {
+                                let validate = undefined;
+                                if(fnValidate !== undefined){
+                                    validate = fnValidate(inputs, index);
+                                }
+                                dispatch(setValueInputs({
+                                    index: index,
+                                    inputValue: text,
+                                    valid: validate
+                                }));
+                            } }
+                            placeholder={ item.textHolder }
+                            placeholderTextColor={ '#aaa' } />
+                        <CreateIcons icon={ renderIcons } stateIcon={ item } />
+                    </View>
+                )
             }}/>
     )
 }
 
 const style = StyleSheet.create({
+    contentInput: {
+        position: 'relative',
+        justifyContent: 'center'
+    },
     input: {
         borderBottomWidth: 2,
         borderBottomColor: '#aaa',
@@ -42,4 +70,8 @@ const style = StyleSheet.create({
     inputFocus: {
         borderBottomColor: '#cc0000'
     },
+    icon: {
+        position: "absolute",
+        right: 20
+    }
 });

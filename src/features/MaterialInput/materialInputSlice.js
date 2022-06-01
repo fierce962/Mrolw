@@ -10,7 +10,7 @@ const materialSlice = createSlice({
             state.inputs = [];
             action.payload.forEach(textValue => {
                 state.inputs.push({
-                    text: textValue,
+                    textHolder: textValue,
                     focus: false,
                     value: ''
                 })
@@ -21,6 +21,9 @@ const materialSlice = createSlice({
         },
         setValueInputs(state, action){
             state.inputs[action.payload.index].value = action.payload.inputValue; 
+            if(action.payload.valid !== undefined){
+                state.inputs[action.payload.index].valid = action.payload.valid;
+            } 
         }
     }
 })
