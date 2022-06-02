@@ -14,7 +14,6 @@ import FlotingMessage from "./FlotingMessage";
 import FloatingButton from "./FloatingButton";
 
 export default function VoiceToText({ evaluatedText }){
-    console.log('render voice to text')
     const dispatch = useDispatch();
     const record = useSelector(state => state.pronunciation.startRecord);
     const navigation = useNavigation();
@@ -32,7 +31,6 @@ export default function VoiceToText({ evaluatedText }){
 
     function onSpeechResultsHandler(e){
         let correct = e.value.some(voiceResults => {
-            console.log(voiceResults, evaluatedText)
             if(voiceResults.toLocaleLowerCase()
                 .includes(evaluatedText.toLocaleLowerCase())) return true;
         });

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 export default function CreateWordelItems({ setFocus, indexItem, indexWordel }){
     const item = useSelector(state => state.wordel.wordel[indexWordel][indexItem]);
-    console.log('wordel item', indexWordel, indexItem, item);
+
     let animate = 1;
     const selectStyle = [
         style.itemText,

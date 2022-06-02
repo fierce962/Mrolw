@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { store } from '../store/store';
 import { createInput, setValueInputs } from "../features/MaterialInput/materialInputSlice";
 import { createUser } from "../database/AuthDataBase";
+import { useNavigation } from "@react-navigation/native";
+import { setStorage } from "../models/Storage";
 
 import TextTitle from "../components/TextTitle";
 import CreateMaterialInput from "../components/CreateMaterialInput";
@@ -58,6 +60,7 @@ function validate(textInput, Allinputs, index){
 
 export default function Register(){
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     dispatch(createInput(['Nombre de Usuario', 'Correo Electronico', 'Clave', 'Confirme la clave']));
     const contentReference = [];
     return (
@@ -90,6 +93,12 @@ export default function Register(){
                                 }
                             }));
                             contentReference[1].focus();
+                        }else{
+                            await setStorage('user', {
+                                id: resultCreate,
+                                userName: inputsValues[0].value,
+                                lastLearnIds: []
+                            });
                         }
                     }else{
                         console.log('input error',inputError[0], inputError[1])
@@ -100,7 +109,9 @@ export default function Register(){
                         contentReference[inputError[1]].focus();
                     }
                 }} />
-                <CreateButton title={ 'cancelar' } secudary={ true } />
+                <CreateButton title={ 'cancelar' } secudary={ true } fnPress={() => {
+                    navigation.navigate('login');
+                }} />
             </View>
         </View>
     )

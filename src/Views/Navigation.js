@@ -4,14 +4,17 @@ import { useNavigation } from '@react-navigation/native';
 
 import { afAuth } from '../database/firebaseConfig';
 import { closeSession } from '../database/AuthDataBase';
+import { clearAll } from '../models/Storage';
 
 import Home from './home';
+import Register from './Register';
 import ViewWordel from '../components/ViewWordel';
 import ViewPronunciation from '../components/ViewPronunciation';
 import IconTouchable from '../components/IconTouchable';
 import CreateError from '../components/CreateError';
 import { CreateLogo } from '../components/CreateSvg';
 import Login from './Login';
+
 
 export default function Navigation({ drawer }){
     const Stack = createNativeStackNavigator();
@@ -49,8 +52,9 @@ export default function Navigation({ drawer }){
                         )
                     },
                     headerRight: () => (
-                        <IconTouchable iconName={ 'sign-out' } fnPress={ () => {
+                        <IconTouchable iconName={ 'sign-out' } fnPress={ async () => {
                             closeSession();
+                            await clearAll();
                         } } />
                     )
                 })}>
@@ -68,6 +72,7 @@ export default function Navigation({ drawer }){
                     }
                 }}>
                 <Stack.Screen name='login' component={ Login } />
+                <Stack.Screen name='register' component={ Register } />
             </Stack.Group>
         </Stack.Navigator>
     );

@@ -26,6 +26,14 @@ class Storage{
             console.log('error');
         }
     }
+
+    async clearAll(){
+        try {
+            await AsyncStorage.clearAll();
+        } catch (error) {
+            console.log('error clear Store', error);
+        }
+    }
 }
 
-export const { getStorage, setStorage, removeStorage } = new Storage();
+export const { getStorage, setStorage, removeStorage, clearAll } = new Storage();

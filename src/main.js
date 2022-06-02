@@ -46,10 +46,8 @@ export default function Main() {
         const subscription = AppState.addEventListener('change', nexState => {
             if(nexState === 'active'){
                 hasNotificationBackGraund();
-                console.log('active');
                 const actualDate = new Date().getDate()
                 if(date !== actualDate){
-                    console.log('clear home')
                     dispatch(refreshHome());
                     date = actualDate;
                 }

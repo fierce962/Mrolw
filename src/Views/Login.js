@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 import { store } from "../store/store";
 import { createInput } from '../features/MaterialInput/materialInputSlice';
@@ -14,7 +15,17 @@ import CreateMaterialInput from "../components/CreateMaterialInput";
 
 export default function Login(){
     const dispatch = useDispatch();
-    dispatch(createInput(['Correo Electronico', 'Clave']));
+    const navigation = useNavigation();
+    
+    useEffect(() => {
+        navigation.addListener('focus', () => {
+            console.log('create focus')
+            dispatch(createInput(['Correo Electronico', 'Clave']));
+        });
+        return () => {
+            navigation.removeListener();
+        } 
+    });
 
     return (
         <View style={ style.content }>
@@ -34,7 +45,10 @@ export default function Login(){
                         }));
                     }
                 }} />
-                <CreateButton sytle={ style.btn } title={ 'Registrarse' } secudary={ 'true' } />
+                <CreateButton sytle={ style.btn } title={ 'Registrarse' } secudary={ 'true' } 
+                    fnPress={ () => {
+                        navigation.navigate('register');
+                    } } />
             </View>
             <CreateButton sytle={ style.btn } title={ 'iniciar' } iconName={ 'google' } />
         </View>

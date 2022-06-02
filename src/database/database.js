@@ -23,5 +23,5 @@ export async function createUsers(userName, id){
         userName: userName
     }
     const querySnapshot = await addDoc(collection(db, 'users'), user);
-    console.log('respuesta del crear usuario', querySnapshot);
+    return querySnapshot.id;
 }

@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { setFocus, setValueInputs } from "../features/MaterialInput/materialInputSlice";
 
 function CreateIcons({ icon, stateIcon }){
-    console.log(stateIcon)
     if(icon !== undefined && icon){
         let nameIcon = 'times-circle';
         let color = 'red'
@@ -56,6 +55,7 @@ export default function CreateMaterialInput({ renderIcons, fnValidate, contentRe
                                 if(fnValidate !== undefined){
                                     validate = fnValidate(text, inputs, index);
                                 }
+                                console.log('result validate', validate)
                                 dispatch(setValueInputs({
                                     index: index,
                                     inputValue: text,

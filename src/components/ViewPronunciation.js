@@ -14,7 +14,6 @@ export default function ViewPronunciation(){
 
     useEffect(() => {
         navigation.addListener('beforeRemove', (e) => {
-            console.log(e.data.action.type, e.data.action.type === 'GO_BACK')
             if(e.data.action.type === 'GO_BACK'){
                 e.preventDefault();
                 navigation.navigate('home');

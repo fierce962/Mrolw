@@ -11,7 +11,6 @@ export default function CreateWordel({ index, setFocus, alternativeBackGraund, w
     ]
 
     function LoadItems(){
-        console.log(wordelText)
         return wordelText.split('').map((value, i) => (
             <CreateWordelItems key={ `items${index}-${i}` } indexItem={ i } indexWordel={ index } setFocus={ setFocus } />
         ))
