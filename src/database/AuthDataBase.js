@@ -1,13 +1,15 @@
 import { afAuth } from "./firebaseConfig";
 import { createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, signOut  } from "firebase/auth";
-import { createUsers } from './database';
+import { createUsers, getUserData } from './database';
 
 class AuthDataBase{
 
     async loginUser(email, password){
         try {            
-            await signInWithEmailAndPassword(afAuth, email, password);
+            const resultLogin = await signInWithEmailAndPassword(afAuth, email, password);
+            console.log('user id', resultLogin.user.uid)
+            await getUserData(resultLogin.user.uid);
             return 'login'
         } catch (error) {
             if(error.code === 'auth/invalid-email' || error.code === 'auth/user-not-found'){

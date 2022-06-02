@@ -8,39 +8,41 @@ import { controllerNotifications } from "../../models/ControllerNotifications";
 export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
-        let parseWords = await getStorage('words');
+        let user = await getStorage('user');
+        console.log('user', user)
         try {
-            if(parseWords === null || parseWords.day !== new Date().getDate()){
+            if(user.words === undefined || user.words.day !== new Date().getDate()){
                 await controllerNotifications.removeNotification('notificationId');
-                if(parseWords === null) parseWords = {};
-                const maxId = parseWords.maxId === undefined ? 4 : parseWords.maxId; 
+                if(user.words === undefined) user.words = {};
+                console.log('user addwords', user)
+                const maxId = user.words.maxId === undefined ? 4 : user.words.maxId; 
                 let limit = 5;
-                if(parseWords.learn !== undefined && parseWords.learn.length !== 0){
-                    parseWords.learn.forEach(learnWords => {
-                        parseWords.list.push(learnWords);
+                if(user.words.learn !== undefined && user.words.learn.length !== 0){
+                    user.words.learn.forEach(learnWords => {
+                        user.words.list.push(learnWords);
                     });
                 };
-                if(parseWords.learn !== undefined){
-                    limit += -parseWords.list.length;
+                if(user.words.learn !== undefined){
+                    limit += -user.words.list.length;
                 }
                 if(limit !== 0){
                     const newList = await getWordsRangeDb(maxId, limit);
-                    const olwList = parseWords.list === undefined ? [] : parseWords.list;
-                    parseWords = createWordsObject(olwList);
+                    const olwList = user.words.list === undefined ? [] : user.words.list;
+                    user.words = createWordsObject(olwList);
                     newList.forEach(wordList =>{
-                        parseWords.list.push(wordList);
+                        user.words.list.push(wordList);
                     });
-                    parseWords.maxId = getMaxId(parseWords.list);
+                    user.words.maxId = getMaxId(user.words.list);
                 }else{
-                    parseWords.day = new Date().getDate();
-                    parseWords.learn = [];
+                    user.words.day = new Date().getDate();
+                    user.words.learn = [];
                 }
             }
         } catch (error) {
             console.log('error getwords', error)
         }
-        await setStorage('words', parseWords);
-        return parseWords;
+        await setStorage('words', user);
+        return user.words;
     }
 )
 
@@ -48,11 +50,11 @@ export const searchWords = createAsyncThunk(
     'learn/searchNewWords',
     async () => {
         try {
-            let words = await getStorage('words');
-            words.list = await getWordsRangeDb(words.maxId, 5);
-            words.maxId = getMaxId(words.list);
-            await setStorage('words', words);
-            return words;
+            let user = await getStorage('user');
+            user.words.list = await getWordsRangeDb(user.words.maxId, 5);
+            user.words.maxId = getMaxId(user.words.list);
+            await setStorage('user', user);
+            return user.words;
         } catch (error) {
             console.log('seachWords', error)
         }
@@ -70,6 +72,7 @@ function getMaxId(learnList){
 export const setLearnWord = createAsyncThunk(
     'learn/setWord',
     async (index, thunkApi) => {
+        let user = await getStorage('user');
         let words = thunkApi.getState().learn.words;
         const list = words.list.filter((value, i) => i !== index);
         let learn = [... words.learn];
@@ -84,7 +87,8 @@ export const setLearnWord = createAsyncThunk(
                 console.log(error)
             }
         } 
-        await setStorage('words', createWordsObject(list, learn, words.maxId));
+        user.words = createWordsObject(list, learn, words.maxId);
+        await setStorage('user', user);
         return {
             newList: list,
             newLearn: learn 
@@ -95,15 +99,19 @@ export const setLearnWord = createAsyncThunk(
 export const removeLearn = createAsyncThunk(
     'learn/remove',
     async () => {
-        const words = await getStorage('words')
-        words.learn.shift();
-        await setStorage('words', words);
-        if(words.learn.length !== 0){
-            delete words.learn[0].id
-            await addNotification(words.learn[0]);
+        try {
+            const user = await getStorage('user')
+            user.words.learn.shift();
+            await setStorage('user', user);
+            if(user.words.learn.length !== 0){
+                delete user.words.learn[0].id
+                await addNotification(user.words.learn[0]);
+            }
+            console.log('quedan', user.words.learn.length)
+            return user.words;
+        } catch (error) {
+            console.log('error remove learn', error)
         }
-        console.log('quedan restando', words.learn.length);
-        return words;
     }
 )
 
@@ -111,15 +119,15 @@ export const errorLearn = createAsyncThunk(
     'learn/ErrorResults',
     async () => {
         try {
-            const words = await getStorage('words')
-            const remove = words.learn.shift();
-            words.learn.push(remove);
-            if(words.learn.length !== 0){
-                delete words.learn[0].id
-                await addNotification(words.learn[0]);
+            const user = await getStorage('user')
+            const remove = user.words.learn.shift();
+            user.words.learn.push(remove);
+            if(user.words.learn.length !== 0){
+                delete user.words.learn[0].id
+                await addNotification(user.words.learn[0]);
             }
-            await setStorage('words', words);
-            return words;
+            await setStorage('user', user);
+            return user.words;
         } catch (error) {
             console.log('learn/errorResults', error)
         }

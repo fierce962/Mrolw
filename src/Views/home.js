@@ -43,11 +43,11 @@ export default function Home() {
     function timer(){
         if(mode[0] === 'testMode'){
             return <CreateTimerCount fnPress={ async () => {
-                const words = await getStorage('words');
+                const user = await getStorage('user');
                 dispatch(clearWordel());
                 controllerNotifications.removeNotification('notificationId');
-                console.log('timer', words)
-                navigation.navigate('wordel', words.learn[0]);
+                console.log('timer', user.words)
+                navigation.navigate('wordel', user.words.learn[0]);
             } }/>
         }
         return <CreateButton title={ 'Solicitar mas palabras' } size={ 20 } fnPress={ () => dispatch(searchWords()) } />

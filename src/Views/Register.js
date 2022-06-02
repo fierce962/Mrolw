@@ -93,12 +93,7 @@ export default function Register(){
                                 }
                             }));
                             contentReference[1].focus();
-                        }else{
-                            await setStorage('user', {
-                                id: resultCreate,
-                                userName: inputsValues[0].value
-                            });
-                        }
+                        };
                     }else{
                         console.log('input error', inputError[0], inputError[1])
                         dispatch(setValueInputs({

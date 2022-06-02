@@ -43,7 +43,7 @@ export default function Login(){
                             index: resultValidate.index,
                             valid: resultValidate
                         }));
-                    }
+                    };
                 }} />
                 <CreateButton sytle={ style.btn } title={ 'Registrarse' } secudary={ 'true' } 
                     fnPress={ () => {
