@@ -1,11 +1,12 @@
 import { afAuth } from "./firebaseConfig";
 import { createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword } from "firebase/auth";
+    signInWithEmailAndPassword, signOut  } from "firebase/auth";
 import { createUsers } from './database';
 
 class AuthDataBase{
 
     async loginUser(email, password){
+        console.log('login fn', email, password)
         try {            
             const login = await signInWithEmailAndPassword(afAuth, email, password);
             console.log(login)
@@ -13,7 +14,7 @@ class AuthDataBase{
         } catch (error) {
             // auth/invalid-email
             console.log('error in login', error.code);
-            if(error.code === 'auth/invalid-email'){
+            if(error.code === 'auth/invalid-email' || error.code === 'auth/user-not-found'){
                 return 'invalid-email';
             }else if(error.code === 'auth/wrong-password'){
                 return 'invalid-password';
@@ -34,7 +35,15 @@ class AuthDataBase{
             }
         }
     }
+
+    async closeSession(){
+        try {
+            await signOut(afAuth);
+        } catch (error) {
+            console.log('no cerro la session', error)
+        }
+    }
 }
 
 const authdb = new AuthDataBase();
-export const { loginUser, createUser } = authdb;
+export const { loginUser, createUser, closeSession } = authdb;

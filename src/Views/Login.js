@@ -5,12 +5,12 @@ import { useDispatch } from "react-redux";
 import { store } from "../store/store";
 import { createInput } from '../features/MaterialInput/materialInputSlice';
 import { loginUser } from "../database/AuthDataBase";
-
+import { setOneErrorInput } from "../features/MaterialInput/materialInputSlice";
+import { validateInputs } from "./modelsViews/ValidatesInputs";
 
 import TextTitle from "../components/TextTitle";
 import CreateButton from "../components/CreateButton";
 import CreateMaterialInput from "../components/CreateMaterialInput";
-import { afAuth } from "../database/firebaseConfig";
 
 export default function Login(){
     const dispatch = useDispatch();
@@ -25,8 +25,14 @@ export default function Login(){
             <View style={ style.contentBtn } >
                 <CreateButton sytle={ style.btn } title={ 'Iniciar' } fnPress={async () => {
                     const inputsValue = store.getState().materialInput.inputs
-                    await loginUser(inputsValue[0].value, inputsValue[1].value);
-                    console.log('value afauth', afAuth)
+                    const user = await loginUser(inputsValue[0].value, inputsValue[1].value);
+                    const resultValidate = validateInputs.login(user);
+                    if(resultValidate.result){
+                        dispatch(setOneErrorInput({
+                            index: resultValidate.index,
+                            valid: resultValidate
+                        }));
+                    }
                 }} />
                 <CreateButton sytle={ style.btn } title={ 'Registrarse' } secudary={ 'true' } />
             </View>

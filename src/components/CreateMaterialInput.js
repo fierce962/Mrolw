@@ -20,7 +20,7 @@ function CreateIcons({ icon, stateIcon }){
 }
 
 function CreateBoxError({ input }){
-    if(!input.focus || input.valid === undefined) return null
+    if(input.valid === undefined || !input.valid.result) return null
     return (
         <View style={ { paddingLeft: 10 } }>
             <Text style={ { color: '#fff' } }>{ input.valid.message }</Text>

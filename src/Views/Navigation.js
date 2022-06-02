@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 import { afAuth } from '../database/firebaseConfig';
-
+import { closeSession } from '../database/AuthDataBase';
 
 import Home from './home';
 import ViewWordel from '../components/ViewWordel';
@@ -16,13 +16,17 @@ import Login from './Login';
 export default function Navigation({ drawer }){
     const Stack = createNativeStackNavigator();
     const navigation = useNavigation();
+
     useEffect(() => {
         afAuth.onAuthStateChanged((user) => {
             if(user !== null){
                 navigation.navigate('home');
+            }else{
+                navigation.navigate('login');
             }
         })
     })
+
     return(
         <Stack.Navigator initialRouteName='login'>
             <Stack.Group screenOptions={({ route, navigation }) => ({
@@ -43,7 +47,12 @@ export default function Navigation({ drawer }){
                             <IconTouchable iconName={ name }
                                 fnPress={ fnPress } /> 
                         )
-                    }
+                    },
+                    headerRight: () => (
+                        <IconTouchable iconName={ 'sign-out' } fnPress={ () => {
+                            closeSession();
+                        } } />
+                    )
                 })}>
                 <Stack.Screen options={ { headerBackVisible: false } } name='home' component={ Home } />
                 <Stack.Screen options={ { headerBackVisible: false } } name='wordel' component={ ViewWordel } />

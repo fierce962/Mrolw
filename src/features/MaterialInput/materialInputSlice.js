@@ -34,9 +34,18 @@ const materialSlice = createSlice({
                         state.inputs[action.payload.index + 1].valid.result = true;
                 }
             }
+        },
+        setOneErrorInput(state, action){
+            state.inputs.forEach((values, index) => {
+                if(action.payload.index === index){
+                    values.valid = action.payload.valid;
+                }else{
+                    values.valid = undefined;
+                }
+            });
         }
     }
 })
 
 export default materialSlice.reducer;
-export const { createInput, setFocus, setValueInputs } = materialSlice.actions;
+export const { createInput, setFocus, setValueInputs, setOneErrorInput } = materialSlice.actions;
