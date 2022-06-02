@@ -96,12 +96,11 @@ export default function Register(){
                         }else{
                             await setStorage('user', {
                                 id: resultCreate,
-                                userName: inputsValues[0].value,
-                                lastLearnIds: []
+                                userName: inputsValues[0].value
                             });
                         }
                     }else{
-                        console.log('input error',inputError[0], inputError[1])
+                        console.log('input error', inputError[0], inputError[1])
                         dispatch(setValueInputs({
                             index: inputError[1],
                             valid: validate(inputError[0], inputsValues, inputError[1])

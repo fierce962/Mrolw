@@ -54,8 +54,7 @@ export default function CreateMaterialInput({ renderIcons, fnValidate, contentRe
                                 let validate = undefined;
                                 if(fnValidate !== undefined){
                                     validate = fnValidate(text, inputs, index);
-                                }
-                                console.log('result validate', validate)
+                                };
                                 dispatch(setValueInputs({
                                     index: index,
                                     inputValue: text,

@@ -29,7 +29,7 @@ class Storage{
 
     async clearAll(){
         try {
-            await AsyncStorage.clearAll();
+            await AsyncStorage.clear();
         } catch (error) {
             console.log('error clear Store', error);
         }
