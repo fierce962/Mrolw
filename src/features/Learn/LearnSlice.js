@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getStorage, setStorage } from "../../models/Storage";
-import { getWordsRangeDb } from "../../database/database";
+import { getWordsRangeDb, setUserDataWords } from "../../database/database";
 
 import { controllerNotifications } from "../../models/ControllerNotifications";
 
@@ -9,7 +9,7 @@ export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
         let user = await getStorage('user');
-        console.log('user', user)
+        console.log('user get words', user)
         try {
             if(user.words === undefined || user.words.day !== new Date().getDate()){
                 await controllerNotifications.removeNotification('notificationId');
@@ -108,6 +108,7 @@ export const removeLearn = createAsyncThunk(
                 await addNotification(user.words.learn[0]);
             }
             console.log('quedan', user.words.learn.length)
+            await setUserDataWords(user)
             return user.words;
         } catch (error) {
             console.log('error remove learn', error)

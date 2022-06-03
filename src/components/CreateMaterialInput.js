@@ -9,7 +9,7 @@ function CreateIcons({ icon, stateIcon }){
     if(icon !== undefined && icon){
         let nameIcon = 'times-circle';
         let color = 'red'
-        if(stateIcon.valid !== undefined && stateIcon.valid.result){
+        if(stateIcon.valid !== undefined && !stateIcon.valid.result){
             nameIcon = 'check-circle';
             color = 'green'
         }

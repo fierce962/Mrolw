@@ -1,5 +1,5 @@
 import { db } from './firebaseConfig';
-import { addDoc, getDocs, collection, limit, orderBy, query, where } from "firebase/firestore";
+import { addDoc, getDocs, updateDoc, doc, collection, limit, orderBy, query, where } from "firebase/firestore";
 import { setStorage } from '../models/Storage';
 
 export async function getWordsRangeDb(rangeMax, limitNumb = 5){
@@ -23,6 +23,7 @@ export async function createUsers(userName, id){
         userName: userName
     }
     const querySnapshot = await addDoc(collection(db, 'users'), user);
+    user.tableId = querySnapshot.docs[0].id;
     await setStorage('user', user);
     return querySnapshot.id;
 };
@@ -30,8 +31,20 @@ export async function createUsers(userName, id){
 export async function getUserData(uidUser){
     try {        
         const querySnapshot = await getDocs(query(collection(db, 'users'), where('idUser', '==', uidUser)));
-        await setStorage('user', querySnapshot.docs[0].data());
+        const user =  querySnapshot.docs[0].data();
+        user.tableId = querySnapshot.docs[0].id;
+        await setStorage('user', user);
     } catch (error) {
         console.log('error get userdata', error)
+    }
+}
+
+export async function setUserDataWords(user){
+    try {
+        const id = user.tableId;
+        delete user.tableId;
+        await updateDoc(doc(db, 'users', id), user);
+    } catch (error) {
+        console.log('setuserdata', error)
     }
 }

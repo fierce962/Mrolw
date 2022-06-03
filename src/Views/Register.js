@@ -6,63 +6,23 @@ import { store } from '../store/store';
 import { createInput, setValueInputs } from "../features/MaterialInput/materialInputSlice";
 import { createUser } from "../database/AuthDataBase";
 import { useNavigation } from "@react-navigation/native";
-import { setStorage } from "../models/Storage";
+import { validateInputs } from "./modelsViews/ValidatesInputs";
 
 import TextTitle from "../components/TextTitle";
 import CreateMaterialInput from "../components/CreateMaterialInput";
 import CreateButton from "../components/CreateButton";
 
 
-function validate(textInput, Allinputs, index){
-    const validateResult = {
-        message: '',
-        result: false,
-    }
-    if('Correo Electronico' === Allinputs[index].textHolder){
-        const evaluateRegex = new RegExp(/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/);
-        if(textInput === ''){
-            validateResult.message = 'El no puede estar vacio';
-        }else if(evaluateRegex.test(textInput)){
-            validateResult.result = true;
-        }else{
-            validateResult.message = 'El correo no es valido';
-        }
-    }else if('Nombre de Usuario' === Allinputs[index].textHolder){
-        if(textInput === ''){
-            validateResult.message = 'El nombre de usuario no puede estar vacio';
-        }else if(textInput.length < 6){
-            validateResult.message = 'El nombre de usuario debe ser de minimo 6 caracteres';
-        }else{
-            validateResult.result = true;
-        }
-    }else if('Clave' === Allinputs[index].textHolder){
-        if(textInput === ''){
-            validateResult.message = 'La clave no puede estar vacia';
-        }else if(textInput.length < 6){
-            validateResult.message = 'La clave debe ser de minimo 6 caracteres';
-        }else{
-            validateResult.result = true;
-        }
-    }else if('Confirme la clave' === Allinputs[index].textHolder){
-        console.log('clave 1', Allinputs[index - 1].value, 'clave 2', Allinputs[index].value)
-        if(textInput === ''){
-            validateResult.message = 'La clave no puede estar vacia';
-        }else if(textInput.length < 6){
-            validateResult.message = 'La clave debe ser de minimo 6 caracteres';
-        }else if(Allinputs[index - 1].value !== textInput){
-            validateResult.message = 'Las claves no coinciden';
-        }else{
-            validateResult.result = true;
-        }
-    }
-    return validateResult;
-}
-
 export default function Register(){
     const dispatch = useDispatch();
     const navigation = useNavigation();
     dispatch(createInput(['Nombre de Usuario', 'Correo Electronico', 'Clave', 'Confirme la clave']));
     const contentReference = [];
+
+    function validate(text, inputs, index){
+        return validateInputs.register(text, inputs, index)
+    }
+
     return (
         <View style={ style.contentRegister }>
             <View></View>
@@ -72,11 +32,12 @@ export default function Register(){
                     contentReference={ contentReference }  />
             </View>
             <View style={ style.contentBtn } >
-                <CreateButton title={ 'registrarse' } fnPress={async () => {
+                <CreateButton title={ 'registrarse' } aditionalStyle={ style.btn }
+                    fnPress={async () => {
                     const inputsValues = store.getState().materialInput.inputs;
                     let inputError;
                     const send = inputsValues.every((value, index) => {
-                        if(value.valid !== undefined && value.valid.result){
+                        if(value.valid !== undefined && !value.valid.result){
                             return true;
                         }
                         if(inputError === undefined) inputError = [value.value, index];
@@ -103,9 +64,10 @@ export default function Register(){
                         contentReference[inputError[1]].focus();
                     }
                 }} />
-                <CreateButton title={ 'cancelar' } secudary={ true } fnPress={() => {
-                    navigation.navigate('login');
-                }} />
+                <CreateButton title={ 'cancelar' } aditionalStyle={ style.btn } 
+                    secudary={ true } fnPress={() => {
+                        navigation.navigate('login');
+                    }} />
             </View>
         </View>
     )
@@ -119,5 +81,8 @@ const style = StyleSheet.create({
     contentBtn: {
         flexDirection: 'row',
         flexWrap: 'wrap'
+    },
+    btn: {
+        margin: 5
     }
 });

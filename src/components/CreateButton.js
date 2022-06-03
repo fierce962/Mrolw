@@ -2,12 +2,13 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function CreateButton({ title, fnPress, iconName, size, secudary }){
+export default function CreateButton({ title, fnPress, iconName, size, secudary, aditionalStyle }){
     if(size === undefined) size = 20;
 
     const btn = [
         style.Button,
-        secudary !== undefined && style.secundaryBtn
+        secudary !== undefined && style.secundaryBtn,
+        aditionalStyle !== undefined && aditionalStyle,
     ];
 
     function CreateIcon(){
@@ -33,7 +34,6 @@ export default function CreateButton({ title, fnPress, iconName, size, secudary 
 const style = StyleSheet.create({
     Button: {
         flex: 1,
-        margin: 5,
         maxHeight: 50,
         alignItems: 'center',
         padding: 10,

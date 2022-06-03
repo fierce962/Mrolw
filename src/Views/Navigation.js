@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
-import { afAuth } from '../database/firebaseConfig';
 import { closeSession } from '../database/AuthDataBase';
 import { clearAll } from '../models/Storage';
+import { getStorage } from '../models/Storage';
 
 import Home from './home';
 import Register from './Register';
@@ -15,19 +15,16 @@ import CreateError from '../components/CreateError';
 import { CreateLogo } from '../components/CreateSvg';
 import Login from './Login';
 
-
 export default function Navigation({ drawer }){
     const Stack = createNativeStackNavigator();
     const navigation = useNavigation();
 
     useEffect(() => {
-        afAuth.onAuthStateChanged((user) => {
+        getStorage('user').then(user => {
             if(user !== null){
                 navigation.navigate('home');
-            }else{
-                navigation.navigate('login');
             }
-        })
+        });
     })
 
     return(

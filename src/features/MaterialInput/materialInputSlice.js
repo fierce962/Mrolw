@@ -26,14 +26,6 @@ const materialSlice = createSlice({
             if(action.payload.valid !== undefined){
                 state.inputs[action.payload.index].valid = action.payload.valid;
             };
-            if(state.inputs[action.payload.index].textHolder === 'Clave'){
-                if(state.inputs[action.payload.index + 1] !== undefined &&
-                    state.inputs[action.payload.index + 1].value !== '' &&
-                    state.inputs[action.payload.index].value === 
-                    state.inputs[action.payload.index + 1].value ){
-                        state.inputs[action.payload.index + 1].valid.result = true;
-                }
-            }
         },
         setOneErrorInput(state, action){
             state.inputs.forEach((values, index) => {

@@ -34,7 +34,9 @@ export default function Login(){
                 <CreateMaterialInput />
             </View>
             <View style={ style.contentBtn } >
-                <CreateButton sytle={ style.btn } title={ 'Iniciar' } fnPress={async () => {
+                <CreateButton title={ 'Iniciar' } aditionalStyle={ style.btn }
+                    fnPress={async () => {
+                    console.log('iniciar')
                     const inputsValue = store.getState().materialInput.inputs
                     const user = await loginUser(inputsValue[0].value, inputsValue[1].value);
                     const resultValidate = validateInputs.login(user);
@@ -43,14 +45,16 @@ export default function Login(){
                             index: resultValidate.index,
                             valid: resultValidate
                         }));
+                    }else{
+                        navigation.navigate('home');
                     };
                 }} />
-                <CreateButton sytle={ style.btn } title={ 'Registrarse' } secudary={ 'true' } 
+                <CreateButton title={ 'Registrarse' } secudary={ 'true' } aditionalStyle={ style.btn }
                     fnPress={ () => {
                         navigation.navigate('register');
                     } } />
             </View>
-            <CreateButton sytle={ style.btn } title={ 'iniciar' } iconName={ 'google' } />
+            <CreateButton title={ 'iniciar' } iconName={ 'google' } aditionalStyle={ style.btn } />
         </View>
     )
 }
@@ -64,4 +68,7 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap'
     },
+    btn: {
+        margin: 5
+    }
 })
