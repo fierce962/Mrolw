@@ -66,11 +66,6 @@ export default function Home() {
 
     return (
         <View style={ [{ padding: 10  }, { flex: 1 } ] }>
-            <Button title="create notification" onPress={() => {
-                console.log('create anotification')
-                controllerNotifications.createNotification('test', 'test', {"english": "react", "espanish": "reaccionar", "pronunciation": "rēakt", "pronunciationSpanish": "riakt"}, 30000) 
-                }}/>
-            <Button title="remove" onPress={() => removeStorage('words') }/>
             <HasLearnMode />
         </View>
     )

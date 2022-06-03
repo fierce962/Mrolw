@@ -32,7 +32,10 @@ export default function ViewPronunciation(){
             </View>
             <View style={ style.contenCentral }>
                 <View style={ style.pronunciationView }>
-                    <Text style={ style.textPronunciation }>{ pronunciation.pronunciationSpanish }</Text>
+                    <Text style={ style.textPronunciation }>
+                        { pronunciation.pronunciationSpanish === undefined ? pronunciation.english :
+                            pronunciation.pronunciationSpanish }
+                    </Text>
                     <IconTouchable iconName={ 'volume-up' } sizeIcon={ 40 } 
                         fnPress={ async () => {
                             await Tts.setDefaultLanguage('en-US');

@@ -32,16 +32,18 @@ class ValidateInputs{
         if('Correo Electronico' === Allinputs[index].textHolder){
             addMessage = 'El correo';
             this.email(textInput);
+            if(Allinputs[index].valid !== undefined && Allinputs[index].valid.result){
+                this.validateResult.message = Allinputs[index].valid.message;
+                this.validateResult.result = true;
+            }
         }else if('Nombre de Usuario' === Allinputs[index].textHolder){
             addMessage = 'El nombre de usuario';
             this.lengthInput(textInput, 6, addMessage)
-        }else if('Clave' === Allinputs[index].textHolder){
+        }else if('Clave' === Allinputs[index].textHolder || 'Confirme la clave' === Allinputs[index].textHolder){
             addMessage = 'La clave';
+            const sum = Allinputs[index].textHolder === 'Clave' ? 1 : -1;
             this.lengthInput(textInput, 6, addMessage);
-        }else if('Confirme la clave' === Allinputs[index].textHolder){
-            addMessage = 'La clave';
-            this.lengthInput(textInput, 6, addMessage);
-            this.confirmePassWord(textInput, Allinputs, index);
+            this.confirmePassWord(textInput, Allinputs, index, sum);
         }
         this.hasVoidInput(textInput, addMessage);
         if(this.validateResult.message !== '') this.validateResult.result = true;
@@ -67,10 +69,14 @@ class ValidateInputs{
         };
     }
 
-    confirmePassWord(textInput, Allinputs, index){
-        if(Allinputs[index - 1].value !== textInput){
+    confirmePassWord(textInput, Allinputs, index, sumIndex){
+        if(Allinputs[index + sumIndex].value !== '' && Allinputs[index + sumIndex].value !== textInput){
             this.validateResult.message = 'Las claves no coinciden';
+        }else if(Allinputs[index + sumIndex].valid !== undefined){
+            Allinputs[index + sumIndex].valid.result = false;
+            Allinputs[index].valid.result = false;
         }
+        
     }
 }
 

@@ -5,12 +5,13 @@ import { controllerNavigation } from "../models/ControllerNavigation";
 
 export default function DrawerButton({ drawer }) {
     return (
-        <Button
-            title='wordel'
-            onPress={() => {
-                drawer.current.closeDrawer();
-                controllerNavigation.get().navigate('wordel')
-            }}
-        />
+        // <Button
+        //     title='wordel'
+        //     onPress={() => {
+        //         drawer.current.closeDrawer();
+        //         controllerNavigation.get().navigate('wordel')
+        //     }}
+        // />
+        null
     )
 }

@@ -89,6 +89,12 @@ class ControllerNotifications{
         const date = new Date(new Date().getTime() + time);
         dataInput.day = `${ date.getDate() }`;
         console.log('create notification', dataInput)
+        if(dataInput.pronunciation !== undefined && dataInput.pronunciation === null){
+            delete dataInput.pronunciation;
+        };
+        if(dataInput.pronunciationSpanish !== undefined && dataInput.pronunciation === null){
+            delete dataInput.pronunciationSpanish;
+        };
         const channelId = await notifee.createChannel({
             id: 'default',
             name: 'Default Channel',
