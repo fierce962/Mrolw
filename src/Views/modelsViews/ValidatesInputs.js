@@ -31,11 +31,11 @@ class ValidateInputs{
         this.clearValidate();
         if('Correo Electronico' === Allinputs[index].textHolder){
             addMessage = 'El correo';
-            this.email(textInput);
             if(Allinputs[index].valid !== undefined && Allinputs[index].valid.result){
                 this.validateResult.message = Allinputs[index].valid.message;
                 this.validateResult.result = true;
             }
+            this.email(textInput);
         }else if('Nombre de Usuario' === Allinputs[index].textHolder){
             addMessage = 'El nombre de usuario';
             this.lengthInput(textInput, 6, addMessage)
@@ -66,6 +66,9 @@ class ValidateInputs{
         const evaluateRegex = new RegExp(/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/);
         if(!evaluateRegex.test(textInput)){
             this.validateResult.message = 'El correo no es valido';
+        }else{
+            this.validateResult.message = '';
+            this.validateResult.result = false;
         };
     }
 

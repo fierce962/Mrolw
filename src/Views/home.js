@@ -10,7 +10,7 @@ import CreateTimerCount from "../components/CreateTimerCount";
 import CreateButton from "../components/CreateButton";
 
 import { controllerNotifications } from "../models/ControllerNotifications";
-import { removeStorage, getStorage } from '../models/Storage';
+import { getStorage } from '../models/Storage';
 import { clearWordel } from "../features/wordel/wordelSlice";
 import { searchWords } from "../features/Learn/LearnSlice";
 import { calcTime } from "../features/timerCount/timerCountSlice";

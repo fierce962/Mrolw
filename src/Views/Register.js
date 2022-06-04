@@ -54,6 +54,8 @@ export default function Register(){
                                 }
                             }));
                             contentReference[1].focus();
+                        }else{
+                            navigation.navigate('login');
                         };
                     }else{
                         console.log('input error', inputError[0], inputError[1])
