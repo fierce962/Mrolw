@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Animated } from 'react-native';
 
-export default function FloatingMessage({ message, topSpacing }){
+export default function FloatingMessage({ message, topSpacing, notTiangle }){
     let animateValue = new Animated.Value(0);
     Animated.timing(animateValue, {
         toValue: 1,
@@ -19,7 +19,7 @@ export default function FloatingMessage({ message, topSpacing }){
                 inputRange: [0, 1],
                 outputRange: [0, 10]
             }) }]}>
-            <View style={ style.triangle } ></View>
+            <View style={ notTiangle === undefined ? style.triangle : {} } ></View>
             <Text style={ style.text }>{ message }</Text>
         </Animated.View>
     )

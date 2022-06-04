@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { View } from 'react-native';
 import { DrawerLayoutAndroid, AppState } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
@@ -12,6 +13,7 @@ import { controllerNavigation } from './models/ControllerNavigation';
 
 import Navigation from './Views/Navigation';
 import DrawerButton from './components/DrawerButton';
+import GeneralMessageFloating from './Views/GeneralMessageFloating';
 
 
 export default function Main() {
@@ -59,13 +61,16 @@ export default function Main() {
     }, []);
 
     return (
-        <NavigationContainer >
-            <DrawerLayoutAndroid
-                ref={ drawerRef }
-                drawerWidth={300}
-                renderNavigationView={() => <DrawerButton drawer={ drawerRef }/> } >
-                    <Navigation drawer={ drawerRef }/>
-            </DrawerLayoutAndroid>
-        </NavigationContainer>
+        <View style={[ { position: 'relative' }, { flex: 1 } ]}>
+            <NavigationContainer>
+                <DrawerLayoutAndroid
+                    ref={ drawerRef }
+                    drawerWidth={300}
+                    renderNavigationView={() => <DrawerButton drawer={ drawerRef }/> } >
+                        <Navigation drawer={ drawerRef }/>
+                </DrawerLayoutAndroid>
+            </NavigationContainer>
+            <GeneralMessageFloating />
+        </View>
     );
 }
