@@ -10,7 +10,7 @@ import { assingModalParameters } from '../features/modal/modalSlice';
 import { setParameters } from "../features/FloatingButton/floatingButtonSlice";
 
 import ModalAnimate from "./ModalAnimate";
-import FlotingMessage from "./FlotingMessage";
+import FlotingMessagePronunciation from "./FlotingMessagePronunciation";
 import FloatingButton from "./FloatingButton";
 
 export default function VoiceToText({ evaluatedText }){
@@ -87,7 +87,7 @@ export default function VoiceToText({ evaluatedText }){
                         </Text>
                     </TouchableHighlight>
                 </Animated.View>
-                <FlotingMessage message={'No se detecto su voz'} topSpacing={ 90 }/>
+                <FlotingMessagePronunciation message={'No se detecto su voz'} topSpacing={ 90 }/>
             </View>
             <FloatingButton fnPress={ () => navigation.navigate('home') }/>
         </View>

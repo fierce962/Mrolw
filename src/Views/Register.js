@@ -85,6 +85,7 @@ const style = StyleSheet.create({
         flexWrap: 'wrap'
     },
     btn: {
-        margin: 5
+        margin: 5,
+        borderRadius: 5
     }
 });
