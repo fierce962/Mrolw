@@ -41,6 +41,7 @@ const style = StyleSheet.create({
     },
     contentbtn: {
         width: '80%',
+        height: 50,
         margin: 10
     }
 })
