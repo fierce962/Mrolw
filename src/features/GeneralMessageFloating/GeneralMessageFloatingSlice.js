@@ -4,14 +4,16 @@ import { createSlice } from "@reduxjs/toolkit";
 const generalMessageFloating = createSlice({
     name: 'generalMessage',
     initialState: {
-        render: true
+        render: false,
+        menssage: ''
     },
     reducers: {
-        setRender(state, action){
-            state.render = action.payload;
+        setState(state, action){
+            state.render = action.payload.render;
+            state.menssage = action.payload.menssage;
         }
     }
 })
 
 export default generalMessageFloating.reducer;
-export const { setRender } = generalMessageFloating.actions;
+export const { setState } = generalMessageFloating.actions;
