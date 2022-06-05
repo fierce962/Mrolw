@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { View } from 'react-native';
 import { DrawerLayoutAndroid, AppState } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -21,7 +21,6 @@ export default function Main() {
     const drawerRef = useRef(null);
     const appState = useRef(AppState.currentState);
     let date = new Date().getDate();
-    controllerNotifications.createListener();
 
     async function hasNotificationBackGraund(){
         try {

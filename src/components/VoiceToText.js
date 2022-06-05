@@ -83,7 +83,7 @@ export default function VoiceToText({ evaluatedText }){
                 <Animated.View style={ styleAnimate }>
                     <TouchableHighlight style={ style.buttonIcon } onPress={ startVoice }>
                         <Text>
-                            <Icon name="microphone" size={ 30 } color="#000" />;
+                            <Icon name="microphone" size={ 30 } color="#000" />
                         </Text>
                     </TouchableHighlight>
                 </Animated.View>

@@ -14,7 +14,7 @@ class ControllerNotifications{
     async getInitialNotification(){
         const initialNotification = await notifee.getInitialNotification();
         if(initialNotification !== null && this.initialNotification){
-            console.log('nitial notification', initialNotification.data)
+            console.log('initial notification', initialNotification.notification.data)
             this.actionsPress(initialNotification.notification.data, initialNotification.pressAction.id);
         }else{
             this.initialNotification = false;
@@ -67,9 +67,11 @@ class ControllerNotifications{
     }
 
     async actionsPress(data, pressActionId){
+        console.log('action press')
         const action = pressActionId.split('-');
         const EqualDay = this.hasEqualDay(data, action);
         if(action[0] === 'open' && EqualDay[0]){
+            console.log('entro en el navigation open')
             controllerNavigation.get().navigate(action[1], data);
         }else{
             controllerNavigation.get().navigate('error', EqualDay[1]);

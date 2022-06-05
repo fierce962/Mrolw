@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { View } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import { controllerNavigation } from "../models/ControllerNavigation";
 import { useSelector, useDispatch } from "react-redux";
 
 import CreateBoxLearnWord from "../components/CreateBoxLearnWord";
@@ -20,7 +19,6 @@ export default function Home() {
     const dispatch = useDispatch();
     const mode = useSelector(state => state.learn.mode);
     const navigation = useNavigation();
-    controllerNavigation.set(navigation);
 
     const information = {
         title: 'se acabo el estudio',

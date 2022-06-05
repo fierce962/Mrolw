@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 import { closeSession } from '../database/AuthDataBase';
 import { clearAll } from '../models/Storage';
 import { getStorage } from '../models/Storage';
+import { controllerNavigation } from '../models/ControllerNavigation';
+import { controllerNotifications } from '../models/ControllerNotifications';
 
 import Home from './home';
 import Register from './Register';
@@ -16,19 +18,26 @@ import { CreateLogo } from '../components/CreateSvg';
 import Login from './Login';
 
 export default function Navigation({ drawer }){
+    const [initialRouter, setInitialRouter] = useState('');
     const Stack = createNativeStackNavigator();
     const navigation = useNavigation();
-
+    controllerNavigation.set(navigation);
+    
     useEffect(() => {
         getStorage('user').then(user => {
             if(user !== null){
-                navigation.navigate('home');
+                setInitialRouter('home')
+            }else{
+                setInitialRouter('login')
             }
+            controllerNotifications.createListener();
         });
-    })
+    });
 
+    if(initialRouter === '') return null
+    
     return(
-        <Stack.Navigator initialRouteName='login'>
+        <Stack.Navigator initialRouteName={ initialRouter }>
             <Stack.Group screenOptions={({ route, navigation }) => ({
                     headerTitle: () => <CreateLogo width={ 50 } height={ 50 } color={ '#cc0000' } />,
                     headerTitleAlign: 'center',
