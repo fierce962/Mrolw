@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { store } from '../store/store';
 import { createInput, setValueInputs } from "../features/MaterialInput/materialInputSlice";
+import { setState } from "../features/GeneralMessageFloating/GeneralMessageFloatingSlice";
 import { createUser } from "../database/AuthDataBase";
 import { useNavigation } from "@react-navigation/native";
 import { validateInputs } from "./modelsViews/ValidatesInputs";
@@ -34,6 +35,9 @@ export default function Register(){
             <View style={ style.contentBtn } >
                 <CreateButton title={ 'registrarse' } aditionalStyle={ style.btn }
                     fnPress={async () => {
+                    dispatch(setState({
+                        render: true
+                    }));
                     const inputsValues = store.getState().materialInput.inputs;
                     let inputError;
                     const send = inputsValues.every((value, index) => {
@@ -65,6 +69,9 @@ export default function Register(){
                         }));
                         contentReference[inputError[1]].focus();
                     }
+                    dispatch(setState({
+                        render: false
+                    }));
                 }} />
                 <CreateButton title={ 'cancelar' } aditionalStyle={ style.btn } 
                     secudary={ true } fnPress={() => {

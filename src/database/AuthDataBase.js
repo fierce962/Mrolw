@@ -23,7 +23,8 @@ class AuthDataBase{
     async createUser(userName, email, password){
         try {
             const user = await createUserWithEmailAndPassword(afAuth, email, password);
-            return await createUsers(userName, user.user.uid);
+            const userId = await createUsers(userName, user.user.uid);
+            return userId;
         } catch (error) {
             if(error.code === 'auth/email-already-in-use'){
                 return 'email-duplicate';

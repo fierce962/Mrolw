@@ -7,13 +7,14 @@ import FloatingMessage from "../components/FloatingMessage";
 export default function GeneralMessageFloating(){
     const render = useSelector(state => state.generalMessage.render);
     const menssage = useSelector(state => state.generalMessage.menssage);
-
     if(!render) return null;
     
     return (
         <View style={ style.contentGeneral }>
             <View style={ style.contentMessage }>
-                <FloatingMessage message={ 'Espere por favor procesando' } topSpacing={ 0 } notTiangle={ true }/>
+                <FloatingMessage message={ menssage === '' ? 'Espere por favor procesando' : menssage } 
+                    topSpacing={ 0 } 
+                    notTiangle={ true }/>
             </View>
         </View>
     )

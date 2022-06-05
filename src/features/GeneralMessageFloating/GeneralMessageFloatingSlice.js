@@ -10,7 +10,9 @@ const generalMessageFloating = createSlice({
     reducers: {
         setState(state, action){
             state.render = action.payload.render;
-            state.menssage = action.payload.menssage;
+            if(action.payload.menssage !== undefined){
+                state.menssage = action.payload.menssage;
+            }
         }
     }
 })

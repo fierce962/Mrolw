@@ -8,6 +8,7 @@ import { createInput } from '../features/MaterialInput/materialInputSlice';
 import { loginUser } from "../database/AuthDataBase";
 import { setOneErrorInput } from "../features/MaterialInput/materialInputSlice";
 import { validateInputs } from "./modelsViews/ValidatesInputs";
+import { setState } from "../features/GeneralMessageFloating/GeneralMessageFloatingSlice";
 
 import TextTitle from "../components/TextTitle";
 import CreateButton from "../components/CreateButton";
@@ -37,6 +38,9 @@ export default function Login(){
                 <CreateButton title={ 'Iniciar' } aditionalStyle={ style.btn }
                     fnPress={async () => {
                     console.log('iniciar')
+                    dispatch(setState({
+                        render: true
+                    }));
                     const inputsValue = store.getState().materialInput.inputs
                     const user = await loginUser(inputsValue[0].value, inputsValue[1].value);
                     const resultValidate = validateInputs.login(user);
@@ -46,8 +50,14 @@ export default function Login(){
                             valid: resultValidate
                         }));
                     }else{
-                        navigation.navigate('home');
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'home' }]
+                        });
                     };
+                    dispatch(setState({
+                        render: false
+                    }));
                 }} />
                 <CreateButton title={ 'Registrarse' } secudary={ 'true' } aditionalStyle={ style.btn }
                     fnPress={ () => {
