@@ -52,6 +52,7 @@ export default function Navigation({ drawer }){
                         <IconTouchable iconName={ 'sign-out' } fnPress={ async () => {
                             closeSession();
                             await clearAll();
+                            navigation.navigate('login');
                         } } />
                     )
                 })}>

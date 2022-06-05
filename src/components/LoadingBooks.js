@@ -4,7 +4,7 @@ import { View, StyleSheet, Animated } from 'react-native';
 import TextTitle from "./TextTitle";
 
 export default function LoadingBooks({ render }){
-    if(render !== undefined && !render) return null;
+    if(render === undefined || !render) return null;
     const init = new Animated.Value(0);
     Animated.timing(init, {
         delay: 500,

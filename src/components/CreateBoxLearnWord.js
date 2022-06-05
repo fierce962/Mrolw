@@ -6,6 +6,7 @@ import { getWords, setLearnWord } from '../features/Learn/LearnSlice';
 
 import TextTitle from "./TextTitle";
 import CreateButton from "./CreateButton";
+import LoadingBooks from './LoadingBooks';
 
 function LearnText({ textTitle, text }){
     return (
@@ -41,7 +42,7 @@ export default function CreateBoxLearnWord({ viewRender }){
             );
         }
     }
-    return null
+    return <LoadingBooks render={ true } />
 }
 
 const style = StyleSheet.create({
