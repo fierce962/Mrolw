@@ -81,6 +81,7 @@ class ControllerNotifications{
     async removeNotification(nameStore){
         console.log('fn remove remove notification')
         let id = await getStorage(nameStore);
+        console.log('id', id);
         if(id !== null){
             await notifee.cancelNotification(id);
         };
@@ -124,7 +125,7 @@ class ControllerNotifications{
             },
             trigger,
         );
-
+        console.log('notification id', notificationId);
         await setStorage('notificationId', notificationId)
     }
 }

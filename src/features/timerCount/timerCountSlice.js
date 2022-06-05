@@ -4,18 +4,22 @@ import { getStorage } from "../../models/Storage";
 export const calcTime = createAsyncThunk(
     'timet/calctime',
     async () => {
-        const storageDate = new Date(await getStorage('proxTestMode'));
-        console.log('storage date', storageDate)
-        let calc = (storageDate.getTime() - new Date().getTime()) / 60000;
-        calc = parseInt(calc);
-        console.log('log calctim', calc > 0)
-        if(calc >= 10){
-            calc = calc.toString();
-        }else if(calc > 0){
-            calc = `0${ calc }`;
+        const dateStorage = await getStorage('proxTestMode');
+        if(dateStorage !== null){
+            const goData = new Date(dateStorage);
+            console.log('storage date', goData)
+            let calc = (goData.getTime() - new Date().getTime()) / 60000;
+            calc = parseInt(calc);
+            console.log('log calctim', calc > 0)
+            if(calc >= 10){
+                calc = calc.toString();
+            }else if(calc > 0){
+                calc = `0${ calc }`;
+            }
+            if(calc <= 0) calc = '00';
+            return [goData.toString(), calc];
         }
-        if(calc <= 0) calc = '00';
-        return [storageDate.toString(), calc]
+        return [`${ new Date() }`, '00'];
     }
 )
 

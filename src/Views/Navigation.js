@@ -59,6 +59,7 @@ export default function Navigation({ drawer }){
                     },
                     headerRight: () => (
                         <IconTouchable iconName={ 'sign-out' } fnPress={ async () => {
+                            await controllerNotifications.removeNotification('notificationId');
                             closeSession();
                             await clearAll();
                             navigation.navigate('login');
