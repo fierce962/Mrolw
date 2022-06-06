@@ -6,9 +6,10 @@ import FloatingMessage from "./FloatingMessage";
 
 export default function FlotingMessagePronunciation({ message, topSpacing }){
     const noSpeech = useSelector(state => state.pronunciation.noSpeech);
-
+    console.log('no espeech', noSpeech, message)
     if(noSpeech){
-        <FloatingMessage message={ message } topSpacing={ topSpacing } />
+        console.log('entro en el if');
+        return <FloatingMessage message={ message } topSpacing={ topSpacing } />
     }
     return null
 }

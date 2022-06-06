@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Animated } from 'react-native';
 
 export default function FloatingMessage({ message, topSpacing, notTiangle }){
+    console.log('flaoting')
     let animateValue = new Animated.Value(0);
     Animated.timing(animateValue, {
         toValue: 1,

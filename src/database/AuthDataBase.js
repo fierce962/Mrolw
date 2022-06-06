@@ -21,6 +21,7 @@ class AuthDataBase{
     }
 
     async createUser(userName, email, password){
+        console.log('create user')
         try {
             const user = await createUserWithEmailAndPassword(afAuth, email, password);
             const userId = await createUsers(userName, user.user.uid);
@@ -28,6 +29,8 @@ class AuthDataBase{
         } catch (error) {
             if(error.code === 'auth/email-already-in-use'){
                 return 'email-duplicate';
+            }if(error.code === 'auth/network-request-failed'){
+                
             }
         }
     }
