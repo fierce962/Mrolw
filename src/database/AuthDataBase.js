@@ -16,6 +16,10 @@ class AuthDataBase{
                 return 'invalid-email';
             }else if(error.code === 'auth/wrong-password'){
                 return 'invalid-password';
+            }if(error.code === 'auth/network-request-failed'){
+                console.log('error conection in login user');
+                await hasReconnected();
+                return await loginUser(email, password);
             }
         }
     }
