@@ -10,10 +10,12 @@ import { refreshHome } from './features/Learn/LearnSlice';
 import { getStorage, removeStorage } from './models/Storage';
 import { controllerNotifications } from './models/ControllerNotifications';
 import { controllerNavigation } from './models/ControllerNavigation';
+import { listenerNetwork } from './models/networkInfo';
 
 import Navigation from './Views/Navigation';
 import DrawerButton from './components/DrawerButton';
 import GeneralMessageFloating from './Views/GeneralMessageFloating';
+
 
 
 export default function Main() {
@@ -21,6 +23,7 @@ export default function Main() {
     const drawerRef = useRef(null);
     const appState = useRef(AppState.currentState);
     let date = new Date().getDate();
+    listenerNetwork();
 
     async function hasNotificationBackGraund(){
         try {

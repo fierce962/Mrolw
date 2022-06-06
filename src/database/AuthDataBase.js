@@ -2,7 +2,7 @@ import { afAuth } from "./firebaseConfig";
 import { createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, signOut  } from "firebase/auth";
 import { createUsers, getUserData } from './database';
-
+import { hasReconnected } from '../models/networkInfo';
 class AuthDataBase{
 
     async loginUser(email, password){
@@ -24,13 +24,17 @@ class AuthDataBase{
         console.log('create user')
         try {
             const user = await createUserWithEmailAndPassword(afAuth, email, password);
+            console.log('user new user', user);
             const userId = await createUsers(userName, user.user.uid);
+            console.log('user id', userId);
             return userId;
         } catch (error) {
             if(error.code === 'auth/email-already-in-use'){
                 return 'email-duplicate';
             }if(error.code === 'auth/network-request-failed'){
-                
+                console.log('error conection in create user');
+                await hasReconnected();
+                return await createUser(userName, email, password);
             }
         }
     }
