@@ -1,5 +1,9 @@
 import React from 'react';
 import notifee, { TriggerType, EventType } from '@notifee/react-native';
+import { useDispatch } from 'react-redux';
+
+import { clearWordel } from '../features/wordel/wordelSlice';
+import { clearModal } from '../features/modal/modalSlice';
 
 import { controllerNavigation } from './ControllerNavigation';
 import { setStorage, getStorage, removeStorage } from '../models/Storage';
@@ -23,10 +27,21 @@ class ControllerNotifications{
     }
 
     createListenerFirstplane(){
+        const dispatch = useDispatch();
         notifee.onForegroundEvent(({ type, detail }) => {
-            if(type === EventType.DELIVERED){
-                //.cancelNotification(detail.notification.id)
-                console.log('se cancelo')
+            if(type === EventType.PRESS){
+                const { notification } = detail;
+                console.log('press notifiation first plane', notification.data, notification.android.pressAction.id);
+                if(notification.android.pressAction.id.split('-')[1] === 'wordel'){
+                    console.log('entro el el clear')
+                    controllerNavigation.get().reset({
+                        index: 0,
+                        routes: [{ name: 'home' }]
+                    });
+                    dispatch(clearWordel());
+                    dispatch(clearModal());
+                }
+                this.actionsPress(notification.data, notification.android.pressAction.id);
             }
         })
     }
