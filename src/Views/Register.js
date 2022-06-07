@@ -62,7 +62,6 @@ export default function Register(){
                             navigation.navigate('login');
                         };
                     }else{
-                        console.log('input error', inputError[0], inputError[1])
                         dispatch(setValueInputs({
                             index: inputError[1],
                             valid: validate(inputError[0], inputsValues, inputError[1])

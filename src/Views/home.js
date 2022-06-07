@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View } from 'react-native';
+import { View, AppState } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -19,6 +19,9 @@ export default function Home() {
     const dispatch = useDispatch();
     const mode = useSelector(state => state.learn.mode);
     const navigation = useNavigation();
+    let refTimeOut = {
+        ref: undefined
+    };
 
     const information = {
         title: 'se acabo el estudio',
@@ -30,6 +33,16 @@ export default function Home() {
         if(mode[0] === 'testMode'){
             dispatch(calcTime());
         }
+        const subscription = AppState.addEventListener('change', nexState => {
+            if(nexState === 'active' && mode[0] === 'testMode'){
+                console.log('entro el el listener')
+                clearTimeout(refTimeOut.ref);
+                dispatch(calcTime());
+            }
+        });
+        return () => {
+            subscription.remove();
+        }
     })
 
     if(mode[0] === 'finishMode'){
@@ -40,11 +53,10 @@ export default function Home() {
 
     function timer(){
         if(mode[0] === 'testMode'){
-            return <CreateTimerCount fnPress={ async () => {
+            return <CreateTimerCount refTimeOut={ refTimeOut } fnPress={ async () => {
                 const user = await getStorage('user');
                 dispatch(clearWordel());
                 controllerNotifications.removeNotification('notificationId');
-                console.log('timer', user.words)
                 navigation.navigate('wordel', user.words.learn[0]);
             } }/>
         }

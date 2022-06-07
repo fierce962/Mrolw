@@ -18,11 +18,9 @@ class ControllerNotifications{
     async getInitialNotification(){
         const initialNotification = await notifee.getInitialNotification();
         if(initialNotification !== null && this.initialNotification){
-            console.log('initial notification', initialNotification.notification.data)
             this.actionsPress(initialNotification.notification.data, initialNotification.pressAction.id);
         }else{
             this.initialNotification = false;
-            console.log('no se disparo el initial', this.initialNotification);
         }
     }
 
@@ -31,9 +29,7 @@ class ControllerNotifications{
         notifee.onForegroundEvent(({ type, detail }) => {
             if(type === EventType.PRESS){
                 const { notification } = detail;
-                console.log('press notifiation first plane', notification.data, notification.android.pressAction.id);
                 if(notification.android.pressAction.id.split('-')[1] === 'wordel'){
-                    console.log('entro el el clear')
                     controllerNavigation.get().reset({
                         index: 0,
                         routes: [{ name: 'home' }]
@@ -92,19 +88,15 @@ class ControllerNotifications{
     }
 
     async removeNotification(nameStore){
-        console.log('fn remove remove notification')
         let id = await getStorage(nameStore);
-        console.log('id', id);
         if(id !== null){
             await notifee.cancelNotification(id);
         };
     }
 
     async createNotification(title, body, dataInput = {}, time = 300){
-        console.log('create notification');
         const date = new Date(new Date().getTime() + time);
         dataInput.day = `${ date.getDate() }`;
-        console.log('create notification', dataInput)
         if(dataInput.pronunciation !== undefined && dataInput.pronunciation === null){
             delete dataInput.pronunciation;
         };
@@ -138,7 +130,6 @@ class ControllerNotifications{
             },
             trigger,
         );
-        console.log('notification id', notificationId);
         await setStorage('notificationId', notificationId)
     }
 }

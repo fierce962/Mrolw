@@ -8,7 +8,6 @@ class AuthDataBase{
     async loginUser(email, password){
         try {            
             const resultLogin = await signInWithEmailAndPassword(afAuth, email, password);
-            console.log('user id', resultLogin.user.uid)
             await getUserData(resultLogin.user.uid);
             return 'login'
         } catch (error) {
@@ -25,18 +24,14 @@ class AuthDataBase{
     }
 
     async createUser(userName, email, password){
-        console.log('create user')
         try {
             const user = await createUserWithEmailAndPassword(afAuth, email, password);
-            console.log('user new user', user);
             const userId = await createUsers(userName, user.user.uid);
-            console.log('user id', userId);
             return userId;
         } catch (error) {
             if(error.code === 'auth/email-already-in-use'){
                 return 'email-duplicate';
             }if(error.code === 'auth/network-request-failed'){
-                console.log('error conection in create user');
                 await hasReconnected();
                 return await createUser(userName, email, password);
             }

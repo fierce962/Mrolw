@@ -64,7 +64,10 @@ export default function Navigation({ drawer }){
                             await controllerNotifications.removeNotification('notificationId');
                             closeSession();
                             await clearAll();
-                            navigation.navigate('login');
+                            controllerNavigation.get().reset({
+                                index: 0,
+                                routes: [{ name: 'login' }]
+                            });
                         } } />
                     )
                 })}>

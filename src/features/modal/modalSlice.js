@@ -12,7 +12,6 @@ const modalslice = createSlice({
     },
     reducers: {
         clearModal(state){
-            console.log('clear modal')
             state.values.visibleView = false;
             state.values.message = '';
             state.values.route = '';

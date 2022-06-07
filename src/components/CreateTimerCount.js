@@ -5,10 +5,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import CreateButton from './CreateButton';
 import { restTime } from '../features/timerCount/timerCountSlice';
 
-export default function CreateTimerCount({ fnPress }){
+export default function CreateTimerCount({ fnPress, refTimeOut }){
     const dispatch = useDispatch();
     const time = useSelector(state => state.timer.timeRemaining);
-
+    const seconds = useSelector(state => state.timer.seconds);
+    console.log('create timer', seconds)
     if(time === undefined){
         return null
     }
@@ -19,18 +20,19 @@ export default function CreateTimerCount({ fnPress }){
             toValue: -40,
             duration: 1000,
             useNativeDriver: false,
-            delay: 59000
+            delay: seconds
         }).start();
 
-        setTimeout(() => {
+        refTimeOut.ref = setTimeout(() => {
+            console.log('se disparo el time out')
             Animated.timing(animate, {
                 toValue: 0,
                 duration: 0,
                 useNativeDriver: false,
             }).start();
             dispatch(restTime());
-        }, 60000);
-
+        }, seconds + 1000);
+        console.log(refTimeOut)
         const fisrtNumber = [
             style.viewAnimation,
             time[1] - 1 < 0 && time[0] !== '0' && { bottom: animate },

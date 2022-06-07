@@ -4,7 +4,6 @@ import { setStorage } from '../models/Storage';
 import { hasReconnected } from '../models/networkInfo';
 
 export async function getWordsRangeDb(rangeMax, limitNumb = 5){
-    console.log('get words')
     try {
         const wordsList = [];
         const querySnapshot = await getDocs(query(collection(db, 'words'), 
@@ -20,8 +19,7 @@ export async function getWordsRangeDb(rangeMax, limitNumb = 5){
             return wordsList;
         }
     } catch (error) {
-        console.log('errror in get wordRange')
-        //console.log('error', error.code)
+        console.log('error', error.code)
     }
 }
 
@@ -58,10 +56,8 @@ export async function getUserData(uidUser){
 }
 
 export async function setUserDataWords(user){
-    console.log('set datawords ', {... user});
     try {
         const id = user.tableId;
-        console.log('set id', id);
         delete user.tableId;
         await updateDoc(doc(db, 'users', id), user);
     } catch (error) {

@@ -12,7 +12,6 @@ const wordelSlice = createSlice({
     },
     reducers: {
         clearWordel: (state) => {
-            console.log('get clear');
             state.wordel = [],
             state.actualIndex = 0,
             state.seletIndex = undefined,

@@ -9,12 +9,10 @@ export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
         let user = await getStorage('user');
-        console.log('user get words', user)
         try {
             if(user.words === undefined || user.words.day !== new Date().getDate()){
                 await controllerNotifications.removeNotification('notificationId');
                 if(user.words === undefined) user.words = {};
-                console.log('user addwords', user)
                 const maxId = user.words.maxId === undefined ? 4 : user.words.maxId; 
                 let limit = 5;
                 if(user.words.learn !== undefined && user.words.learn.length !== 0){
@@ -56,7 +54,7 @@ export const searchWords = createAsyncThunk(
             await setStorage('user', user);
             return user.words;
         } catch (error) {
-            console.log('seachWords', error)
+            ('seachWords', error)
         }
     }
 );
@@ -136,8 +134,8 @@ export const errorLearn = createAsyncThunk(
 
 async function addNotification(data){
     await controllerNotifications.createNotification('Comienza la prueba', 
-    'Ya puedes practicar lo que aprendiste', data, 180000);
-    await setStorage('proxTestMode', new Date( new Date().getTime() + 180000 ));
+    'Ya puedes practicar lo que aprendiste', data, 1.08e+6);
+    await setStorage('proxTestMode', new Date( new Date().getTime() + 1.08e+6 ));
 }
 
 function CreateRamdonLearn(learn){

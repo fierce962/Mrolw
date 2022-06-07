@@ -7,17 +7,16 @@ export const calcTime = createAsyncThunk(
         const dateStorage = await getStorage('proxTestMode');
         if(dateStorage !== null){
             const goData = new Date(dateStorage);
-            console.log('storage date', goData)
             let calc = (goData.getTime() - new Date().getTime()) / 60000;
+            const seconds = parseInt(((calc.toFixed(2).split('.')[1] / 99) * 60000));
             calc = parseInt(calc);
-            console.log('log calctim', calc > 0)
             if(calc >= 10){
                 calc = calc.toString();
             }else if(calc > 0){
                 calc = `0${ calc }`;
             }
             if(calc <= 0) calc = '00';
-            return [goData.toString(), calc];
+            return [goData.toString(), calc, seconds];
         }
         return [`${ new Date() }`, '00'];
     }
@@ -28,10 +27,12 @@ const timerCounter = createSlice({
     name: 'timer',
     initialState: {
         goalDate: undefined,
-        timeRemaining: undefined
+        timeRemaining: undefined,
+        seconds: undefined
     },
     reducers: {
         restTime(state){
+            state.seconds = 59000;
             if(parseInt(state.timeRemaining) - 1 >= 10){
                 state.timeRemaining = (parseInt(state.timeRemaining) - 1).toString();
             }else{
@@ -43,6 +44,8 @@ const timerCounter = createSlice({
         builder.addCase(calcTime.fulfilled, (state, action) => {
             state.goalDate = action.payload[0];
             state.timeRemaining = action.payload[1];
+            console.log('action seconds', action.payload[2])
+            state.seconds = action.payload[2];
         });
     }
 });

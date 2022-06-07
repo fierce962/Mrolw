@@ -20,7 +20,6 @@ export default function Login(){
     
     useEffect(() => {
         navigation.addListener('focus', () => {
-            console.log('create focus')
             dispatch(createInput(['Correo Electronico', 'Clave']));
         });
         return () => {
@@ -37,7 +36,6 @@ export default function Login(){
             <View style={ style.contentBtn } >
                 <CreateButton title={ 'Iniciar' } aditionalStyle={ style.btn }
                     fnPress={async () => {
-                    console.log('iniciar')
                     dispatch(setState({
                         render: true
                     }));
