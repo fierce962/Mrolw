@@ -26,7 +26,7 @@ export default function Navigation({ drawer }){
     
     useEffect(() => {
         getStorage('user').then(user => {
-            if(user !== null){
+            if(user !== null && initialRouter === ''){
                 setInitialRouter('home');
             }else{
                 setInitialRouter('login');
@@ -39,7 +39,7 @@ export default function Navigation({ drawer }){
     controllerNotifications.createListener();
 
     return(
-        <Stack.Navigator initialRouteName={ initialRouter }>
+        <Stack.Navigator initialRouteName={ 'login' }>
             <Stack.Group screenOptions={({ route, navigation }) => ({
                     headerTitle: () => <CreateLogo width={ 50 } height={ 50 } color={ '#cc0000' } />,
                     headerTitleAlign: 'center',

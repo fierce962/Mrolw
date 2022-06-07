@@ -56,6 +56,7 @@ export default function CreateTimerCount({ fnPress, refTimeOut }){
             </View>
         )
     }else{
+        refTimeOut.ref = undefined;
         return <CreateButton title={ 'Practica' } size={ 22 } 
                     iconName={ 'angle-double-right' } 
                     fnPress={ fnPress } />

@@ -28,7 +28,8 @@ export default function ViewPronunciation(){
                     <TextTitle typeStyle={ 'main' }  text={ `Pronunacion de ${ pronunciation.english }` } />
                 </View>
                 <TextTitle typeStyle={ 'secundary' }  
-                    text={ 'Transformando de la pronunciacion en ingles utilizando el alfabeto fonetico en español seria' }/>
+                    text={ pronunciation.pronunciationSpanish !== undefined ? 'Transformando de la pronunciacion en ingles utilizando el alfabeto fonetico en español seria'
+                            : 'No logramos conseguir una transformar esta palabra. lo setimos, puedes ayudarte escuchando su pronunciacion' }/>
             </View>
             <View style={ style.contenCentral }>
                 <View style={ style.pronunciationView }>

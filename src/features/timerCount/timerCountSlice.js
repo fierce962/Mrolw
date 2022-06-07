@@ -14,11 +14,12 @@ export const calcTime = createAsyncThunk(
                 calc = calc.toString();
             }else if(calc > 0){
                 calc = `0${ calc }`;
+            }else{
+                calc = '00';
             }
-            if(calc <= 0) calc = '00';
             return [goData.toString(), calc, seconds];
         }
-        return [`${ new Date() }`, '00'];
+        return [`${ new Date() }`, '00', undefined];
     }
 )
 

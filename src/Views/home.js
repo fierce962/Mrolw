@@ -34,7 +34,8 @@ export default function Home() {
             dispatch(calcTime());
         }
         const subscription = AppState.addEventListener('change', nexState => {
-            if(nexState === 'active' && mode[0] === 'testMode'){
+            console.log('referent time out', refTimeOut)
+            if(nexState === 'active' && mode[0] === 'testMode' && refTimeOut.ref !== undefined){
                 console.log('entro el el listener')
                 clearTimeout(refTimeOut.ref);
                 dispatch(calcTime());

@@ -26,7 +26,6 @@ const wordelSlice = createSlice({
                 if(finish){
                     message = 'Correcta';
                 }else{
-                    resIncorrect(state.wordel[state.wordel.length - 1], action.payload);
                     message = 'Fallaste';
                 }
                 state.finish = [true, message];
@@ -140,13 +139,6 @@ function validNew(wordel, word){
         }
     });
     return [validCreate, countCorret === wordel.length];
-}
-
-function resIncorrect(wordel, word){
-    wordel.forEach((element, i) => {
-        element.letters = word[i];
-        element.correct = 'green';
-    });
 }
 
 export const { clearWordel, createWordel, setActualWorlde, selectWordel, newAttempts, blurWordelFocus } = wordelSlice.actions;
