@@ -102,12 +102,11 @@ export const removeLearn = createAsyncThunk(
         try {
             const user = await getStorage('user')
             user.words.learn.shift();
+            await setUserDataWords({ ... user });
             if(user.words.learn.length !== 0){
                 delete user.words.learn[0].id
                 await addNotification(user.words.learn[0]);
             }
-            console.log('quedan', user.words.learn.length)
-            await setUserDataWords(user)
             await setStorage('user', user);
             return user.words;
         } catch (error) {

@@ -58,8 +58,10 @@ export async function getUserData(uidUser){
 }
 
 export async function setUserDataWords(user){
+    console.log('set datawords ', {... user});
     try {
         const id = user.tableId;
+        console.log('set id', id);
         delete user.tableId;
         await updateDoc(doc(db, 'users', id), user);
     } catch (error) {
