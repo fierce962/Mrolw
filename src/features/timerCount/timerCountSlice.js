@@ -5,10 +5,15 @@ export const calcTime = createAsyncThunk(
     'timet/calctime',
     async () => {
         const dateStorage = await getStorage('proxTestMode');
+        console.log('date storage', dateStorage);
         if(dateStorage !== null){
             const goData = new Date(dateStorage);
             let calc = (goData.getTime() - new Date().getTime()) / 60000;
-            const seconds = parseInt(((calc.toFixed(2).split('.')[1] / 99) * 60000));
+            let seconds = parseInt(((calc.toFixed(2).split('.')[1] / 99) * 60000));
+            if(seconds === 0){
+                console.log('seconds fue 0 se asigno 59000')
+                seconds = 59000;
+            } 
             calc = parseInt(calc);
             if(calc >= 10){
                 calc = calc.toString();

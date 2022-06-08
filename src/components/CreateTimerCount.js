@@ -9,7 +9,7 @@ export default function CreateTimerCount({ fnPress, refTimeOut }){
     const dispatch = useDispatch();
     const time = useSelector(state => state.timer.timeRemaining);
     const seconds = useSelector(state => state.timer.seconds);
-    console.log('create timer', seconds)
+    console.log('create timer', seconds, 'timer', time);
     if(time === undefined){
         return null
     }

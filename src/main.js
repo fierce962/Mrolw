@@ -67,7 +67,7 @@ export default function Main() {
             <NavigationContainer>
                 <DrawerLayoutAndroid
                     ref={ drawerRef }
-                    drawerWidth={300}
+                    drawerWidth={ 300 }
                     renderNavigationView={() => <DrawerButton drawer={ drawerRef }/> } >
                         <Navigation drawer={ drawerRef }/>
                 </DrawerLayoutAndroid>

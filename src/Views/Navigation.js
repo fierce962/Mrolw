@@ -18,7 +18,6 @@ import { CreateLogo } from '../components/CreateSvg';
 import Login from './Login';
 
 export default function Navigation({ drawer }){
-    console.log('navigation render')
     const [initialRouter, setInitialRouter] = useState('');
     const Stack = createNativeStackNavigator();
     const navigation = useNavigation();
@@ -26,7 +25,7 @@ export default function Navigation({ drawer }){
     
     useEffect(() => {
         getStorage('user').then(user => {
-            if(user !== null && initialRouter === ''){
+            if(user !== null){
                 setInitialRouter('home');
             }else{
                 setInitialRouter('login');
@@ -39,7 +38,7 @@ export default function Navigation({ drawer }){
     controllerNotifications.createListener();
 
     return(
-        <Stack.Navigator initialRouteName={ 'login' }>
+        <Stack.Navigator initialRouteName={ initialRouter }>
             <Stack.Group screenOptions={({ route, navigation }) => ({
                     headerTitle: () => <CreateLogo width={ 50 } height={ 50 } color={ '#cc0000' } />,
                     headerTitleAlign: 'center',
@@ -56,7 +55,9 @@ export default function Navigation({ drawer }){
                         const fnPress = () => route.name === 'home' ? drawer.current.openDrawer() : navigation.navigate('home')
                         return (
                             <IconTouchable iconName={ name }
-                                fnPress={ fnPress } /> 
+                                fnPress={ () => { 
+                                    fnPress();
+                                }} /> 
                         )
                     },
                     headerRight: () => (
