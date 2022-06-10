@@ -134,8 +134,8 @@ export const errorLearn = createAsyncThunk(
 
 async function addNotification(data){
     await controllerNotifications.createNotification('Comienza la prueba', 
-    'Ya puedes practicar lo que aprendiste', data, 1.08e+6);
-    await setStorage('proxTestMode', new Date( new Date().getTime() + 1.08e+6 ));
+    'Ya puedes practicar lo que aprendiste', data, 60000);
+    await setStorage('proxTestMode', new Date( new Date().getTime() + 60000 ));
 }
 
 function CreateRamdonLearn(learn){

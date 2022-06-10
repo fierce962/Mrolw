@@ -1,27 +1,26 @@
 import React, { useEffect } from "react";
-import { TouchableHighlight, View, Text, StyleSheet, Animated } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, StyleSheet } from 'react-native';
 import Voice from '@react-native-voice/voice';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
-import { changeStartRecord, ChangeNoSpeech } from "../features/pronunciation/pronunciationSlice";
+import { ChangeNoSpeech } from "../features/pronunciation/pronunciationSlice";
 import { assingModalParameters } from '../features/modal/modalSlice';
 import { setParameters } from "../features/FloatingButton/floatingButtonSlice";
 
 import ModalAnimate from "./ModalAnimate";
 import FlotingMessagePronunciation from "./FlotingMessagePronunciation";
+import VoiceIconAnimated from "./VoiceIconAnimated";
 import FloatingButton from "./FloatingButton";
 
 export default function VoiceToText({ evaluatedText }){
     const dispatch = useDispatch();
-    const record = useSelector(state => state.pronunciation.startRecord);
     const navigation = useNavigation();
+    const results = [];
 
     useEffect(() => {
         Voice.onSpeechStart = onSpeechStartHandler;
         Voice.onSpeechResults = onSpeechResultsHandler;
-        Voice.onSpeechEnd = onSpeechEndHandler;
         Voice.onSpeechError = onErrorHandler;
     });
 
@@ -30,6 +29,7 @@ export default function VoiceToText({ evaluatedText }){
     }
 
     function onSpeechResultsHandler(e){
+        console.log('values', e.value)
         let correct = e.value.some(voiceResults => {
             if(voiceResults.toLocaleLowerCase()
                 .includes(evaluatedText.toLocaleLowerCase())) return true;
@@ -44,49 +44,24 @@ export default function VoiceToText({ evaluatedText }){
     }
 
     function onErrorHandler(e){
-        dispatch(changeStartRecord());
+        console.log('error handler')
         dispatch(ChangeNoSpeech(true));
-    }
-
-    function onSpeechEndHandler(e){
-        dispatch(changeStartRecord());
     }
 
     function startVoice(){
         Voice.start('en-US');
-        dispatch(changeStartRecord());
         dispatch(ChangeNoSpeech(false));
     }
 
-    let animateInit = record ? new Animated.Value(50) : 50;
-    if(record){
-        Animated.loop(
-            Animated.timing(animateInit, {
-                toValue: 100,
-                duration: 1000,
-                useNativeDriver: false
-            })
-        ).start();
+    function stopVoice(){
+        Voice.stop();
     }
-
-    const styleAnimate = [
-        style.tolgleAnimate,
-        record && { width: animateInit }, 
-        record && { height: animateInit },  
-        { borderRadius: animateInit } 
-    ]
 
     return (
         <View style={ style.voiceBody }>
             <View style={ style.contentVoice }>
                 <ModalAnimate />
-                <Animated.View style={ styleAnimate }>
-                    <TouchableHighlight style={ style.buttonIcon } onPress={ startVoice }>
-                        <Text>
-                            <Icon name="microphone" size={ 30 } color="#000" />
-                        </Text>
-                    </TouchableHighlight>
-                </Animated.View>
+                <VoiceIconAnimated fnPressIn={ startVoice } fnPressOut={ stopVoice } />
                 <FlotingMessagePronunciation message={'No se detecto su voz'} topSpacing={ 90 }/>
             </View>
             <FloatingButton fnPress={ () => navigation.navigate('home') }/>
@@ -105,18 +80,5 @@ const style = StyleSheet.create({
         alignItems: 'center',
         position: 'relative',
     },
-    tolgleAnimate: {
-        borderWidth: 1,
-        borderColor: '#fff',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    buttonIcon: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        backgroundColor: '#fff',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
+
 })
