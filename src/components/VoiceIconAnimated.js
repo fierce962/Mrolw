@@ -33,7 +33,9 @@ export default function VoiceIconAnimated({ fnPressIn, fnPressOut }){
                 } } 
                 onPressOut={() => {
                     setPress(false);
-                    fnPressOut();
+                    setTimeout(() => {
+                        fnPressOut();
+                    }, 500)
                 }} >
                 <Text>
                     <Icon name="microphone" size={ 30 } color={ press === false ? '#000' : 'red' } />

@@ -16,7 +16,6 @@ import FloatingButton from "./FloatingButton";
 export default function VoiceToText({ evaluatedText }){
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const results = [];
 
     useEffect(() => {
         Voice.onSpeechStart = onSpeechStartHandler;
@@ -29,7 +28,6 @@ export default function VoiceToText({ evaluatedText }){
     }
 
     function onSpeechResultsHandler(e){
-        console.log('values', e.value)
         let correct = e.value.some(voiceResults => {
             if(voiceResults.toLocaleLowerCase()
                 .includes(evaluatedText.toLocaleLowerCase())) return true;
@@ -44,7 +42,6 @@ export default function VoiceToText({ evaluatedText }){
     }
 
     function onErrorHandler(e){
-        console.log('error handler')
         dispatch(ChangeNoSpeech(true));
     }
 
@@ -62,7 +59,7 @@ export default function VoiceToText({ evaluatedText }){
             <View style={ style.contentVoice }>
                 <ModalAnimate />
                 <VoiceIconAnimated fnPressIn={ startVoice } fnPressOut={ stopVoice } />
-                <FlotingMessagePronunciation message={'No se detecto su voz'} topSpacing={ 90 }/>
+                <FlotingMessagePronunciation message={'Debe mantener presionado mientras habla'} topSpacing={ 90 }/>
             </View>
             <FloatingButton fnPress={ () => navigation.navigate('home') }/>
         </View>
