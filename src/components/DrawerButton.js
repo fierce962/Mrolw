@@ -10,10 +10,14 @@ export default function DrawerButton({ drawer }) {
     return (
         <View style={[ { flex: 1 }, { backgroundColor: '#202020' } ]}>
             <ProfileImg profileName={ 'fierce' } />
-            <CreateButton title={ 'Perfil' } aditionalStyle={ style.changeBtnStyle } />
+            {/* <CreateButton title={ 'Perfil' } aditionalStyle={ style.changeBtnStyle } />
             <CreateButton title={ 'Palabras' } aditionalStyle={ style.changeBtnStyle } />
-            <CreateButton title={ 'Oraciones' } aditionalStyle={ style.changeBtnStyle } />
-            <CreateButton title={ 'Prueba con audio' } aditionalStyle={ style.changeBtnStyle } />
+            <CreateButton title={ 'Oraciones' } aditionalStyle={ style.changeBtnStyle } /> */}
+            <CreateButton title={ 'Prueba con audio' } aditionalStyle={ style.changeBtnStyle } 
+                fnPress={() => {
+                    controllerNavigation.get().navigate('testAudio');
+                    drawer.current.closeDrawer();
+                }} />
         </View>
     )
 }

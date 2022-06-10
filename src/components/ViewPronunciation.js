@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
-import Tts from 'react-native-tts';
+
 import VoiceToText from "./VoiceToText";
 import TextTitle from "./TextTitle";
-import IconTouchable from './IconTouchable';
+import TextToSpeech from "./TextToSpeech";
 
 
 export default function ViewPronunciation(){
@@ -37,11 +37,7 @@ export default function ViewPronunciation(){
                         { pronunciation.pronunciationSpanish === undefined ? pronunciation.english :
                             pronunciation.pronunciationSpanish }
                     </Text>
-                    <IconTouchable iconName={ 'volume-up' } sizeIcon={ 40 } 
-                        fnPress={ async () => {
-                            await Tts.setDefaultLanguage('en-US');
-                            Tts.speak(pronunciation.english);
-                        }}/>
+                    <TextToSpeech textSpeech={ pronunciation.english }/>
                 </View>
                 <View style={ { alignItems: 'center' } }>
                     <Text style={ style.text }>Ponte a prueba intentalo</Text>
