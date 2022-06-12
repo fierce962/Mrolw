@@ -4,12 +4,14 @@ class ValidateInputs{
         index: undefined,
         message: '',
         result: false,
+        nextOrPrevious: undefined
     }
 
     clearValidate(){
         this.validateResult.index = undefined
         this.validateResult.message = '';
         this.validateResult.result = false;
+        this.validateResult.nextOrPrevious = undefined;
     }
 
     login(resultLogin){
@@ -75,11 +77,10 @@ class ValidateInputs{
     confirmePassWord(textInput, Allinputs, index, sumIndex){
         if(Allinputs[index + sumIndex].value !== '' && Allinputs[index + sumIndex].value !== textInput){
             this.validateResult.message = 'Las claves no coinciden';
-        }else if(Allinputs[index + sumIndex].valid !== undefined){
-            Allinputs[index + sumIndex].valid.result = false;
-            Allinputs[index].valid.result = false;
-        }
-        
+            this.validateResult.result = false;
+        }else{
+            this.validateResult.nextOrPrevious = sumIndex;
+        };
     }
 }
 

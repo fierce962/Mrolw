@@ -17,7 +17,8 @@ import CreateButton from "../components/CreateButton";
 export default function Register(){
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    dispatch(createInput(['Nombre de Usuario', 'Correo Electronico', 'Clave', 'Confirme la clave']));
+    const listInputs = ['Nombre de Usuario', 'Correo Electronico', 'Clave', 'Confirme la clave'];
+    dispatch(createInput(listInputs));
     const contentReference = [];
 
     function validate(text, inputs, index){
@@ -30,6 +31,7 @@ export default function Register(){
             <View>
                 <TextTitle text={'Registarse'} typeStyle={ 'main' } />
                 <CreateListMaterialInput renderIcons={ true } fnValidate={ validate } 
+                    renderItems={ listInputs }
                     contentReference={ contentReference }  />
             </View>
             <View style={ style.contentBtn } >

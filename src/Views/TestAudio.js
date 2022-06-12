@@ -7,6 +7,7 @@ import { setParameters } from "../features/FloatingButton/floatingButtonSlice";
 import TextTitle from "../components/TextTitle";
 import TextToSpeech from "../components/TextToSpeech";
 import FloatingButton from "../components/FloatingButton";
+import MaterialInput from '../components/MaterialInput';
 
 export default function TestAudio(){
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function TestAudio(){
                 palabras que ya has aprendido deberas escucharla y escribir que palabra es,
                 la seleccion se realiza de forma aleatorea.
             </Text>
+            <MaterialInput />
             <TextToSpeech />
             <FloatingButton />
         </View>

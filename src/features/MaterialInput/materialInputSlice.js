@@ -25,6 +25,12 @@ const materialSlice = createSlice({
             };
             if(action.payload.valid !== undefined){
                 state.inputs[action.payload.index].valid = action.payload.valid;
+                console.log(action.payload.valid)
+                if(action.payload.valid.nextOrPrevious !== undefined &&
+                    state.inputs[action.payload.index + action.payload.valid.nextOrPrevious].valid !== undefined){
+                    console.log('entro en el next ')
+                    state.inputs[action.payload.index + action.payload.valid.nextOrPrevious].valid.result = false;
+                }
             };
         },
         setOneErrorInput(state, action){

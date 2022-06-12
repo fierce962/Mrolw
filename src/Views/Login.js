@@ -17,10 +17,11 @@ import CreateListMaterialInput from "../components/CreateListMaterialInput";
 export default function Login(){
     const dispatch = useDispatch();
     const navigation = useNavigation();
+    const listInputs = ['Correo Electronico', 'Clave'];
     
     useEffect(() => {
         navigation.addListener('focus', () => {
-            dispatch(createInput(['Correo Electronico', 'Clave']));
+            dispatch(createInput(listInputs));
         });
         return () => {
             navigation.removeListener();
@@ -31,7 +32,7 @@ export default function Login(){
         <View style={ style.content }>
             <TextTitle text={ 'Iniciar Session' } typeStyle={ 'main' } secundaryColor={ 'true' } />
             <View>
-                <CreateListMaterialInput />
+                <CreateListMaterialInput renderItems={ listInputs }/>
             </View>
             <View style={ style.contentBtn } >
                 <CreateButton title={ 'Iniciar' } aditionalStyle={ style.btn }
