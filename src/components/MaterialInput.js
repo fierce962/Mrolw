@@ -26,12 +26,14 @@ function CreateBoxError({ input }){
     )
 }
 
-export default function MaterialInput({ fnRef, index, renderIcons, placeholderText, fnFocus, fnBlur, fnOnchange }){
+export default function MaterialInput({ fnRef, index, renderIcons, placeholderText, fnFocus, fnBlur, fnOnchange, extraStyle }){
     const input = useSelector(state => state.materialInput.inputs[index]);
+
     if(input === undefined) return null
     const styleInput = [
         style.input,
-        input.focus && style.inputFocus
+        input.focus && style.inputFocus,
+        extraStyle !== undefined && extraStyle
     ];
 
     return (
