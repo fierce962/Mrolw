@@ -1,38 +1,62 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Animated } from 'react-native';
 
 import { useDispatch } from "react-redux";
 import { setParameters } from "../features/FloatingButton/floatingButtonSlice";
-import { createInput } from "../features/MaterialInput/materialInputSlice";
+import { createInput, setValueInputs } from "../features/MaterialInput/materialInputSlice";
+
 
 import TextTitle from "../components/TextTitle";
 import TextToSpeech from "../components/TextToSpeech";
 import FloatingButton from "../components/FloatingButton";
 import MaterialInput from '../components/MaterialInput';
 
-function CreateInputs(){
+function CreateInputs({ fnChange, index, refRenderMessage }){
     const [focus, setFocus] = useState(false);
     const styleInput = [
         style.contentTest,
         focus && style.contentTestFocus
-    ]
+    ];
 
     return(
         <View style={ styleInput }>
             <View style={ style.materialInputContent }>
                 <MaterialInput placeholderText={ 'test' } 
-                    index={0} 
+                    index={ index } 
                     fnFocus={ () => setFocus(true) }
                     fnBlur={ () => setFocus(false) }
+                    fnOnchange={ (text) => fnChange(text, index) }
                     extraStyle={ { margin: 0, borderBottomWidth: 0, paddingLeft: 10 } } />
             </View>
             <View style={ style.contentSpeech }>
                 <TextToSpeech />
             </View>
-            {/* <View style={ style.contentMenssage }>
-                <TextTitle text={ 'incorrecto' } typeStyle={ 'main' } />
-            </View> */}
+            <CreateMessage refSetRenderMessae={ refRenderMessage } index={ index } />
         </View>
+    )
+};
+
+function CreateMessage({ refSetRenderMessae, index }){
+    const [renderMessage, setRender] = useState(false);
+    if(refSetRenderMessae[index] === undefined){
+        refSetRenderMessae.push(setRender);
+    }
+    if(!renderMessage) return null
+
+    let animatedMessage = new Animated.Value(0);
+    Animated.timing(animatedMessage, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: false
+    }).start();
+    console.log(animatedMessage)
+    return (
+        <Animated.View style={[ style.contentMenssage, { width: animatedMessage.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0%', '100%']     
+        })  } ]}>
+            <TextTitle text={ 'incorrecto' } typeStyle={ 'main' } />
+        </Animated.View>
     )
 }
 
@@ -44,9 +68,16 @@ export default function TestAudio(){
     }))
 
     const testInputs = ['test', 'test', 'test', 'test', 'test'];
+    const refSetRenderMessae = [];
 
     dispatch(createInput(testInputs))
 
+    function changeValueInputs(text, i){
+        dispatch(setValueInputs({
+            index: i,
+            inputValue: text
+        }))
+    }
 
     return (
         <View style={ style.containerTestAudio }>
@@ -58,10 +89,18 @@ export default function TestAudio(){
                 </Text>
             </View>
             <KeyboardAvoidingView behavior={Platform.OS === 'android' ? "padding" : "height"}>
-                <FlatList data={ testInputs } renderItem={() => <CreateInputs /> }/>
+                <FlatList data={ testInputs } renderItem={({ index }) => {
+                    return <CreateInputs index={ index } 
+                        fnChange={ changeValueInputs } 
+                        refRenderMessage={ refSetRenderMessae } /> } 
+                }/>
             </KeyboardAvoidingView>
             <View>
-                <FloatingButton />
+                <FloatingButton fnPress={ () => {
+                    refSetRenderMessae.forEach((setRender) => {
+                        setRender(true);
+                    })
+                }} />
             </View>
         </View>
     )
@@ -96,7 +135,6 @@ const style = StyleSheet.create({
         flex: 1
     },
     contentMenssage: {
-        width: '100%',
         height: '100%',
         position: 'absolute',
         justifyContent: 'center',
