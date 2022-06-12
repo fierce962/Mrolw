@@ -12,7 +12,7 @@ import { setState } from "../features/GeneralMessageFloating/GeneralMessageFloat
 
 import TextTitle from "../components/TextTitle";
 import CreateButton from "../components/CreateButton";
-import CreateMaterialInput from "../components/CreateMaterialInput";
+import CreateListMaterialInput from "../components/CreateListMaterialInput";
 
 export default function Login(){
     const dispatch = useDispatch();
@@ -31,7 +31,7 @@ export default function Login(){
         <View style={ style.content }>
             <TextTitle text={ 'Iniciar Session' } typeStyle={ 'main' } secundaryColor={ 'true' } />
             <View>
-                <CreateMaterialInput />
+                <CreateListMaterialInput />
             </View>
             <View style={ style.contentBtn } >
                 <CreateButton title={ 'Iniciar' } aditionalStyle={ style.btn }

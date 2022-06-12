@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { validateInputs } from "./modelsViews/ValidatesInputs";
 
 import TextTitle from "../components/TextTitle";
-import CreateMaterialInput from "../components/CreateMaterialInput";
+import CreateListMaterialInput from "../components/CreateListMaterialInput";
 import CreateButton from "../components/CreateButton";
 
 
@@ -29,7 +29,7 @@ export default function Register(){
             <View></View>
             <View>
                 <TextTitle text={'Registarse'} typeStyle={ 'main' } />
-                <CreateMaterialInput renderIcons={ true } fnValidate={ validate } 
+                <CreateListMaterialInput renderIcons={ true } fnValidate={ validate } 
                     contentReference={ contentReference }  />
             </View>
             <View style={ style.contentBtn } >

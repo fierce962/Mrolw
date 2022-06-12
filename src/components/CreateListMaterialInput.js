@@ -27,7 +27,7 @@ function CreateBoxError({ input }){
     )
 }
 
-export default function CreateMaterialInput({ renderIcons, fnValidate, contentReference }){
+export default function CreateListMaterialInput({ renderIcons, fnValidate, contentReference }){
     const dispatch = useDispatch();
     const inputs = useSelector(state => state.materialInput.inputs);
 
@@ -80,7 +80,9 @@ const style = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: '#aaa',
         color: '#fff',
-        margin: 10
+        margin: 10,
+        backgroundColor: '#202020',
+        borderRadius: 3
     },
     inputFocus: {
         borderBottomColor: '#cc0000'
