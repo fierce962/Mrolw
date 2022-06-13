@@ -63,4 +63,20 @@ export async function setUserDataWords(user){
     } catch (error) {
         console.log('setuserdata', error)
     }
+};
+
+export async function getWordsTestAudio(searchWords){
+    try {
+        const words = [];
+        const querySnapshot = await getDocs(query(collection(db, 'words'), 
+                    where("id", 'in', searchWords),
+                    limit(5)));
+        querySnapshot.forEach((doc) => {
+            words.push(doc.data());
+        });
+        console.log('words', words)
+        return words;
+    } catch (error) {
+        console.log('error', error);
+    }
 }

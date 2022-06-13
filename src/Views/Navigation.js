@@ -16,7 +16,7 @@ import IconTouchable from '../components/IconTouchable';
 import CreateError from '../components/CreateError';
 import { CreateLogo } from '../components/CreateSvg';
 import Login from './Login';
-import TestAudio from './TestAudio';
+import ViewTestAudio from './ViewTestAudio';
 
 export default function Navigation({ drawer }){
     const [initialRouter, setInitialRouter] = useState('');
@@ -77,7 +77,7 @@ export default function Navigation({ drawer }){
                 <Stack.Screen options={ { headerBackVisible: false } } name='wordel' component={ ViewWordel } />
                 <Stack.Screen options={ { headerBackVisible: false } } name='voice' component={ ViewPronunciation } />
                 <Stack.Screen options={ { headerBackVisible: false } } name='error' component={ CreateError } />
-                <Stack.Screen options={ { headerBackVisible: false } } name='testAudio' component={ TestAudio } />
+                <Stack.Screen options={ { headerBackVisible: false } } name='testAudio' component={ ViewTestAudio } />
             </Stack.Group>
             <Stack.Group screenOptions={{ 
                     headerShown: false,
