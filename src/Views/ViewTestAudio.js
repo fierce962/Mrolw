@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Animated } from 'react-native';
 import { useDispatch } from "react-redux";
-import { store } from '../store/store';
 
-import { createInput, setValueInputs } from "../features/MaterialInput/materialInputSlice";
+import { setValueInputs } from "../features/MaterialInput/materialInputSlice";
 
 import TextTitle from "../components/TextTitle";
 import TextToSpeech from "../components/TextToSpeech";
@@ -39,24 +38,29 @@ function CreateInputs({ fnChange, index, wordItem }){
 
 function CreateMessage({ index }){
     const [renderMessage, setRender] = useState(false);
+    const animate = useRef(true);
+
     if(testAudio.refSetRenderMessae[index] === undefined){
         testAudio.refSetRenderMessae.push(setRender);
     }
     if(!renderMessage) return null
-
     let animatedMessage = new Animated.Value(0);
-    Animated.timing(animatedMessage, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: false
-    }).start();
+    if(animate.current){
+        Animated.timing(animatedMessage, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: false
+        }).start();
+        animate.current = false;
+    };
 
     return (
         <Animated.View style={[ style.contentMenssage, { width: animatedMessage.interpolate({
             inputRange: [0, 1],
             outputRange: ['0%', '100%']     
-        })  } ]}>
-            <TextTitle text={ 'incorrecto' } typeStyle={ 'main' } />
+        })  }, { backgroundColor: testAudio.evaluateInputs[index] ? 'green' : 'red' } ]}>
+            <TextTitle text={  testAudio.evaluateInputs[index] ? 'correcto' : 'incorrecto' } 
+            typeStyle={ 'main' } />
         </Animated.View>
     )
 }
@@ -105,12 +109,7 @@ export default function ViewTestAudio(){
                 changeValueInputs={ changeValueInputs } />
             <View>
                 <FloatingButton fnPress={ () => {
-                    const inputs = store.getState().materialInput.inputs;
-                    inputs.forEach((input, index) => {
-                        if(input.value !== ''){
-                            testAudio.refSetRenderMessae[index](true);
-                        }
-                    })
+                    testAudio.evaluateValueInputs();
                 }} />
             </View>
         </View>
@@ -149,8 +148,7 @@ const style = StyleSheet.create({
         height: '100%',
         position: 'absolute',
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'red'
+        alignItems: 'center'
     }
 });
 

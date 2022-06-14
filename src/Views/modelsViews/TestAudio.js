@@ -12,10 +12,20 @@ class TestAudio{
     words = [];
     refListInputs;
     refSetRenderMessae = [];
+    evaluateInputs = [];
     dispatch = useDispatch();
 
     evaluateValueInputs(){
-
+        const inputs = store.getState().materialInput.inputs;
+        inputs.forEach((input, index) => {
+            if(this.evaluateInputs[index] === undefined){
+                this.evaluateInputs.push(false);
+            }
+            if(input.value !== ''){
+                this.evaluateInputs[index] = input.value === this.words[index].english;
+                this.refSetRenderMessae[index](true);
+            };
+        });
     }
 
     async getWords(){
