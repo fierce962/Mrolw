@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Animated } from 'react-native';
+import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Animated, ScrollView } from 'react-native';
 import { useDispatch } from "react-redux";
 
 import { setValueInputs } from "../features/MaterialInput/materialInputSlice";
@@ -12,7 +12,7 @@ import LoadingBooks from '../components/LoadingBooks';
 
 import { testAudio } from './modelsViews/TestAudio';
 
-function CreateInputs({ fnChange, index, wordItem }){
+function CreateInputs({ fnChange, wordItem, index }){
     const [focus, setFocus] = useState(false);
     const styleInput = [
         style.contentTest,
@@ -65,6 +65,15 @@ function CreateMessage({ index }){
     )
 }
 
+function ListIputs({ changeValueInputs }){
+    return testAudio.words.map((wordItem, index) => (
+        <CreateInputs key={ `inputs${index}` }
+            fnChange={ changeValueInputs } 
+            wordItem={ wordItem } 
+            index={ index } />
+    ));
+}
+
 function CreateListInputs({ changeValueInputs }){
     const [renderList, setRenderList] = useState(false);
     if(testAudio.refListInputs === undefined){
@@ -73,11 +82,9 @@ function CreateListInputs({ changeValueInputs }){
     if(!renderList) return <LoadingBooks render={ true } />
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'android' ? "padding" : "height"}>
-            <FlatList data={ testAudio.words } renderItem={({ item, index }) => {
-                return <CreateInputs index={ index }
-                    wordItem={ item } 
-                    fnChange={ changeValueInputs } /> } 
-            }/>
+            <ScrollView keyboardShouldPersistTaps={ 'always' }>
+                    <ListIputs changeValueInputs={ changeValueInputs }/>
+            </ScrollView>
         </KeyboardAvoidingView>
     )
 }
@@ -87,6 +94,9 @@ export default function ViewTestAudio(){
 
     useEffect(() => {
         testAudio.getWords();
+        return () => {
+            testAudio.clearTestAudio();
+        }
     })
 
     function changeValueInputs(text, i){
@@ -100,7 +110,7 @@ export default function ViewTestAudio(){
         <View style={ style.containerTestAudio }>
             <View>
                 <TextTitle text={ 'Test con audio' } typeStyle={ 'main' } />
-                <Text style={ { color: '#fff' } }>Se te proporcionara una lista de 
+                <Text style={[ { color: '#fff' }, { textAlign: 'justify' } ]}>Se te proporcionara una lista de 
                     palabras que ya has aprendido deberas escucharla y escribir que palabra es,
                     la seleccion se realiza de forma aleatorea.
                 </Text>

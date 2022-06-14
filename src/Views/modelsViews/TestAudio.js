@@ -15,6 +15,14 @@ class TestAudio{
     evaluateInputs = [];
     dispatch = useDispatch();
 
+    clearTestAudio(){
+        console.log('clear test audio');
+        this.words = [];
+        this.refListInputs = undefined;
+        this.refSetRenderMessae = [];
+        this.evaluateInputs = [];
+    }
+
     evaluateValueInputs(){
         const inputs = store.getState().materialInput.inputs;
         inputs.forEach((input, index) => {
