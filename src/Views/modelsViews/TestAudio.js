@@ -7,7 +7,8 @@ import { setParameters } from '../../features/FloatingButton/floatingButtonSlice
 import { assingwords, 
     setRenderInput,
     setRenderMessage,
-    setRenderResultsOrInputs } from '../../features/TestAudio/testAudioSlice';
+    setRenderResultsOrInputs,
+    clearTestAudio } from '../../features/TestAudio/testAudioSlice';
 
 import { getStorage } from '../../models/Storage';
 import { getWordsTestAudio } from '../../database/database';
@@ -17,14 +18,19 @@ class TestAudio{
 
     clearTestAudio(){
         console.log('clear test audio');
+        this.dispatch(clearTestAudio());
     }
 
     onPressBtn(){
         const title = store.getState().floatingBtn.parameters.title;
         if(title === 'Comparar'){
             this.evaluateValueInputs();
-        }else{
+        }else if(title === 'Ver las Respuestas'){
             this.dispatch(setRenderResultsOrInputs('results'));
+        }else{
+            this.clearTestAudio();
+            this.setParametersFloating(false, '');
+            this.getWords();
         }
     }
 
@@ -41,7 +47,7 @@ class TestAudio{
             }))
         });
         if(count === inputs.length){
-            this.setParametersFloating(true, 'Ver las Respuestas')
+            this.setParametersFloating(true, 'Ver las Respuestas');
         }
     }
 
@@ -99,7 +105,7 @@ class TestAudio{
                 result: result[index]
             });
         });
-        console.log(results)
+        this.setParametersFloating(true, 'Realizar otra prueba');
         return results;
     }
 };

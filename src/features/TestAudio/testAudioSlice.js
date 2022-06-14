@@ -11,6 +11,13 @@ const testAudioSlice = createSlice({
         renderResults: 'inputs'
     },
     reducers: {
+        clearTestAudio(state){
+            state.words = [];
+            state.listInputs = false;
+            state.renderMessage = [];
+            state.evaluateInputs = [];
+            state.renderResults = 'inputs';
+        },
         assingwords(state, action){
             state.words = action.payload;
         },
@@ -34,4 +41,4 @@ const testAudioSlice = createSlice({
 });
 
 export default testAudioSlice.reducer;
-export const { assingwords, setRenderInput, setRenderMessage, setRenderResultsOrInputs } = testAudioSlice.actions;
+export const { assingwords, setRenderInput, setRenderMessage, setRenderResultsOrInputs, clearTestAudio } = testAudioSlice.actions;
