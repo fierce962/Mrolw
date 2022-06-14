@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, KeyboardAvoidingView, Animated, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, Animated, ScrollView, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from "react-redux";
 
@@ -9,7 +9,7 @@ import FloatingButton from "../components/FloatingButton";
 import MaterialInput from '../components/MaterialInput';
 import LoadingBooks from '../components/LoadingBooks';
 
-import { testAudio } from './modelsViews/TestAudio';
+import { classTestAudio } from './modelsViews/TestAudio';
 
 function CreateInputs({ wordItem, index }){
     const [focus, setFocus] = useState(false);
@@ -24,7 +24,7 @@ function CreateInputs({ wordItem, index }){
                     index={ index } 
                     fnFocus={ () => setFocus(true) }
                     fnBlur={ () => setFocus(false) }
-                    fnOnchange={ (text) => testAudio.changeValueInputs(text, index) }
+                    fnOnchange={ (text) => classTestAudio.changeValueInputs(text, index) }
                     extraStyle={ { margin: 0, borderBottomWidth: 0, paddingLeft: 10 } } />
             </View>
             <View style={ style.contentSpeech }>
@@ -36,10 +36,11 @@ function CreateInputs({ wordItem, index }){
 };
 
 function CreateMessage({ index }){
-    const renderMessage = useSelector(state => state.testAudio.renderMessage)
+    const renderMessage = useSelector(state => state.testAudio.renderMessage[index]);
+    const evaluateInputs = useSelector(state => state.testAudio.evaluateInputs[index]);
     const animate = useRef(true);
 
-    if(!renderMessage) return null
+    if(renderMessage === undefined || !renderMessage) return null
     let animatedMessage = new Animated.Value(0);
     if(animate.current){
         Animated.timing(animatedMessage, {
@@ -54,8 +55,8 @@ function CreateMessage({ index }){
         <Animated.View style={[ style.contentMenssage, { width: animatedMessage.interpolate({
             inputRange: [0, 1],
             outputRange: ['0%', '100%']     
-        })  }, { backgroundColor: testAudio.evaluateInputs[index] ? 'green' : 'red' } ]}>
-            <TextTitle text={  testAudio.evaluateInputs[index] ? 'correcto' : 'incorrecto' } 
+        })  }, { backgroundColor: evaluateInputs ? 'green' : 'red' } ]}>
+            <TextTitle text={  evaluateInputs ? 'correcto' : 'incorrecto' } 
             typeStyle={ 'main' } />
         </Animated.View>
     )
@@ -71,7 +72,7 @@ function ListIputs(){
 }
 
 function CreateListInputs(){
-    const renderList = useSelector(state => state.testAudio.refListInputs);
+    const renderList = useSelector(state => state.testAudio.listInputs);
     if(!renderList) return <LoadingBooks render={ true } />
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'android' ? "padding" : "height"}>
@@ -83,6 +84,8 @@ function CreateListInputs(){
 }
 
 function Results(){
+    const results = classTestAudio.getResults();
+
     return (
         <View>
             <TextTitle text={ 'Resultados' } typeStyle={ 'secundary' }/>
@@ -90,28 +93,36 @@ function Results(){
                 <Text style={[ style.text, style.textResults ]}>Tu respuesta</Text>
                 <Text style={[ style.text, style.textResults ]}>Solucion</Text>
             </View>
-            <View style={[ style.resultsViews, style.results ]}>
-                <Text style={[ style.text, { fontSize: 20 } ]}>1.</Text>
-                <Text style={[ style.text, style.textResults ]} >respues1</Text>
-                <Icon name="check-circle" color={ 'green' } size={ 22 }/>
-                <Text style={[ style.text, style.textResults ]} >Solucion1</Text>
-            </View>
+            <FlatList data={ results }
+                renderItem={({ item, index }) => <ListResults item={ item } index={ index } /> }
+            />
+        </View>
+    )
+}
+
+function ListResults({ item, index }){
+    return (
+        <View style={[ style.resultsViews, style.results ]}>
+            <Text style={[ style.text, { fontSize: 20 } ]}>{ index + 1 }.</Text>
+            <Text style={[ style.text, style.textResults ]} >{ item.response }</Text>
+            <Icon name={ item.result ? 'check-circle-o' :  'times-circle' } color={ item.result ? 'green' : 'red' } size={ 22 }/>
+            <Text style={[ style.text, style.textResults ]} >{ item.solution }</Text>
         </View>
     )
 }
 
 function RenderInputsOrResults(){
-    const [render, setRender] = useState('inputs');
+    const render = useSelector(state => state.testAudio.renderResults);
     if(render === 'inputs') return <CreateListInputs />
     if(render === 'results') return <Results />
 }
 
 export default function ViewTestAudio(){
-
+    
+    classTestAudio.getWords();
     useEffect(() => {
-        testAudio.getWords();
         return () => {
-            testAudio.clearTestAudio();
+            classTestAudio.clearTestAudio();
         }
     })
 
@@ -127,7 +138,7 @@ export default function ViewTestAudio(){
             <RenderInputsOrResults />
             <View>
                 <FloatingButton fnPress={ () => {
-                    testAudio.onPressBtn();
+                    classTestAudio.onPressBtn();
                 }} />
             </View>
         </View>

@@ -4,7 +4,10 @@ import { useDispatch } from 'react-redux';
 import { store } from '../../store/store';
 import { createInput, setValueInputs } from '../../features/MaterialInput/materialInputSlice';
 import { setParameters } from '../../features/FloatingButton/floatingButtonSlice';
-import { assingwords, setRenderInput, setRenderMessage } from '../../features/TestAudio/testAudioSlice';
+import { assingwords, 
+    setRenderInput,
+    setRenderMessage,
+    setRenderResultsOrInputs } from '../../features/TestAudio/testAudioSlice';
 
 import { getStorage } from '../../models/Storage';
 import { getWordsTestAudio } from '../../database/database';
@@ -21,7 +24,7 @@ class TestAudio{
         if(title === 'Comparar'){
             this.evaluateValueInputs();
         }else{
-            console.log('mostrar respuestas')
+            this.dispatch(setRenderResultsOrInputs('results'));
         }
     }
 
@@ -30,17 +33,12 @@ class TestAudio{
         let count = 0;
         inputs.forEach((input, index) => {
             if(input.value !== ''){
-                this.dispatch(setRenderMessage({
-                    index: index,
-                    evaluateInputs: input.value.toLowerCase() === this.words[index].english.toLowerCase()
-                }))
                 count++; 
-            }else{
-                this.dispatch(setRenderMessage({
-                    index: index,
-                    evaluateInputs: undefined
-                }))
             };
+            this.dispatch(setRenderMessage({
+                index: index,
+                text: input.value
+            }))
         });
         if(count === inputs.length){
             this.setParametersFloating(true, 'Ver las Respuestas')
@@ -48,11 +46,13 @@ class TestAudio{
     }
 
     async getWords(){
+        console.log('getwords');
         this.setParametersFloating(false, '');
         const maxId = await this.getMaxIdWords();
         const random = this.setRandomNumbers(maxId);
-        this.dispatch(assingwords(await getWordsTestAudio(random)));
-        this.dispatch(createInput(this.words));
+        const words = await getWordsTestAudio(random)
+        this.dispatch(assingwords(words));
+        this.dispatch(createInput(words));
         this.setParametersFloating(true, 'Comparar');
         this.dispatch(setRenderInput(true));
     };
@@ -86,6 +86,22 @@ class TestAudio{
             inputValue: text
         }))
     };
+
+    getResults(){
+        const results = [];
+        const words = store.getState().testAudio.words;
+        const inputs = store.getState().materialInput.inputs;
+        const result = store.getState().testAudio.evaluateInputs;
+        inputs.forEach((input, index) => {
+            results.push({
+                response: input.value,
+                solution: words[index].english,
+                result: result[index]
+            });
+        });
+        console.log(results)
+        return results;
+    }
 };
 
-export const testAudio = new TestAudio();
+export const classTestAudio = new TestAudio();

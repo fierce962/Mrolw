@@ -7,7 +7,8 @@ const testAudioSlice = createSlice({
         words: [],
         listInputs: false,
         renderMessage: [],
-        evaluateInputs: []
+        evaluateInputs: [],
+        renderResults: 'inputs'
     },
     reducers: {
         assingwords(state, action){
@@ -21,13 +22,16 @@ const testAudioSlice = createSlice({
                 state.evaluateInputs.push(false);
                 state.renderMessage.push(false);
             };
-            if(action.evaluateInputs !== undefined){
-                state.evaluateInputs[action.payload.index] = action.evaluateInputs;
+            if(action.payload.text !== ''){
+                state.evaluateInputs[action.payload.index] = action.payload.text.toLowerCase() === state.words[action.payload.index].english.toLowerCase();
                 state.renderMessage[action.payload.index] = true;
-            }
+            };
+        },
+        setRenderResultsOrInputs(state, action){
+            state.renderResults = action.payload;
         }
     },
 });
 
 export default testAudioSlice.reducer;
-export const { assingwords, setRenderInput, setRenderMessage } = testAudioSlice.actions;
+export const { assingwords, setRenderInput, setRenderMessage, setRenderResultsOrInputs } = testAudioSlice.actions;
