@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Animated, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useSelector } from "react-redux";
 
 import TextTitle from "../components/TextTitle";
 import TextToSpeech from "../components/TextToSpeech";
@@ -35,12 +36,9 @@ function CreateInputs({ wordItem, index }){
 };
 
 function CreateMessage({ index }){
-    const [renderMessage, setRender] = useState(false);
+    const renderMessage = useSelector(state => state.testAudio.renderMessage)
     const animate = useRef(true);
 
-    if(testAudio.refSetRenderMessae[index] === undefined){
-        testAudio.refSetRenderMessae.push(setRender);
-    }
     if(!renderMessage) return null
     let animatedMessage = new Animated.Value(0);
     if(animate.current){
@@ -64,7 +62,8 @@ function CreateMessage({ index }){
 }
 
 function ListIputs(){
-    return testAudio.words.map((wordItem, index) => (
+    const words = useSelector(state => state.testAudio.words);
+    return words.map((wordItem, index) => (
         <CreateInputs key={ `inputs${index}` }
             wordItem={ wordItem } 
             index={ index } />
@@ -72,10 +71,7 @@ function ListIputs(){
 }
 
 function CreateListInputs(){
-    const [renderList, setRenderList] = useState(false);
-    if(testAudio.refListInputs === undefined){
-        testAudio.refListInputs = setRenderList;
-    }
+    const renderList = useSelector(state => state.testAudio.refListInputs);
     if(!renderList) return <LoadingBooks render={ true } />
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'android' ? "padding" : "height"}>
@@ -105,7 +101,7 @@ function Results(){
 }
 
 function RenderInputsOrResults(){
-    const [render, setRender] = useState('results');
+    const [render, setRender] = useState('inputs');
     if(render === 'inputs') return <CreateListInputs />
     if(render === 'results') return <Results />
 }
@@ -113,10 +109,10 @@ function RenderInputsOrResults(){
 export default function ViewTestAudio(){
 
     useEffect(() => {
-        // testAudio.getWords();
-        // return () => {
-        //     testAudio.clearTestAudio();
-        // }
+        testAudio.getWords();
+        return () => {
+            testAudio.clearTestAudio();
+        }
     })
 
     return (

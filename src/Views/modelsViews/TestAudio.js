@@ -4,24 +4,16 @@ import { useDispatch } from 'react-redux';
 import { store } from '../../store/store';
 import { createInput, setValueInputs } from '../../features/MaterialInput/materialInputSlice';
 import { setParameters } from '../../features/FloatingButton/floatingButtonSlice';
-
+import { assingwords, setRenderInput, setRenderMessage } from '../../features/TestAudio/testAudioSlice';
 
 import { getStorage } from '../../models/Storage';
 import { getWordsTestAudio } from '../../database/database';
 
 class TestAudio{
-    words = [];
-    refListInputs;
-    refSetRenderMessae = [];
-    evaluateInputs = [];
     dispatch = useDispatch();
 
     clearTestAudio(){
         console.log('clear test audio');
-        this.words = [];
-        this.refListInputs = undefined;
-        this.refSetRenderMessae = [];
-        this.evaluateInputs = [];
     }
 
     onPressBtn(){
@@ -37,16 +29,20 @@ class TestAudio{
         const inputs = store.getState().materialInput.inputs;
         let count = 0;
         inputs.forEach((input, index) => {
-            if(this.evaluateInputs[index] === undefined){
-                this.evaluateInputs.push(false);
-            }
             if(input.value !== ''){
-                this.evaluateInputs[index] = input.value.toLowerCase() === this.words[index].english.toLowerCase();
-                this.refSetRenderMessae[index](true);
+                this.dispatch(setRenderMessage({
+                    index: index,
+                    evaluateInputs: input.value.toLowerCase() === this.words[index].english.toLowerCase()
+                }))
                 count++; 
+            }else{
+                this.dispatch(setRenderMessage({
+                    index: index,
+                    evaluateInputs: undefined
+                }))
             };
         });
-        if(count === this.words.length){
+        if(count === inputs.length){
             this.setParametersFloating(true, 'Ver las Respuestas')
         }
     }
@@ -55,10 +51,10 @@ class TestAudio{
         this.setParametersFloating(false, '');
         const maxId = await this.getMaxIdWords();
         const random = this.setRandomNumbers(maxId);
-        this.words = await getWordsTestAudio(random);
+        this.dispatch(assingwords(await getWordsTestAudio(random)));
         this.dispatch(createInput(this.words));
         this.setParametersFloating(true, 'Comparar');
-        this.refListInputs(true);
+        this.dispatch(setRenderInput(true));
     };
 
     setParametersFloating(view, title){
