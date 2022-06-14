@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Animated, ScrollView } from 'react-native';
-import { useDispatch } from "react-redux";
-
-import { setValueInputs } from "../features/MaterialInput/materialInputSlice";
+import { View, Text, StyleSheet, KeyboardAvoidingView, Animated, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TextTitle from "../components/TextTitle";
 import TextToSpeech from "../components/TextToSpeech";
@@ -12,7 +10,7 @@ import LoadingBooks from '../components/LoadingBooks';
 
 import { testAudio } from './modelsViews/TestAudio';
 
-function CreateInputs({ fnChange, wordItem, index }){
+function CreateInputs({ wordItem, index }){
     const [focus, setFocus] = useState(false);
     const styleInput = [
         style.contentTest,
@@ -25,7 +23,7 @@ function CreateInputs({ fnChange, wordItem, index }){
                     index={ index } 
                     fnFocus={ () => setFocus(true) }
                     fnBlur={ () => setFocus(false) }
-                    fnOnchange={ (text) => fnChange(text, index) }
+                    fnOnchange={ (text) => testAudio.changeValueInputs(text, index) }
                     extraStyle={ { margin: 0, borderBottomWidth: 0, paddingLeft: 10 } } />
             </View>
             <View style={ style.contentSpeech }>
@@ -65,16 +63,15 @@ function CreateMessage({ index }){
     )
 }
 
-function ListIputs({ changeValueInputs }){
+function ListIputs(){
     return testAudio.words.map((wordItem, index) => (
         <CreateInputs key={ `inputs${index}` }
-            fnChange={ changeValueInputs } 
             wordItem={ wordItem } 
             index={ index } />
     ));
 }
 
-function CreateListInputs({ changeValueInputs }){
+function CreateListInputs(){
     const [renderList, setRenderList] = useState(false);
     if(testAudio.refListInputs === undefined){
         testAudio.refListInputs = setRenderList;
@@ -83,43 +80,58 @@ function CreateListInputs({ changeValueInputs }){
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'android' ? "padding" : "height"}>
             <ScrollView keyboardShouldPersistTaps={ 'always' }>
-                    <ListIputs changeValueInputs={ changeValueInputs }/>
+                    <ListIputs />
             </ScrollView>
         </KeyboardAvoidingView>
     )
 }
 
+function Results(){
+    return (
+        <View>
+            <TextTitle text={ 'Resultados' } typeStyle={ 'secundary' }/>
+            <View style={ style.resultsViews }>
+                <Text style={[ style.text, style.textResults ]}>Tu respuesta</Text>
+                <Text style={[ style.text, style.textResults ]}>Solucion</Text>
+            </View>
+            <View style={[ style.resultsViews, style.results ]}>
+                <Text style={[ style.text, { fontSize: 20 } ]}>1.</Text>
+                <Text style={[ style.text, style.textResults ]} >respues1</Text>
+                <Icon name="check-circle" color={ 'green' } size={ 22 }/>
+                <Text style={[ style.text, style.textResults ]} >Solucion1</Text>
+            </View>
+        </View>
+    )
+}
+
+function RenderInputsOrResults(){
+    const [render, setRender] = useState('results');
+    if(render === 'inputs') return <CreateListInputs />
+    if(render === 'results') return <Results />
+}
+
 export default function ViewTestAudio(){
-    const dispatch = useDispatch();
 
     useEffect(() => {
-        testAudio.getWords();
-        return () => {
-            testAudio.clearTestAudio();
-        }
+        // testAudio.getWords();
+        // return () => {
+        //     testAudio.clearTestAudio();
+        // }
     })
-
-    function changeValueInputs(text, i){
-        dispatch(setValueInputs({
-            index: i,
-            inputValue: text
-        }))
-    }
 
     return (
         <View style={ style.containerTestAudio }>
             <View>
                 <TextTitle text={ 'Test con audio' } typeStyle={ 'main' } />
-                <Text style={[ { color: '#fff' }, { textAlign: 'justify' } ]}>Se te proporcionara una lista de 
+                <Text style={ style.text }>Se te proporcionara una lista de 
                     palabras que ya has aprendido deberas escucharla y escribir que palabra es,
                     la seleccion se realiza de forma aleatorea.
                 </Text>
             </View>
-            <CreateListInputs
-                changeValueInputs={ changeValueInputs } />
+            <RenderInputsOrResults />
             <View>
                 <FloatingButton fnPress={ () => {
-                    testAudio.evaluateValueInputs();
+                    testAudio.onPressBtn();
                 }} />
             </View>
         </View>
@@ -159,6 +171,27 @@ const style = StyleSheet.create({
         position: 'absolute',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    text: {
+        textAlign: 'justify',
+        color: '#fff'
+    },
+    textResults: {
+        flex: 1,
+        textAlign: 'center',
+        fontSize: 20
+    },
+    resultsViews: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 5,
+        marginBottom: 5,
+        paddingBottom: 3
+    },
+    results: {
+        borderColor: '#fff',
+        borderBottomWidth: 1
     }
 });
 

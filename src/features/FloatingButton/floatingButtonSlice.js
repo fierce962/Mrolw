@@ -10,10 +10,8 @@ const FloatingButtonSlice = createSlice({
     },
     reducers: {
         setParameters(state, action){
-            if(state.parameters.view === false){
-                state.parameters.view = action.payload.view;
-                state.parameters.title = action.payload.title;
-            }
+            state.parameters.view = action.payload.view;
+            state.parameters.title = action.payload.title;
         }
     }
 });

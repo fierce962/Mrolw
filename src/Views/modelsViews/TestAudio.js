@@ -2,8 +2,9 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import { store } from '../../store/store';
-import { createInput } from '../../features/MaterialInput/materialInputSlice';
+import { createInput, setValueInputs } from '../../features/MaterialInput/materialInputSlice';
 import { setParameters } from '../../features/FloatingButton/floatingButtonSlice';
+
 
 import { getStorage } from '../../models/Storage';
 import { getWordsTestAudio } from '../../database/database';
@@ -23,17 +24,31 @@ class TestAudio{
         this.evaluateInputs = [];
     }
 
+    onPressBtn(){
+        const title = store.getState().floatingBtn.parameters.title;
+        if(title === 'Comparar'){
+            this.evaluateValueInputs();
+        }else{
+            console.log('mostrar respuestas')
+        }
+    }
+
     evaluateValueInputs(){
         const inputs = store.getState().materialInput.inputs;
+        let count = 0;
         inputs.forEach((input, index) => {
             if(this.evaluateInputs[index] === undefined){
                 this.evaluateInputs.push(false);
             }
             if(input.value !== ''){
-                this.evaluateInputs[index] = input.value === this.words[index].english;
+                this.evaluateInputs[index] = input.value.toLowerCase() === this.words[index].english.toLowerCase();
                 this.refSetRenderMessae[index](true);
+                count++; 
             };
         });
+        if(count === this.words.length){
+            this.setParametersFloating(true, 'Ver las Respuestas')
+        }
     }
 
     async getWords(){
@@ -67,6 +82,13 @@ class TestAudio{
     async getMaxIdWords(){
         const user = await getStorage('user');
         return user.words.maxId;
+    };
+
+    changeValueInputs(text, i){
+        this.dispatch(setValueInputs({
+            index: i,
+            inputValue: text
+        }))
     };
 };
 

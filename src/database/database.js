@@ -71,10 +71,14 @@ export async function getWordsTestAudio(searchWords){
         const querySnapshot = await getDocs(query(collection(db, 'words'), 
                     where("id", 'in', searchWords),
                     limit(5)));
-        querySnapshot.forEach((doc) => {
-            words.push(doc.data());
-        });
-        console.log('words', words)
+        if(querySnapshot.metadata.fromCache === true){
+            await hasReconnected();
+            await getWordsTestAudio(searchWords);
+        }else{
+            querySnapshot.forEach((doc) => {
+                words.push(doc.data());
+            });
+        };
         return words;
     } catch (error) {
         console.log('error', error);
