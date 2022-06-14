@@ -13,7 +13,7 @@ import LoadingBooks from '../components/LoadingBooks';
 
 import { testAudio } from './modelsViews/TestAudio';
 
-function CreateInputs({ fnChange, index, refRenderMessage, wordItem }){
+function CreateInputs({ fnChange, index, wordItem }){
     const [focus, setFocus] = useState(false);
     const styleInput = [
         style.contentTest,
@@ -32,15 +32,15 @@ function CreateInputs({ fnChange, index, refRenderMessage, wordItem }){
             <View style={ style.contentSpeech }>
                 <TextToSpeech textSpeech={ wordItem.english } />
             </View>
-            <CreateMessage refSetRenderMessae={ refRenderMessage } index={ index } />
+            <CreateMessage index={ index } />
         </View>
     )
 };
 
-function CreateMessage({ refSetRenderMessae, index }){
+function CreateMessage({ index }){
     const [renderMessage, setRender] = useState(false);
-    if(refSetRenderMessae[index] === undefined){
-        refSetRenderMessae.push(setRender);
+    if(testAudio.refSetRenderMessae[index] === undefined){
+        testAudio.refSetRenderMessae.push(setRender);
     }
     if(!renderMessage) return null
 
@@ -61,7 +61,7 @@ function CreateMessage({ refSetRenderMessae, index }){
     )
 }
 
-function CreateListInputs({ refSetRenderMessae, changeValueInputs }){
+function CreateListInputs({ changeValueInputs }){
     const [renderList, setRenderList] = useState(false);
     if(testAudio.refListInputs === undefined){
         testAudio.refListInputs = setRenderList;
@@ -72,15 +72,13 @@ function CreateListInputs({ refSetRenderMessae, changeValueInputs }){
             <FlatList data={ testAudio.words } renderItem={({ item, index }) => {
                 return <CreateInputs index={ index }
                     wordItem={ item } 
-                    fnChange={ changeValueInputs } 
-                    refRenderMessage={ refSetRenderMessae } /> } 
+                    fnChange={ changeValueInputs } /> } 
             }/>
         </KeyboardAvoidingView>
     )
 }
 
 export default function ViewTestAudio(){
-    const refSetRenderMessae = [];
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -103,14 +101,14 @@ export default function ViewTestAudio(){
                     la seleccion se realiza de forma aleatorea.
                 </Text>
             </View>
-            <CreateListInputs refSetRenderMessae={ refSetRenderMessae } 
+            <CreateListInputs
                 changeValueInputs={ changeValueInputs } />
             <View>
                 <FloatingButton fnPress={ () => {
                     const inputs = store.getState().materialInput.inputs;
                     inputs.forEach((input, index) => {
                         if(input.value !== ''){
-                            refSetRenderMessae[index](true);
+                            testAudio.refSetRenderMessae[index](true);
                         }
                     })
                 }} />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
+import { store } from '../../store/store';
 import { createInput } from '../../features/MaterialInput/materialInputSlice';
 import { setParameters } from '../../features/FloatingButton/floatingButtonSlice';
 
@@ -10,9 +11,12 @@ import { getWordsTestAudio } from '../../database/database';
 class TestAudio{
     words = [];
     refListInputs;
+    refSetRenderMessae = [];
     dispatch = useDispatch();
 
+    evaluateValueInputs(){
 
+    }
 
     async getWords(){
         this.setParametersFloating(false, '');
@@ -20,7 +24,7 @@ class TestAudio{
         const random = this.setRandomNumbers(maxId);
         this.words = await getWordsTestAudio(random);
         this.dispatch(createInput(this.words));
-        this.setParametersFloating(false, 'Comparar');
+        this.setParametersFloating(true, 'Comparar');
         this.refListInputs(true);
     };
 
