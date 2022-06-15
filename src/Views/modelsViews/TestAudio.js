@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 import { store } from '../../store/store';
 import { createInput, setValueInputs } from '../../features/MaterialInput/materialInputSlice';
@@ -15,6 +16,7 @@ import { getWordsTestAudio } from '../../database/database';
 
 class TestAudio{
     dispatch = useDispatch();
+    navigation = useNavigation();
 
     clearTestAudio(){
         console.log('clear test audio');
@@ -52,9 +54,21 @@ class TestAudio{
     }
 
     async getWords(){
-        console.log('getwords');
         this.setParametersFloating(false, '');
         const maxId = await this.getMaxIdWords();
+        if(maxId === undefined || maxId < 50){
+            this.navigation.reset({
+                index: 1,
+                routes: [{ name: 'home' }, { name: 'error', params: {
+                    title: 'lo sentimos', 
+                    subTitle: 'Necesitas haber aprendido un minimo de 50 palabras para poder acceder a la prueba con audio', 
+                    nameIcon: 'home', 
+                    textBtn: 'volver al inicio', 
+                    routeName: 'home'
+                } }]
+            });
+            return [];
+        };
         const random = this.setRandomNumbers(maxId);
         const words = await getWordsTestAudio(random)
         this.dispatch(assingwords(words));
@@ -83,7 +97,11 @@ class TestAudio{
 
     async getMaxIdWords(){
         const user = await getStorage('user');
-        return user.words.maxId;
+        if(user.words !== undefined){
+            return user.words.maxId - 5;
+        }else{
+            return undefined;
+        };
     };
 
     changeValueInputs(text, i){

@@ -173,6 +173,10 @@ const learnSlice = createSlice({
         mode: ['learnMode'],
     },
     reducers: {
+        clearLearn(state){
+            state.words = undefined;
+            state.mode = ['learnMode'];
+        },
         refreshHome(state){
             state.mode = ['learnMode'];
         }
@@ -206,6 +210,6 @@ const learnSlice = createSlice({
 })
 
 export default learnSlice.reducer;
-export const { refreshHome } = learnSlice.actions;
+export const { refreshHome, clearLearn } = learnSlice.actions;
 
 

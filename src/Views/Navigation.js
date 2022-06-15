@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 
 import { closeSession } from '../database/AuthDataBase';
 import { clearAll } from '../models/Storage';
 import { getStorage } from '../models/Storage';
 import { controllerNavigation } from '../models/ControllerNavigation';
 import { controllerNotifications } from '../models/ControllerNotifications';
+import { clearLearn } from '../features/Learn/LearnSlice';
 
 import Home from './home';
 import Register from './Register';
@@ -19,27 +21,23 @@ import Login from './Login';
 import ViewTestAudio from './ViewTestAudio';
 
 export default function Navigation({ drawer }){
-    const [initialRouter, setInitialRouter] = useState('');
     const Stack = createNativeStackNavigator();
     const navigation = useNavigation();
+    const dispatch = useDispatch();
     controllerNavigation.set(navigation);
     
     useEffect(() => {
         getStorage('user').then(user => {
             if(user !== null){
-                setInitialRouter('home');
-            }else{
-                setInitialRouter('login');
+                navigation.navigate('home');
             }
         });
     });
     
-    if(initialRouter === '') return null;
-    
     controllerNotifications.createListener();
 
     return(
-        <Stack.Navigator initialRouteName={ initialRouter }>
+        <Stack.Navigator initialRouteName={ 'login' }>
             <Stack.Group screenOptions={({ route, navigation }) => ({
                     headerTitle: () => <CreateLogo width={ 50 } height={ 50 } color={ '#cc0000' } />,
                     headerTitleAlign: 'center',
@@ -70,6 +68,7 @@ export default function Navigation({ drawer }){
                                 index: 0,
                                 routes: [{ name: 'login' }]
                             });
+                            dispatch(clearLearn());
                         } } />
                     )
                 })}>
