@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, FlatList, StyleSheet, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -12,7 +12,7 @@ function Menu(){
     const selected = menuSelect === 0 ? [undefined, true] : [true, undefined];
 
     return (
-        <View style={{ backgroundColor: 'red' }}>
+        <View>
             <View style={ style.menuContainer }>
                 <CreateButton title={ 'Aprendidas' } 
                     secudary={ selected[0] } 
@@ -25,11 +25,12 @@ function Menu(){
     );
 }
 
-function ItemList(){
+function ItemList({ english, espanish, pronunciationSpanish }){
+    console.log('list item')
     return (
         <View style={ style.contentItemList }>
             <View style={ { height: 50 } }>
-                <CreateButton title={ 'Word title' } 
+                <CreateButton title={ english } 
                     iconName={ 'caret-down' } 
                     aditionalStyle={ { justifyContent: 'space-between' } } />
             </View>
@@ -41,13 +42,30 @@ function ItemList(){
     )
 }
 
+function ListWords(){
+    const words = useSelector(state => state.words.wordsLearned);
+    console.log('listwords', words)
+    if(words.length === 0){
+        return null
+    }
+    return (
+        <FlatList data={ words }
+            renderItem={ ({ item }) => <ItemList english={ item.english } 
+                espanish={ item.espanish } pronunciationSpanish={ item.pronunciationSpanish } /> } />
+    )
+}
+
 export default function ViewWords(){
     fnWords.dispatch = useDispatch();
+
+    useEffect(() => {
+        fnWords.getWordsDb();
+    })
 
     return (
         <View style={ { flex: 1 } }>
             <Menu />
-            <ItemList />
+            <ListWords />
         </View>
     )
 }
@@ -64,17 +82,18 @@ const style = StyleSheet.create({
     },
     contentItemList: {
         width: '80%',
-        margin: 10,
+        marginBottom: 8
     },
     contentitemTextList: {
+        height: 0,
+        borderWidth: 0,
         marginHorizontal: 2,
-        borderWidth: 2,
         borderTopWidth: 0,
         borderColor: '#aaa',
         backgroundColor: '#212121',
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
-        paddingLeft: 10
+        paddingLeft: 10,
     },
     itemText: {
         color: '#fff',

@@ -23,6 +23,26 @@ export async function getWordsRangeDb(rangeMax, limitNumb = 5){
     }
 }
 
+export async function getWordsMinMaxRange(minRange, maxRange){
+    try {
+        const wordsList = [];
+        const querySnapshot = await getDocs(query(collection(db, 'words'), 
+                where("id", ">=", minRange), where("id", "<=", maxRange),
+                orderBy('id', 'asc'), limit(10)));
+        if(querySnapshot.metadata.fromCache === true){
+            await hasReconnected();
+            return await getWordsMinMaxRange(minRange, maxRange);
+        }else{
+            querySnapshot.forEach((doc) => {
+                wordsList.push(doc.data());
+            });
+            return wordsList;
+        }
+    } catch (error) {
+        console.log('error', error.code)
+    }
+}
+
 export async function createUsers(userName, id){
     const user = {
         idUser: id,
