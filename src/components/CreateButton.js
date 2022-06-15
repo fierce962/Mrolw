@@ -25,8 +25,8 @@ export default function CreateButton({ title, fnPress, iconName, size, secudary,
             <Text style={[style.text, { fontSize: size } ]}>
                 { title }
                 {' '}
-                <CreateIcon />
             </Text>
+            <CreateIcon />
         </TouchableOpacity>
     );
 }
@@ -38,6 +38,8 @@ const style = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
         backgroundColor: '#313131',
+        flexDirection: 'row',
+        justifyContent: 'center'
     },
     secundaryBtn: {
         backgroundColor: '#202020'

@@ -11,7 +11,9 @@ export default function ProfileImg(){
 
     useEffect(() => {
         getStorage('user').then(userStorage => {
-            setName(userStorage.userName);
+            if(userStorage !== null){
+                setName(userStorage.userName);
+            }
         });
     });
 

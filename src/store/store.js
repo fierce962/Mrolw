@@ -8,6 +8,7 @@ import timerCountSlice from '../features/timerCount/timerCountSlice';
 import materialInputSlice from '../features/MaterialInput/materialInputSlice';
 import GeneralMessageFloatingSlice from '../features/GeneralMessageFloating/GeneralMessageFloatingSlice';
 import TestAudioSlice from '../features/TestAudio/testAudioSlice';
+import WordsSlice from '../features/words/wordsSlice';
 
 export const store = configureStore({
     reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
         timer: timerCountSlice,
         materialInput: materialInputSlice,
         generalMessage: GeneralMessageFloatingSlice,
-        testAudio: TestAudioSlice
+        testAudio: TestAudioSlice,
+        words: WordsSlice
     },
 })

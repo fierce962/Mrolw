@@ -19,6 +19,7 @@ import CreateError from '../components/CreateError';
 import { CreateLogo } from '../components/CreateSvg';
 import Login from './Login';
 import ViewTestAudio from './ViewTestAudio';
+import ViewWords from './ViewWords';
 
 export default function Navigation({ drawer }){
     const Stack = createNativeStackNavigator();
@@ -77,6 +78,7 @@ export default function Navigation({ drawer }){
                 <Stack.Screen options={ { headerBackVisible: false } } name='voice' component={ ViewPronunciation } />
                 <Stack.Screen options={ { headerBackVisible: false } } name='error' component={ CreateError } />
                 <Stack.Screen options={ { headerBackVisible: false } } name='testAudio' component={ ViewTestAudio } />
+                <Stack.Screen options={ { headerBackVisible: false } } name='words' component={ ViewWords } />
             </Stack.Group>
             <Stack.Group screenOptions={{ 
                     headerShown: false,
