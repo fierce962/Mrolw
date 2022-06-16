@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, FlatList, StyleSheet, Text } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, FlatList, StyleSheet, Text, Animated } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 
@@ -25,33 +25,55 @@ function Menu(){
     );
 }
 
-function ItemList({ english, espanish, pronunciationSpanish }){
-    console.log('list item')
+function ItemList({ index }){
+    const word = useSelector(state => state.words.wordsSelect[index]);
+    const animatedUsed = useRef(null);
+
+    const styleText = [
+        style.contentitemTextList,
+        word.open && { borderWidth: 2 }
+    ];
+    let aminatedinit = animatedUsed.current !== null ? 80 : 0;
+    let animateItem = new Animated.Value(aminatedinit);
+    if(word.open){
+        Animated.timing(animateItem, {
+            toValue: 80,
+            duration: 1000,
+            useNativeDriver: false
+        }).start();
+    }else if (animatedUsed.current !== null){
+        Animated.timing(animateItem, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: false
+        }).start();
+    }
     return (
         <View style={ style.contentItemList }>
             <View style={ { height: 50 } }>
-                <CreateButton title={ english } 
+                <CreateButton title={ word.english } 
                     iconName={ 'caret-down' } 
-                    aditionalStyle={ { justifyContent: 'space-between' } } />
+                    aditionalStyle={ { justifyContent: 'space-between' } } 
+                    fnPress={ () => fnWords.changeOpenWord(index, animatedUsed, word.open) } />
             </View>
-            <View style={ style.contentitemTextList }>
-                <Text style={ style.itemText }>En español</Text>
-                <Text style={ style.itemText }>En Pronunciacion</Text>
-            </View>
+            <Animated.View style={[ styleText, { height: animateItem } ]}>
+                <Text style={ style.itemText }>Español</Text>
+                <Text style={ style.itemText }>Pronunciacion</Text>
+            </Animated.View>
         </View>
     )
 }
 
 function ListWords(){
-    const words = useSelector(state => state.words.wordsLearned);
-    console.log('listwords', words)
-    if(words.length === 0){
+    const list = useSelector(state => state.words.list);
+    if(list.length === 0){
         return null
     }
     return (
-        <FlatList data={ words }
-            renderItem={ ({ item }) => <ItemList english={ item.english } 
-                espanish={ item.espanish } pronunciationSpanish={ item.pronunciationSpanish } /> } />
+        <FlatList data={ list }
+            onEndReachedThreshold={ 0.2 }
+            onEndReached={ () => fnWords.getWordsDb() }
+            renderItem={ ({ index }) => <ItemList index={ index } /> } />
     )
 }
 
@@ -85,8 +107,6 @@ const style = StyleSheet.create({
         marginBottom: 8
     },
     contentitemTextList: {
-        height: 0,
-        borderWidth: 0,
         marginHorizontal: 2,
         borderTopWidth: 0,
         borderColor: '#aaa',
@@ -94,6 +114,7 @@ const style = StyleSheet.create({
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         paddingLeft: 10,
+        overflow: 'hidden'
     },
     itemText: {
         color: '#fff',

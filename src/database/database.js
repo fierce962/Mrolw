@@ -28,7 +28,7 @@ export async function getWordsMinMaxRange(minRange, maxRange){
         const wordsList = [];
         const querySnapshot = await getDocs(query(collection(db, 'words'), 
                 where("id", ">=", minRange), where("id", "<=", maxRange),
-                orderBy('id', 'asc'), limit(10)));
+                orderBy('id', 'asc'), limit(20)));
         if(querySnapshot.metadata.fromCache === true){
             await hasReconnected();
             return await getWordsMinMaxRange(minRange, maxRange);

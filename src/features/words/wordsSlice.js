@@ -1,13 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const palabrasSlice = createSlice({
     name: 'words',
     initialState: {
         menuSelect: 0,
-        wordsLearned: [],
-        wordsForLearned: [],
-        openOrClose: []
+        wordsSelect: [],
+        list: []
     },
     reducers: {
         setNewSelectMenu: (state, action) => {
@@ -16,11 +14,17 @@ const palabrasSlice = createSlice({
             }
         },
         setLearnedWords: (state, action) => {
-            console.log(action.payload)
-            state.wordsLearned = action.payload;
+            action.payload.forEach(word => {
+                word.open = false;
+                state.list.push('add');
+                state.wordsSelect.push(word);
+            });
+        },
+        changeOpenWordByIndex: (state, action) => {
+            state.wordsSelect[action.payload].open = !state.wordsSelect[action.payload].open;
         }
     }
 });
 
 export default palabrasSlice.reducer;
-export const { setNewSelectMenu, setLearnedWords } = palabrasSlice.actions;
+export const { setNewSelectMenu, setLearnedWords, changeOpenWordByIndex } = palabrasSlice.actions;
