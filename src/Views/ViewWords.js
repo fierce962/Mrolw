@@ -57,8 +57,8 @@ function ItemList({ index }){
                     fnPress={ () => fnWords.changeOpenWord(index, animatedUsed, word.open) } />
             </View>
             <Animated.View style={[ styleText, { height: animateItem } ]}>
-                <Text style={ style.itemText }>Español</Text>
-                <Text style={ style.itemText }>Pronunciacion</Text>
+                <Text style={ style.itemText }>Español: { word.espanish }</Text>
+                <Text style={ style.itemText }>{ word.pronunciationSpanish === undefined ? `Pronunciacion: No disponible` : `Pronunciacion: ${ word.pronunciationSpanish }` }</Text>
             </Animated.View>
         </View>
     )
@@ -73,7 +73,16 @@ function ListWords(){
         <FlatList data={ list }
             onEndReachedThreshold={ 0.2 }
             onEndReached={ () => fnWords.getWordsDb() }
+            ListFooterComponent={ EndList }
             renderItem={ ({ index }) => <ItemList index={ index } /> } />
+    )
+}
+
+function EndList(){
+    return (
+        <View>
+            <Text style={ style.itemText }> Buscando </Text>
+        </View>
     )
 }
 
@@ -104,7 +113,8 @@ const style = StyleSheet.create({
     },
     contentItemList: {
         width: '80%',
-        marginBottom: 8
+        marginBottom: 8,
+        alignSelf: 'center'
     },
     contentitemTextList: {
         marginHorizontal: 2,
