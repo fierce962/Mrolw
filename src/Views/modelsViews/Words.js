@@ -2,7 +2,7 @@ import React from "react";
 import { store } from '../../store/store';
 
 import { getStorage } from "../../models/Storage";
-import { setNewSelectMenu, setLearnedWords, changeOpenWordByIndex } from '../../features/words/wordsSlice';
+import { setNewSelectMenu, setLearnedWords, changeOpenWordByIndex, setEnd } from '../../features/words/wordsSlice';
 import { getWordsMinMaxRange } from '../../database/database';
 
 class FnWords{
@@ -21,7 +21,6 @@ class FnWords{
     }
 
     async getWordsDb(){
-        console.log('getwordsdb')
         const previusWords = store.getState().words.wordsSelect.length;
         const [minRange, maxRange] = await this.getRanges();
         console.log(minRange, maxRange, this.lastMaxRange, this.permitedMaxRange);
@@ -29,7 +28,8 @@ class FnWords{
             const wordsDb = await getWordsMinMaxRange(minRange, maxRange);
             this.dispatch(setLearnedWords(wordsDb));
         }else{
-            console.log('ya no se dispara la busqueda en la base de datos')
+            console.log('end')
+            this.dispatch(setEnd(true));
         }
     }
 

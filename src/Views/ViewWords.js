@@ -79,9 +79,10 @@ function ListWords(){
 }
 
 function EndList(){
+    const end = useSelector(state => state.words.end);
     return (
-        <View>
-            <Text style={ style.itemText }> Buscando </Text>
+        <View style={ style.contentEndList }>
+            <Text style={ style.itemText } >{ end ? 'No hay mas datos disponibles' : 'Buscando' }</Text>
         </View>
     )
 }
@@ -116,6 +117,11 @@ const style = StyleSheet.create({
         marginBottom: 8,
         alignSelf: 'center'
     },
+    contentEndList: {
+        width: '100%',
+        padding: 20,
+        alignItems: 'center'
+    },  
     contentitemTextList: {
         marginHorizontal: 2,
         borderTopWidth: 0,

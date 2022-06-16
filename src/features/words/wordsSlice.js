@@ -5,7 +5,8 @@ const palabrasSlice = createSlice({
     initialState: {
         menuSelect: 0,
         wordsSelect: [],
-        list: []
+        list: [],
+        end: false,
     },
     reducers: {
         setNewSelectMenu: (state, action) => {
@@ -22,9 +23,12 @@ const palabrasSlice = createSlice({
         },
         changeOpenWordByIndex: (state, action) => {
             state.wordsSelect[action.payload].open = !state.wordsSelect[action.payload].open;
+        },
+        setEnd: (state, action) => {
+            state.end = action.payload;
         }
     }
 });
 
 export default palabrasSlice.reducer;
-export const { setNewSelectMenu, setLearnedWords, changeOpenWordByIndex } = palabrasSlice.actions;
+export const { setNewSelectMenu, setLearnedWords, changeOpenWordByIndex, setEnd } = palabrasSlice.actions;
