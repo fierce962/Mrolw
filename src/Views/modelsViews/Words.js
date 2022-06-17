@@ -38,20 +38,17 @@ class FnWords{
     }
     
     async getWordsForLearn(){
-        console.log('last', this.lastMaxRange, 'permited', this.permitedMaxRange);
         const previusWords = store.getState().words.wordsSelect.length;
         let wordsForLearn = await getStorage('wordsForLearn');
         let wordsDb;
         const maxRange = this.lastMaxRange + 10 < this.permitedMaxRange ? this.lastMaxRange + 10 : this.permitedMaxRange;
         if(wordsForLearn === null || wordsForLearn[wordsForLearn.length - 1].id < maxRange){
-            console.log('entro a la busqueda')
             wordsDb = await getWordsMinMaxRange(this.lastMaxRange + 1, maxRange);
             if(wordsForLearn === null) wordsForLearn = [];
             wordsDb.forEach(words => {
                 wordsForLearn.push(words);
             });
         }else if(previusWords === 0){
-            console.log('entro')
             wordsDb = wordsForLearn;
         };
         if(wordsDb !== undefined && wordsDb.length !== 0){
@@ -65,26 +62,18 @@ class FnWords{
 
     async getWordsLearn(){
         const previusWords = store.getState().words.wordsSelect.length;
-        console.log('getwords previouswords', previusWords)
         const [minRange, maxRange] = await this.getRanges();
-        console.log('minrange', minRange, maxRange)
         let wordsDb;
         if(previusWords === 0 || minRange !== 0){
             const [saveName, localSave] = await this.checkLocalSaveWords(minRange);
-            console.log('saveName', saveName)
+            console.log(localSave !== null ? localSave : 'none')
             if(typeof(localSave) !== 'string' && localSave.length >= 10){
                 wordsDb = localSave;
-                console.log('ya estaba completo el localsave')
             }else{
-                console.log('no habia local o estaba incompleto')
                 let rest = typeof(localSave) !== 'string' ? localSave.length : 0;
-                console.log('rest value', rest);
-                console.log('minrange+5', minRange + rest, maxRange);
                 if(minRange + rest < maxRange){
-                    console.log('se ejecuto la busqueda')
                     wordsDb = await getWordsMinMaxRange(minRange + rest, maxRange);
                 }else{
-                    console.log('no se ejecuto la busqueda')
                 }
                 let save = wordsDb;
                 if(typeof(localSave) !== 'string' && wordsDb !== undefined){
@@ -101,7 +90,6 @@ class FnWords{
                 this.dispatch(setLearnedWords(wordsDb));
             }
         }else{
-            console.log('end')
             this.dispatch(setEnd(true));
         }
     }
@@ -117,14 +105,14 @@ class FnWords{
             const user = await getStorage('user');
             const userMaxIdWords = user.words.maxId - 10;
             console.log('compare', user.words.maxId, userMaxIdWords)
-            const maxRange = userMaxIdWords <= 20 ? userMaxIdWords : 20;
+            const maxRange = userMaxIdWords < 20 ? userMaxIdWords : 20;
             this.lastMaxRange = maxRange;
             this.permitedMaxRange = userMaxIdWords;
             return [0, maxRange]; 
-        }else if(this.lastMaxRange + 1 <= this.permitedMaxRange){
-            const minRange = this.lastMaxRange + 1;
+        }else if(this.lastMaxRange <= this.permitedMaxRange){
+            const minRange = this.lastMaxRange;
             const maxRange = minRange + 10 <= this.permitedMaxRange ? minRange + 10 : this.permitedMaxRange;
-            this.lastMaxRange = maxRange;
+            this.lastMaxRange = maxRange + 1;
             return [minRange, maxRange];
         }else{
             return [0, 0];
