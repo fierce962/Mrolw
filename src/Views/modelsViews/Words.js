@@ -1,7 +1,7 @@
 import React from "react";
 import { store } from '../../store/store';
 
-import { getStorage } from "../../models/Storage";
+import { getStorage, setStorage } from "../../models/Storage";
 import { setNewSelectMenu, setLearnedWords, changeOpenWordByIndex, setEnd } from '../../features/words/wordsSlice';
 import { getWordsMinMaxRange } from '../../database/database';
 
@@ -23,14 +23,49 @@ class FnWords{
     async getWordsDb(){
         const previusWords = store.getState().words.wordsSelect.length;
         const [minRange, maxRange] = await this.getRanges();
-        console.log(minRange, maxRange, this.lastMaxRange, this.permitedMaxRange);
+        console.log('minrange', minRange, maxRange)
+        let wordsDb;
         if(previusWords === 0 || minRange !== 0){
-            const wordsDb = await getWordsMinMaxRange(minRange, maxRange);
-            this.dispatch(setLearnedWords(wordsDb));
+            const [saveName, localSave] = await this.checkLocalSaveWords(minRange);
+            console.log('saveName', saveName)
+            if(typeof(localSave) !== 'string' && localSave.length >= 10){
+                wordsDb = localSave;
+                console.log('ya estaba completo el localsave')
+            }else{
+                console.log('no habia local o estaba incompleto')
+                let rest = typeof(localSave) !== 'string' ? localSave.length : 0;
+                console.log('rest value', rest);
+                console.log('minrange+5', minRange + rest, maxRange);
+                if(minRange + rest < maxRange){
+                    console.log('se ejecuto la busqueda')
+                    wordsDb = await getWordsMinMaxRange(minRange + rest, maxRange);
+                }else{
+                    console.log('no se ejecuto la busqueda')
+                }
+                let save = wordsDb;
+                if(typeof(localSave) !== 'string' && wordsDb !== undefined){
+                    wordsDb.forEach(word => {
+                        localSave.push(word);
+                    });
+                    save = localSave;
+                }
+                if(save !== undefined){
+                    await setStorage(saveName, save);
+                }
+            };
+            if(wordsDb !== undefined){
+                this.dispatch(setLearnedWords(wordsDb));
+            }
         }else{
             console.log('end')
             this.dispatch(setEnd(true));
         }
+    }
+
+    async checkLocalSaveWords(minRange){
+        const searchLocal = minRange === 0 ? `wordsSave020` : `wordsSave${minRange}${minRange+10}`;
+        const localWords = await getStorage(searchLocal);
+        return [searchLocal, localWords !== null ? localWords : 'none'];
     }
 
     async getRanges(){
