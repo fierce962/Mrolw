@@ -12,6 +12,9 @@ const palabrasSlice = createSlice({
         setNewSelectMenu: (state, action) => {
             if(state.menuSelect !== action.payload){
                 state.menuSelect = action.payload;
+                state.wordsSelect = [];
+                state.list = [];
+                state.end = false;
             }
         },
         setLearnedWords: (state, action) => {

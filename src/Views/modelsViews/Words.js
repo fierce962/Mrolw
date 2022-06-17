@@ -12,7 +12,15 @@ class FnWords{
     
     changeMenuSelected(select){
         console.log('change', select);
+        if(select === 1){
+            this.lastMaxRange = this.permitedMaxRange + 10;
+            this.permitedMaxRange += 110; 
+        }else{
+            this.lastMaxRange = undefined;
+            this.permitedMaxRange = undefined;
+        };
         this.dispatch(setNewSelectMenu(select));
+        this.getWordsDb();
     }
 
     changeOpenWord(index, animatedUsed, wordOpen){
@@ -21,7 +29,43 @@ class FnWords{
     }
 
     async getWordsDb(){
+        const menuSelect = store.getState().words.menuSelect;
+        if(menuSelect === 0){
+            await this.getWordsLearn(); 
+        }else{
+            await this.getWordsForLearn();
+        }
+    }
+    
+    async getWordsForLearn(){
+        console.log('last', this.lastMaxRange, 'permited', this.permitedMaxRange);
         const previusWords = store.getState().words.wordsSelect.length;
+        let wordsForLearn = await getStorage('wordsForLearn');
+        let wordsDb;
+        const maxRange = this.lastMaxRange + 10 < this.permitedMaxRange ? this.lastMaxRange + 10 : this.permitedMaxRange;
+        if(wordsForLearn === null || wordsForLearn[wordsForLearn.length - 1].id < maxRange){
+            console.log('entro a la busqueda')
+            wordsDb = await getWordsMinMaxRange(this.lastMaxRange + 1, maxRange);
+            if(wordsForLearn === null) wordsForLearn = [];
+            wordsDb.forEach(words => {
+                wordsForLearn.push(words);
+            });
+        }else if(previusWords === 0){
+            console.log('entro')
+            wordsDb = wordsForLearn;
+        };
+        if(wordsDb !== undefined && wordsDb.length !== 0){
+            this.dispatch(setLearnedWords(wordsDb));
+            this.lastMaxRange = maxRange;
+            await setStorage('wordsForLearn', wordsForLearn);
+        }else{
+            this.dispatch(setEnd(true));
+        };
+    };
+
+    async getWordsLearn(){
+        const previusWords = store.getState().words.wordsSelect.length;
+        console.log('getwords previouswords', previusWords)
         const [minRange, maxRange] = await this.getRanges();
         console.log('minrange', minRange, maxRange)
         let wordsDb;
@@ -71,7 +115,8 @@ class FnWords{
     async getRanges(){
         if(this.lastMaxRange === undefined){
             const user = await getStorage('user');
-            const userMaxIdWords = user.words.maxId - 5;
+            const userMaxIdWords = user.words.maxId - 10;
+            console.log('compare', user.words.maxId, userMaxIdWords)
             const maxRange = userMaxIdWords <= 20 ? userMaxIdWords : 20;
             this.lastMaxRange = maxRange;
             this.permitedMaxRange = userMaxIdWords;
