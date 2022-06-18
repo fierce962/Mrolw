@@ -51,7 +51,7 @@ function ItemList({ index }){
     return (
         <View style={ style.contentItemList }>
             <View style={ { height: 50 } }>
-                <CreateButton title={ word.english } 
+                <CreateButton title={ `${word.id} ${word.english}` } 
                     iconName={ 'caret-down' } 
                     aditionalStyle={ { justifyContent: 'space-between' } } 
                     fnPress={ () => fnWords.changeOpenWord(index, animatedUsed, word.open) } />
