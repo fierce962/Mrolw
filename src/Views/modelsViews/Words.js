@@ -32,9 +32,9 @@ class FnWords{
         if(this.permitedSearhWords){
             this.permitedSearhWords = false;
             if(menuSelect === 0){
-                await this.getWordsLearn(previusWords); 
+                await this.getWords(previusWords, 'viewWordsLearn'); 
             }else{
-                await this.getWordsForLearn(previusWords);
+                await this.getWords(previusWords, 'wordsForLearn');
             }
             this.permitedSearhWords = true;
         }
@@ -51,22 +51,18 @@ class FnWords{
         }
     };
 
-    async getWordsLearn(previusWords){
+    async getWords(previusWords, nameStoreWords){
         let end = false;
         const long = previusWords.length;
-        let wordsLearn = await getStorage('viewWordsLearn');
+        let wordsLearn = await getStorage(nameStoreWords);
         if(wordsLearn === null){
             wordsLearn = await getWordsMinMaxRange(0, 20);
-            await setStorage('viewWordsLearn', wordsLearn);
+            await setStorage(nameStoreWords, wordsLearn);
         }else if(long === 0 && wordsLearn.length > 20){
-            console.log('se ya existen datos pero comenzo');
             wordsLearn.length = 20;
-            console.log('wordsLearn', wordsLearn);
         }else if(long < wordsLearn.length){
-            console.log('ya existen datos pero words todavia tiene');
             const newWords = [];
             for(let i = long; i < long + 10; i++){
-                console.log('identro de ya existen datos', i);
                 if(wordsLearn[i] === undefined){
                     break;
                 }
@@ -74,31 +70,52 @@ class FnWords{
             };
             wordsLearn = newWords;
         }else{
-            console.log('entro a la busqueda', previusWords.length)
-            const maxRange = long + 10 < this.permitedMaxRange ? long + 10 : this.permitedMaxRange;
-            console.log('min', long, 'max', maxRange)
-            if(long < maxRange){
-                const words = await getWordsMinMaxRange(long, maxRange);
-                console.log(words)
-                words.forEach(word => {
-                    wordsLearn.push(word);
-                });
-                await setStorage('viewWordsLearn', wordsLearn);
-                wordsLearn = words;
+            let words
+            if(nameStoreWords === 'viewWordsLearn'){
+                words = await this.getWordsLearned(long, wordsLearn, nameStoreWords);
             }else{
-                console.log('se diparo el end')
-                end = true;
-                this.dispatch(setEnd(true));
+                words = await this.getWordsForLearn(long, previusWords, nameStoreWords);
             }
+            end = words[0];
+            wordsLearn = words[1];
         };
         if(!end){
             this.dispatch(setLearnedWords(wordsLearn));
         }
     };
-    
-    async getWordsForLearn(previusWords){
 
+    async getWordsLearned(long, wordsLearn, nameStoreWords){
+        console.log('entro en words learned')
+        const maxRange = long + 10 < this.permitedMaxRange ? long + 10 : this.permitedMaxRange;
+        if(long < maxRange){
+            const words = await getWordsMinMaxRange(long, maxRange);
+            words.forEach(word => {
+                wordsLearn.push(word);
+            });
+            await setStorage(nameStoreWords, wordsLearn);
+            return [false, words];
+        }else{
+            this.dispatch(setEnd(true));
+            return [true];
+        }
     };
+
+    async getWordsForLearn(long, previusWords, nameStoreWords){
+        const lastIdRange = previusWords[long - 1].maxId; 
+        const minRange = lastIdRange + 1;
+        const maxRange = lastIdRange + 11;
+        if(maxRange < this.permitedMaxRange){
+            const words = await getWordsMinMaxRange(minRange, maxRange);
+            words.forEach(word => {
+                wordsLearn.push(word);
+            });
+            await setStorage(nameStoreWords, wordsLearn);
+            return [false, words];
+        }else{
+            this.dispatch(setEnd(true));
+            return [true];
+        }
+    }
 
 }
 
