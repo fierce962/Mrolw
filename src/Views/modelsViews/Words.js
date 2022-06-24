@@ -11,11 +11,8 @@ class FnWords{
     permitedSearhWords = true;
     
     changeMenuSelected(select){
-        if(select === 1){
-            this.permitedMaxRange += 110; 
-        }else{
-            this.permitedMaxRange = undefined;
-        };
+        this.permitedMaxRange = undefined;
+        this.permitedSearhWords = true;
         this.dispatch(setNewSelectMenu(select));
         this.getWordsDb();
     }
@@ -41,12 +38,14 @@ class FnWords{
     }
 
     async getUserPermitedRange(menuSelect){
+        console.log('meun select', menuSelect)
         if(this.permitedMaxRange === undefined){
             console.log('max permited is undefined')
             const user = await getStorage('user');
             if(user.words !== undefined){
                 const maxId = user.words.maxId;
-                this.permitedMaxRange = menuSelect === 0 ? maxId - 10 : maxId + 105 ;
+                console.log('maxrangepermited', maxId)
+                this.permitedMaxRange = menuSelect === 0 ? maxId - 10 : maxId + 105;
             }
         }
     };
@@ -55,12 +54,11 @@ class FnWords{
         let end = false;
         const long = previusWords.length;
         let wordsLearn = await getStorage(nameStoreWords);
-        if(wordsLearn === null){
-            wordsLearn = await getWordsMinMaxRange(0, 20);
-            await setStorage(nameStoreWords, wordsLearn);
-        }else if(long === 0 && wordsLearn.length > 20){
+        if(wordsLearn !== null && long === 0 && wordsLearn.length > 20){
+            console.log('fue distito de null')
             wordsLearn.length = 20;
-        }else if(long < wordsLearn.length){
+        }else if(wordsLearn !== null && long < wordsLearn.length){
+            console.log('estaban guardadas')
             const newWords = [];
             for(let i = long; i < long + 10; i++){
                 if(wordsLearn[i] === undefined){
@@ -70,53 +68,52 @@ class FnWords{
             };
             wordsLearn = newWords;
         }else{
-            let words
-            if(nameStoreWords === 'viewWordsLearn'){
-                words = await this.getWordsLearned(long, wordsLearn, nameStoreWords);
+            if(wordsLearn === null) wordsLearn = [];
+            const rangeAndValid = this.getRangesAndValid(nameStoreWords, long, previusWords);
+            console.log('rangeandvalid', rangeAndValid);
+            if(rangeAndValid[0]){
+                const words = await getWordsMinMaxRange(rangeAndValid[1], rangeAndValid[2]);
+                words.forEach(word => {
+                    wordsLearn.push(word);
+                });
+                await setStorage(nameStoreWords, wordsLearn);
+                wordsLearn = words;
             }else{
-                words = await this.getWordsForLearn(long, previusWords, nameStoreWords);
+                end = true;
+                this.dispatch(setEnd(true));
             }
-            end = words[0];
-            wordsLearn = words[1];
         };
         if(!end){
             this.dispatch(setLearnedWords(wordsLearn));
         }
     };
 
-    async getWordsLearned(long, wordsLearn, nameStoreWords){
-        console.log('entro en words learned')
-        const maxRange = long + 10 < this.permitedMaxRange ? long + 10 : this.permitedMaxRange;
-        if(long < maxRange){
-            const words = await getWordsMinMaxRange(long, maxRange);
-            words.forEach(word => {
-                wordsLearn.push(word);
-            });
-            await setStorage(nameStoreWords, wordsLearn);
-            return [false, words];
+    getRangesAndValid(nameStoreWords, long, previusWords){
+        let minRange;
+        let maxRange;
+        if(nameStoreWords === 'viewWordsLearn'){
+            minRange = long;
+            if(minRange === 0){
+                if(this.permitedMaxRange < 20){
+                    maxRange = this.permitedMaxRange;
+                }else{
+                    maxRange = 20;
+                }
+            }else{
+                maxRange = minRange + 10 < this.permitedMaxRange ? minRange + 10 : this.permitedMaxRange;
+            }
+            return [long < maxRange, minRange, maxRange]
         }else{
-            this.dispatch(setEnd(true));
-            return [true];
-        }
-    };
-
-    async getWordsForLearn(long, previusWords, nameStoreWords){
-        const lastIdRange = previusWords[long - 1].maxId; 
-        const minRange = lastIdRange + 1;
-        const maxRange = lastIdRange + 11;
-        if(maxRange < this.permitedMaxRange){
-            const words = await getWordsMinMaxRange(minRange, maxRange);
-            words.forEach(word => {
-                wordsLearn.push(word);
-            });
-            await setStorage(nameStoreWords, wordsLearn);
-            return [false, words];
-        }else{
-            this.dispatch(setEnd(true));
-            return [true];
+            if(long === 0){
+                minRange = this.permitedMaxRange - 104;
+                maxRange = minRange + 20;
+            }else{
+                minRange = previusWords[long - 1].id + 1;
+                maxRange = minRange + 10 < this.permitedMaxRange ? minRange + 10 : this.permitedMaxRange;
+            }
+            return [minRange < this.permitedMaxRange, minRange, maxRange];
         }
     }
-
 }
 
 
