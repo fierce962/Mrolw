@@ -105,6 +105,7 @@ class FnWords{
                 minRange = previusWords[long - 1].id + 1;
                 maxRange = minRange + 10 < this.permitedMaxRange ? minRange + 10 : this.permitedMaxRange;
             }
+            console.log('rangesmin', minRange, maxRange);
             return [minRange < this.permitedMaxRange, minRange, maxRange];
         }
     }

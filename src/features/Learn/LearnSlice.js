@@ -25,7 +25,7 @@ export const getWords = createAsyncThunk(
                     limit += -user.words.list.length;
                 }
                 if(limit !== 0){
-                    const newList = await getWordsRangeDb(maxId, limit);
+                    const newList = await getWordsForLearn(maxId, limit);
                     const olwList = user.words.list === undefined ? [] : user.words.list;
                     user.words = createWordsObject(olwList);
                     newList.forEach(wordList =>{
@@ -51,13 +51,7 @@ export const searchWords = createAsyncThunk(
         try {
             console.log('searchwords');
             let user = await getStorage('user');
-            const storeWrods = await getWordsForLearnStore(user.words.maxId, 5);
-            if(storeWrods.length !== 0){
-                console.log('se assigno desde el store')
-                user.words.list = storeWrods;
-            }else{
-                user.words.list = await getWordsRangeDb(user.words.maxId, 5);
-            }
+            user.words.list = await getWordsForLearn(user.words.maxId, 5);
             user.words.maxId = getMaxId(user.words.list);
             await setStorage('user', user);
             return user.words;
@@ -67,11 +61,13 @@ export const searchWords = createAsyncThunk(
     }
 );
 
-async function getWordsForLearnStore(maxId, limit){
+async function getWordsForLearn(maxId, limit){
     let count = 0;
     let storeWords = [];
+    console.log('maxid', maxId)
     const wordsStore = await getStorage('wordsForLearn');
     if(wordsStore !== null){
+        console.log('se asignaron desde el store')
         wordsStore.some(word => {
             if(word.id <= maxId){
                 storeWords.push(word);
@@ -80,6 +76,14 @@ async function getWordsForLearnStore(maxId, limit){
             if(count === limit){
                 return true;
             }
+        });
+    };
+    console.log('storewords', storeWords);
+    if(storeWords.length < 5){
+        const newMaxId = maxId + storeWords.length;
+        const words = await getWordsRangeDb(newMaxId, 5 - storeWords.length);
+        words.forEach(word => {
+            storeWords.push(word);
         });
     };
     return storeWords;
