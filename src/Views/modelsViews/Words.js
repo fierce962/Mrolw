@@ -2,7 +2,7 @@ import React from "react";
 import { store } from '../../store/store';
 
 import { getStorage, setStorage } from "../../models/Storage";
-import { setNewSelectMenu, setLearnedWords, changeOpenWordByIndex, setEnd } from '../../features/words/wordsSlice';
+import { setNewSelectMenu, setLearnedWords, clearSlice, changeOpenWordByIndex, setEnd } from '../../features/words/wordsSlice';
 import { getWordsMinMaxRange } from '../../database/database';
 
 class FnWords{
@@ -14,7 +14,12 @@ class FnWords{
         this.permitedMaxRange = undefined;
         this.permitedSearhWords = true;
         this.dispatch(setNewSelectMenu(select));
+        this.clearWords();
         this.getWordsDb();
+    };
+
+    clearWords(){
+        this.dispatch(clearSlice());
     }
 
     changeOpenWord(index, animatedUsed, wordOpen){
@@ -52,6 +57,9 @@ class FnWords{
         const long = previusWords.length;
         let wordsLearn = await getStorage(nameStoreWords);
         if(wordsLearn !== null && long === 0 && wordsLearn.length > 20){
+            if(nameStoreWords === 'wordsForLearn'){
+                wordsLearn = wordsLearn.filter(word => word.id > this.permitedMaxRange - 105);
+            };
             wordsLearn.length = 20;
         }else if(wordsLearn !== null && long < wordsLearn.length){
             const newWords = [];
@@ -65,6 +73,7 @@ class FnWords{
         }else{
             if(wordsLearn === null) wordsLearn = [];
             const rangeAndValid = this.getRangesAndValid(nameStoreWords, long, previusWords);
+            console.log('results ranges', rangeAndValid);
             if(rangeAndValid[0]){
                 const words = await getWordsMinMaxRange(rangeAndValid[1], rangeAndValid[2]);
                 words.forEach(word => {
@@ -105,7 +114,6 @@ class FnWords{
                 minRange = previusWords[long - 1].id + 1;
                 maxRange = minRange + 10 < this.permitedMaxRange ? minRange + 10 : this.permitedMaxRange;
             }
-            console.log('rangesmin', minRange, maxRange);
             return [minRange < this.permitedMaxRange, minRange, maxRange];
         }
     }

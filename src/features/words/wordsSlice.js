@@ -12,10 +12,12 @@ const palabrasSlice = createSlice({
         setNewSelectMenu: (state, action) => {
             if(state.menuSelect !== action.payload){
                 state.menuSelect = action.payload;
-                state.wordsSelect = [];
-                state.list = [];
-                state.end = false;
             }
+        },
+        clearSlice: (state) => {
+            state.wordsSelect = [];
+            state.list = [];
+            state.end = false;
         },
         setLearnedWords: (state, action) => {
             action.payload.forEach(word => {
@@ -34,4 +36,4 @@ const palabrasSlice = createSlice({
 });
 
 export default palabrasSlice.reducer;
-export const { setNewSelectMenu, setLearnedWords, changeOpenWordByIndex, setEnd } = palabrasSlice.actions;
+export const { setNewSelectMenu, clearSlice, setLearnedWords, changeOpenWordByIndex, setEnd } = palabrasSlice.actions;

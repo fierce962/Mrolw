@@ -92,6 +92,9 @@ export default function ViewWords(){
 
     useEffect(() => {
         fnWords.getWordsDb();
+        return () => {
+            fnWords.clearWords();
+        }
     })
 
     return (

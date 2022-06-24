@@ -65,18 +65,18 @@ async function getWordsForLearn(maxId, limit){
     let count = 0;
     let storeWords = [];
     console.log('maxid', maxId)
-    const wordsStore = await getStorage('wordsForLearn');
+    let wordsStore = await getStorage('wordsForLearn');
     if(wordsStore !== null){
         console.log('se asignaron desde el store')
-        wordsStore.some(word => {
-            if(word.id <= maxId){
+        wordsStore = wordsStore.filter(word => {
+            if(word.id <= maxId && count !== limit){
                 storeWords.push(word);
                 count += 1;
+            }else{
+                return word;
             };
-            if(count === limit){
-                return true;
-            }
         });
+        await setStorage('wordsForLearn', wordsStore);
     };
     console.log('storewords', storeWords);
     if(storeWords.length < 5){
