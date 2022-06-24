@@ -9,6 +9,7 @@ export const getWords = createAsyncThunk(
     'learn/getWords',
     async () => {
         let user = await getStorage('user');
+        console.log('getwords');
         try {
             if(user.words === undefined || user.words.day !== new Date().getDate()){
                 await controllerNotifications.removeNotification('notificationId');
@@ -48,8 +49,15 @@ export const searchWords = createAsyncThunk(
     'learn/searchNewWords',
     async () => {
         try {
+            console.log('searchwords');
             let user = await getStorage('user');
-            user.words.list = await getWordsRangeDb(user.words.maxId, 5);
+            const storeWrods = await getWordsForLearnStore(user.words.maxId, 5);
+            if(storeWrods.length !== 0){
+                console.log('se assigno desde el store')
+                user.words.list = storeWrods;
+            }else{
+                user.words.list = await getWordsRangeDb(user.words.maxId, 5);
+            }
             user.words.maxId = getMaxId(user.words.list);
             await setStorage('user', user);
             return user.words;
@@ -58,6 +66,24 @@ export const searchWords = createAsyncThunk(
         }
     }
 );
+
+async function getWordsForLearnStore(maxId, limit){
+    let count = 0;
+    let storeWords = [];
+    const wordsStore = await getStorage('wordsForLearn');
+    if(wordsStore !== null){
+        wordsStore.some(word => {
+            if(word.id <= maxId){
+                storeWords.push(word);
+                count += 1;
+            };
+            if(count === limit){
+                return true;
+            }
+        });
+    };
+    return storeWords;
+}
 
 function getMaxId(learnList){
     const ids = [];
@@ -98,8 +124,15 @@ export const removeLearn = createAsyncThunk(
     'learn/remove',
     async () => {
         try {
-            const user = await getStorage('user')
-            user.words.learn.shift();
+            console.log('remove');
+            const user = await getStorage('user');
+            const wordsLearn = await getStorage('viewWordsLearn');
+            const removeWord = user.words.learn.shift();
+            if(wordsLearn !== null){
+                console.log('remove words', removeWord)
+                wordsLearn.push(removeWord);
+                await setStorage('viewWordsLearn', wordsLearn);
+            }
             await setUserDataWords({ ... user });
             if(user.words.learn.length !== 0){
                 delete user.words.learn[0].id

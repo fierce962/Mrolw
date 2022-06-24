@@ -38,13 +38,10 @@ class FnWords{
     }
 
     async getUserPermitedRange(menuSelect){
-        console.log('meun select', menuSelect)
         if(this.permitedMaxRange === undefined){
-            console.log('max permited is undefined')
             const user = await getStorage('user');
             if(user.words !== undefined){
                 const maxId = user.words.maxId;
-                console.log('maxrangepermited', maxId)
                 this.permitedMaxRange = menuSelect === 0 ? maxId - 10 : maxId + 105;
             }
         }
@@ -55,22 +52,19 @@ class FnWords{
         const long = previusWords.length;
         let wordsLearn = await getStorage(nameStoreWords);
         if(wordsLearn !== null && long === 0 && wordsLearn.length > 20){
-            console.log('fue distito de null')
             wordsLearn.length = 20;
         }else if(wordsLearn !== null && long < wordsLearn.length){
-            console.log('estaban guardadas')
             const newWords = [];
             for(let i = long; i < long + 10; i++){
                 if(wordsLearn[i] === undefined){
                     break;
-                }
+                };
                 newWords.push(wordsLearn[i]);
             };
             wordsLearn = newWords;
         }else{
             if(wordsLearn === null) wordsLearn = [];
             const rangeAndValid = this.getRangesAndValid(nameStoreWords, long, previusWords);
-            console.log('rangeandvalid', rangeAndValid);
             if(rangeAndValid[0]){
                 const words = await getWordsMinMaxRange(rangeAndValid[1], rangeAndValid[2]);
                 words.forEach(word => {
